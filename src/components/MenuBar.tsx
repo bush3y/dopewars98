@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { MENUS } from '../data/menu';
+import { useGame } from '../game/GameContext';
+import { runMenuItem } from '../game/menuActions';
 
 /** Renders a title with its accelerator letter underlined (e.g. "File"). */
 function Title({ text, accel }: { text: string; accel: number }) {
@@ -16,6 +18,7 @@ function Title({ text, accel }: { text: string; accel: number }) {
 export function MenuBar() {
   const [open, setOpen] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const game = useGame();
 
   // Close on outside click / Escape.
   useEffect(() => {
@@ -53,7 +56,10 @@ export function MenuBar() {
                   <button
                     type="button"
                     className="dropdown__item"
-                    onClick={() => setOpen(null)}
+                    onClick={() => {
+                      runMenuItem(item.label, game);
+                      setOpen(null);
+                    }}
                   >
                     <span>{item.label}</span>
                     {item.phase && <span className="dropdown__hint">P{item.phase}</span>}

@@ -4,17 +4,22 @@ import { HealthBar } from './HealthBar';
 import { MarketPane } from './MarketPane';
 import { TrenchcoatPane } from './TrenchcoatPane';
 import { MobileDrawer } from './MobileDrawer';
-import type { GameSnapshot } from '../data/types';
+import { useGame } from '../game/GameContext';
 
 /**
  * Portrait reflow (BRIEF.md §2). Full-bleed with safe-area insets and softened
- * corners (mobile only). Header carries the menu (☰ drawer), LED stats and a
- * slim health bar; Market and Trenchcoat are stacked, both visible, no tabs.
- * Same snapshot/data as desktop — presentation only.
+ * corners. Header carries the menu (☰ drawer), LED stats and a slim health bar;
+ * Market and Trenchcoat are stacked, both visible, no tabs. Action bar wires the
+ * loop (Travel/Buy/Sell/Finances). Same state as desktop — presentation only.
  */
-export function MobileLayout({ snap }: { snap: GameSnapshot }) {
+export function MobileLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { snapshot: snap, state, ui } = useGame();
   const fmt = (n: number) => n.toLocaleString('en-US');
+
+  const held: Partial<Record<string, boolean>> = {};
+  for (const row of snap.trenchcoat) held[row.drug] = true;
+  const canSell = ui.selected != null && !!state.inventory[ui.selected];
 
   return (
     <div className="mobile">
@@ -55,7 +60,12 @@ export function MobileLayout({ snap }: { snap: GameSnapshot }) {
 
       <main className="mobile__body">
         <section className="mobile__section mobile__section--market">
-          <MarketPane market={snap.market} />
+          <MarketPane
+            market={snap.market}
+            selected={ui.selected}
+            onSelect={ui.select}
+            held={held}
+          />
         </section>
         <section className="mobile__section mobile__section--coat">
           <TrenchcoatPane
@@ -63,15 +73,21 @@ export function MobileLayout({ snap }: { snap: GameSnapshot }) {
             spaceUsed={snap.spaceUsed}
             capacity={snap.capacity}
             emptyText="Empty — buy drugs to fill your trenchcoat."
+            selected={ui.selected}
+            onSelect={ui.select}
           />
         </section>
       </main>
 
       <nav className="mobile__actions">
-        <button type="button">Travel</button>
-        <button type="button" disabled>Buy</button>
-        <button type="button" disabled>Sell</button>
-        <button type="button">$</button>
+        <button type="button" onClick={() => ui.open('travel')}>Travel</button>
+        <button type="button" disabled={ui.selected == null} onClick={() => ui.open('buy')}>
+          Buy
+        </button>
+        <button type="button" disabled={!canSell} onClick={() => ui.open('sell')}>
+          Sell
+        </button>
+        <button type="button" onClick={() => ui.open('finances')}>$</button>
       </nav>
 
       <MobileDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />

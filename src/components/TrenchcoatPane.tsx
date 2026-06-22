@@ -1,18 +1,22 @@
 import { DRUG_NAME } from '../data/gameData';
-import type { InventoryEntry } from '../data/types';
+import type { DrugId, InventoryEntry } from '../data/types';
 
-/** The "Trenchcoat. Space: X/Y" inventory list: drug + qty + price. */
+/** The "Trenchcoat. Space: X/Y" inventory list. Rows selectable to drive Sell. */
 export function TrenchcoatPane({
   trenchcoat,
   spaceUsed,
   capacity,
   emptyText,
+  selected,
+  onSelect,
 }: {
   trenchcoat: InventoryEntry[];
   spaceUsed: number;
   capacity: number;
   /** Optional hint shown when nothing is held (used in the mobile stacked view). */
   emptyText?: string;
+  selected?: DrugId | null;
+  onSelect?: (drug: DrugId) => void;
 }) {
   return (
     <div className="pane">
@@ -20,7 +24,7 @@ export function TrenchcoatPane({
         Trenchcoat. Space : {capacity - spaceUsed}/{capacity}
       </div>
       <div className="pane__list">
-        <table className="grid">
+        <table className="grid grid--selectable">
           <thead>
             <tr>
               <th className="grid__col-name">Drug</th>
@@ -30,14 +34,19 @@ export function TrenchcoatPane({
           </thead>
           <tbody>
             {trenchcoat.map((row) => (
-              <tr key={row.drug}>
+              <tr
+                key={row.drug}
+                className={selected === row.drug ? 'is-selected' : ''}
+                onClick={() => onSelect?.(row.drug)}
+                aria-selected={selected === row.drug}
+              >
                 <td>{DRUG_NAME[row.drug]}</td>
                 <td className="grid__col-num">{row.qty.toLocaleString('en-US')}</td>
                 <td className="grid__col-num">{row.price.toLocaleString('en-US')}</td>
               </tr>
             ))}
             {trenchcoat.length === 0 && emptyText && (
-              <tr>
+              <tr className="grid__no-hover">
                 <td colSpan={3} className="grid__empty">{emptyText}</td>
               </tr>
             )}

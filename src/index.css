@@ -546,3 +546,149 @@ body {
   outline: none;
   box-shadow: none;
 }
+
+/* ===========================================================================
+   Selectable list rows (market / trenchcoat)
+   =========================================================================== */
+.grid--selectable tbody tr {
+  cursor: pointer;
+}
+.grid--selectable tbody tr:hover:not(.grid__no-hover) {
+  background: #d8e4ff;
+}
+.grid--selectable tbody tr.is-selected {
+  background: #000080;
+  color: #fff;
+}
+.grid__no-hover {
+  cursor: default;
+}
+.grid__held {
+  color: #0b8a0b;
+  font-size: 9px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.is-selected .grid__held {
+  color: #7fff7f;
+}
+
+.subway__note {
+  font-size: 11px;
+  text-align: center;
+  color: #b30000;
+  margin-top: 6px;
+}
+.dw-footer__mode {
+  margin-right: auto;
+  font-size: 11px;
+  color: #404040;
+  align-self: center;
+  padding-left: 2px;
+}
+
+/* ===========================================================================
+   Dialogs / modals
+   =========================================================================== */
+.modal-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+.modal {
+  width: min(360px, 100%);
+}
+.modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dlg__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 16px;
+}
+.dlg__stats--col {
+  grid-template-columns: 1fr;
+}
+.dlg__stats > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px dotted #aaa;
+  padding-bottom: 2px;
+}
+.dlg__score {
+  border-bottom: 0 !important;
+  border-top: 2px solid #808080;
+  margin-top: 4px;
+  padding-top: 6px;
+  font-size: 15px;
+}
+.dlg__qty {
+  align-items: center;
+  gap: 8px;
+}
+.dlg__qty input {
+  flex: 1;
+  min-width: 0;
+}
+.dlg__total {
+  font-size: 14px;
+}
+.dlg__message {
+  margin: 0;
+  line-height: 1.4;
+}
+.dlg__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.dlg__actions button {
+  min-width: 80px;
+  min-height: 30px;
+}
+.dlg__actions--wrap {
+  flex-wrap: wrap;
+}
+
+.pos {
+  color: #0b8a0b;
+}
+.neg {
+  color: #b30000;
+}
+
+.travel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.travel-grid button {
+  min-height: 44px;
+}
+
+/* On a phone the modal sits a touch higher and uses larger tap targets. */
+@media (max-width: 640px) {
+  .modal-scrim {
+    align-items: flex-start;
+    padding-top: 12vh;
+  }
+  .modal {
+    width: min(420px, 100%);
+  }
+  .dlg__actions button {
+    min-height: 44px;
+    flex: 1;
+  }
+  .dlg__qty input {
+    min-height: 36px;
+  }
+}

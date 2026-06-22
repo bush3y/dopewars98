@@ -160,7 +160,7 @@ Every player's world is byte-identical; only decisions differ.
   screenshot. No logic. Goal: it *looks* right. ✅ DONE
 - **Phase 1 — Core loop.** Extracted data. Travel, buy, sell, bank, repay,
   advance day, interest, price regen. No encounters. Win/lose on day 31. Seedable
-  PRNG wired from the start.
+  PRNG wired from the start. ✅ DONE
 - **Phase 2 — Encounters.** Officer Hardass / deputies, guns, health, fight/run,
   muggings, found bonuses. Keyed RNG per §6.
 - **Phase 3 — Persistence & polish.** Save slots, high scores, net-worth chart,

@@ -1,7 +1,8 @@
 import { useSyncExternalStore } from 'react';
 import { DesktopWindow } from './components/DesktopWindow';
 import { MobileLayout } from './components/MobileLayout';
-import { SNAPSHOT } from './data/gameData';
+import { GameDialogs } from './components/GameDialogs';
+import { GameProvider } from './game/GameContext';
 
 const MOBILE_QUERY = '(max-width: 640px)';
 
@@ -22,12 +23,17 @@ export default function App() {
   const isMobile = useMediaQuery(MOBILE_QUERY);
 
   // Desktop = faithful square window on a backdrop. Mobile = portrait reflow.
-  // Same SNAPSHOT feeds both (BRIEF.md §2).
-  return isMobile ? (
-    <MobileLayout snap={SNAPSHOT} />
-  ) : (
-    <div className="desktop-backdrop">
-      <DesktopWindow snap={SNAPSHOT} />
-    </div>
+  // Both read the same reducer-driven state via GameProvider (BRIEF.md §2, §4).
+  return (
+    <GameProvider>
+      {isMobile ? (
+        <MobileLayout />
+      ) : (
+        <div className="desktop-backdrop">
+          <DesktopWindow />
+        </div>
+      )}
+      <GameDialogs />
+    </GameProvider>
   );
 }

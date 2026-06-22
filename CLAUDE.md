@@ -15,9 +15,13 @@ emulator, no reskin. Modern features live behind the faithful core.
 ## Status
 
 - **Phase 0 (static shell): DONE.** Desktop window matches the Day-1/Bronx
-  screenshot; mobile portrait reflow renders the same data. No game logic yet.
-- Next: **Phase 1 — core loop** (reducer, seedable PRNG, buy/sell/travel/bank,
-  daily price regen). See BRIEF §4 and §7.
+  screenshot; mobile portrait reflow renders the same data.
+- **Phase 1 (core loop): DONE.** Seedable PRNG, deterministic market, reducer
+  (buy/sell/travel/bank/repay), daily interest, market events with own flavor
+  text, win on day 31 with net-worth score. Engine verified by
+  `scripts/verify-engine.ts`.
+- Next: **Phase 2 — encounters** (Officer Hardass/deputies, guns, health,
+  fight/run, muggings, found bonuses). Keyed RNG per BRIEF §6.
 
 ## Commands
 
@@ -46,12 +50,23 @@ npm run lint     # eslint
 ## Layout of `src/`
 
 - `data/` — `types.ts` (domain types + `GameSnapshot` seam), `gameData.ts`
-  (drugs, locations, Phase-0 `SNAPSHOT` fixture).
-- `components/` — `Led`, `HealthBar`, `StatPanel`, `SubwayGrid`, `MarketPane`,
-  `TrenchcoatPane`, `MenuBar`, `DesktopWindow`, `MobileLayout`.
+  (drugs, locations), `economy.ts` (price ranges, interest, event flavor text),
+  `menu.ts` (shared menu structure for desktop bar + mobile drawer).
+- `engine/` — pure game logic, no React. `rng.ts` (seedable PRNG + coord hash),
+  `market.ts` (deterministic price/event generation), `types.ts` (`GameState` +
+  `Action`), `reducer.ts` (the state machine + `initialState`/`netWorth`/
+  `spaceUsed`), `selectors.ts` (`toSnapshot`).
+- `game/` — React glue. `GameContext.tsx` (`useReducer` + UI state: selection,
+  open dialog), `menuActions.ts` (maps menu labels → actions).
+- `components/` — dumb presentation: `Led`, `HealthBar`, `StatPanel`,
+  `SubwayGrid`, `MarketPane`, `TrenchcoatPane`, `MenuBar`, `MobileDrawer`,
+  `DesktopWindow`, `MobileLayout`, `Modal`, `GameDialogs`, and `dialogs/*`
+  (Buy/Sell/Finances/Travel/Event/GameOver/NewGame).
 - `hooks/useDragWindow.ts` — titlebar drag (not resizable, by design).
 - `index.css` — all styling, layered on `98.css`. DSEG7 `@font-face` here;
   font files live in `public/fonts/` (SIL OFL, license included).
+- `scripts/verify-engine.ts` — engine sanity check; run `npx tsx
+  scripts/verify-engine.ts`.
 
 ## Gotchas
 
