@@ -1,0 +1,548 @@
+/* ===========================================================================
+   Dope Wars — global styles. Layered on top of 98.css (imported in main.tsx).
+   Phase 0: faithful static shell. See BRIEF.md §2.
+   =========================================================================== */
+
+@font-face {
+  font-family: 'DSEG7';
+  src: url('/fonts/DSEG7Classic-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --led-green: #28ff28;
+  --led-green-ghost: #0a3f0a;
+  --led-red: #ff3b30;
+  --led-red-ghost: #3f0c0a;
+  --led-yellow: #ffd21e;
+  --led-yellow-ghost: #3f3306;
+  --led-bg: #000;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;
+}
+
+/* --- Desktop backdrop: classic teal Win9x desktop ------------------------- */
+.desktop-backdrop {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #008080; /* the canonical teal */
+  box-sizing: border-box;
+}
+
+/* --- The game window ------------------------------------------------------ */
+.dw-window {
+  width: 560px;
+}
+
+.menubar {
+  display: flex;
+  gap: 2px;
+  padding: 2px 4px;
+  font-size: 12px;
+  position: relative;
+  z-index: 5;
+}
+.menubar__menu {
+  position: relative;
+}
+.menubar__item {
+  font: inherit;
+  background: transparent;
+  border: 0;
+  padding: 2px 6px;
+  cursor: default;
+  box-shadow: none;
+  min-width: 0;
+}
+.menubar__item:hover,
+.menubar__item.is-open {
+  background: #000080;
+  color: #fff;
+}
+.menubar__item:active,
+.menubar__item:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Win9x dropdown: raised gray panel, blue hover rows. */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin: 0;
+  padding: 2px;
+  list-style: none;
+  min-width: 168px;
+  background: #c0c0c0;
+  box-shadow: inset -1px -1px 0 #000, inset 1px 1px 0 #fff,
+    inset -2px -2px 0 #808080, inset 2px 2px 0 #dfdfdf, 2px 2px 3px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+.dropdown__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 3px 10px;
+}
+.dropdown__item:hover {
+  background: #000080;
+  color: #fff;
+}
+.dropdown__item:active,
+.dropdown__item:focus {
+  outline: none;
+  box-shadow: none;
+}
+/* Tiny "which phase makes this real" tag while items are stubbed. */
+.dropdown__hint {
+  font-size: 10px;
+  opacity: 0.5;
+}
+.dropdown__item:hover .dropdown__hint {
+  opacity: 0.8;
+}
+
+.dw-body {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+}
+.dw-left,
+.dw-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.dw-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 8px;
+}
+.dw-footer button {
+  min-width: 84px;
+}
+
+/* --- LED stat rows -------------------------------------------------------- */
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+.stat-label {
+  font-weight: 700;
+  font-size: 15px;
+  width: 52px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+}
+.stat-label--green {
+  color: #0b8a0b;
+}
+.stat-label--red {
+  color: #b30000;
+}
+.stat-label--yellow {
+  color: #b89000;
+}
+
+.led {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  background: var(--led-bg);
+  border: 2px inset #c0c0c0;
+  padding: 2px 6px;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 22px;
+}
+.led__ghost,
+.led__value {
+  font-family: 'DSEG7', monospace;
+  font-size: 16px;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+.led__ghost {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.led__value {
+  position: relative;
+  z-index: 1;
+}
+.led--green .led__value { color: var(--led-green); }
+.led--green .led__ghost { color: var(--led-green-ghost); }
+.led--red .led__value { color: var(--led-red); }
+.led--red .led__ghost { color: var(--led-red-ghost); }
+.led--yellow .led__value { color: var(--led-yellow); }
+.led--yellow .led__ghost { color: var(--led-yellow-ghost); }
+
+/* --- Health bar ----------------------------------------------------------- */
+.health {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.health__label {
+  font-size: 12px;
+  white-space: nowrap;
+}
+.healthbar {
+  position: relative;
+  flex: 1;
+  height: 18px;
+  background: #fff;
+  border: 2px inset #c0c0c0;
+  overflow: hidden;
+}
+.healthbar__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: #0000c0;
+}
+.healthbar__text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  /* Readable over both blue fill and white track. */
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+/* --- Subway grid ---------------------------------------------------------- */
+.subway__box {
+  margin: 0;
+}
+.subway__box legend {
+  font-size: 12px;
+}
+.subway__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 2px;
+}
+.subway__dest {
+  min-height: 28px;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.actions button {
+  flex: 1;
+}
+
+/* --- List panes ----------------------------------------------------------- */
+.pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.pane__caption {
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.pane__list {
+  background: #fff;
+  border: 2px inset #c0c0c0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.grid th {
+  text-align: left;
+  font-weight: 400;
+  background: #c0c0c0;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #808080;
+  box-shadow: inset -1px -1px 0 #808080, inset 1px 1px 0 #fff;
+  padding: 1px 6px;
+  position: sticky;
+  top: 0;
+}
+.grid td {
+  padding: 1px 6px;
+}
+.grid tbody tr:nth-child(odd) {
+  background: #f4f4f4;
+}
+.grid__col-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.grid__col-name {
+  width: 60%;
+}
+.grid__empty {
+  color: #808080;
+  font-style: italic;
+  text-align: center;
+  padding: 10px 6px;
+}
+
+/* ===========================================================================
+   Mobile portrait reflow (BRIEF.md §2). Same data, different presentation.
+   Full-bleed with safe-area insets, softened corners (mobile only).
+   =========================================================================== */
+.mobile {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100%;
+  box-sizing: border-box;
+  background: #c0c0c0;
+  overflow: hidden;
+}
+
+.mobile__header {
+  padding: calc(8px + env(safe-area-inset-top)) 12px 10px;
+  padding-left: calc(12px + env(safe-area-inset-left));
+  padding-right: calc(12px + env(safe-area-inset-right));
+  background: linear-gradient(#cfcfcf, #c0c0c0);
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #fff inset, 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+.mobile__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.mobile__menu-btn {
+  font-size: 18px;
+  line-height: 1;
+  min-width: 40px;
+  min-height: 36px;
+  border-radius: 8px;
+  padding: 0;
+}
+.mobile__brand {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.mobile__day {
+  font-size: 12px;
+  margin-left: auto;
+}
+.mobile__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.mobile__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mobile__stat .stat-label {
+  width: auto;
+  font-size: 11px;
+}
+.mobile__stat .led {
+  height: 28px;
+  border-radius: 6px;
+}
+.mobile__health {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.mobile__health .health__label {
+  font-size: 12px;
+}
+.mobile__health .healthbar {
+  height: 16px;
+  border-radius: 6px;
+}
+
+/* Two stacked sections, both visible: Market (flexes) over Trenchcoat (capped). */
+.mobile__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px 0;
+  padding-left: calc(8px + env(safe-area-inset-left));
+  padding-right: calc(8px + env(safe-area-inset-right));
+}
+.mobile__section {
+  display: flex;
+  min-height: 0;
+}
+.mobile__section .pane {
+  flex: 1;
+}
+.mobile__section .pane__list {
+  border-radius: 8px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.mobile__section--market {
+  flex: 1; /* market takes the lion's share */
+}
+.mobile__section--coat {
+  flex: 0 0 auto;
+  max-height: 32vh;
+}
+.mobile__body .grid {
+  font-size: 15px;
+}
+.mobile__body .grid td,
+.mobile__body .grid th {
+  padding: 7px 12px;
+}
+
+.mobile__actions {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  padding-left: calc(12px + env(safe-area-inset-left));
+  padding-right: calc(12px + env(safe-area-inset-right));
+  background: linear-gradient(#c0c0c0, #b8b8b8);
+  border-top: 1px solid #fff;
+}
+.mobile__actions button {
+  flex: 1;
+  min-height: 46px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* --- Mobile menu drawer --------------------------------------------------- */
+.drawer__scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 40;
+}
+.drawer__scrim.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(80vw, 300px);
+  background: #c0c0c0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.4);
+  transform: translateX(-100%);
+  transition: transform 0.22s ease;
+  z-index: 50;
+  overflow-y: auto;
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  border-right: 2px solid #808080;
+}
+.drawer.is-open {
+  transform: translateX(0);
+}
+.drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: linear-gradient(#000080, #1084d0);
+  color: #fff;
+}
+.drawer__brand {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.drawer__close {
+  min-width: 36px;
+  min-height: 32px;
+  border-radius: 6px;
+}
+.drawer__group {
+  padding: 6px 0;
+  border-bottom: 1px solid #a0a0a0;
+}
+.drawer__group-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #555;
+  padding: 6px 16px 2px;
+}
+.drawer__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 11px 16px;
+  min-height: 44px;
+}
+.drawer__item:active {
+  background: #000080;
+  color: #fff;
+}
+.drawer__item:focus {
+  outline: none;
+  box-shadow: none;
+}
