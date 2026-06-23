@@ -65,14 +65,17 @@ ok('bank grew 5%', s.bank === Math.round(bankBefore * 1.05));
 dispatch({ type: 'SELL', drug: 'weed', qty: 9999 });
 ok('sell clamps to held (now empty)', !s.inventory.weed);
 
-// Run to the end; status flips to won on the final day's travel.
+// Run to the end, resolving encounters (run from fights, dismiss notices).
+// Status flips to won on the final day's travel — unless the cops get you.
 let guard = 0;
-while (s.status === 'playing' && guard++ < 100) {
+while (s.status === 'playing' && guard++ < 300) {
+  if (s.pendingEncounter) { dispatch({ type: 'RUN' }); continue; }
+  if (s.notice) { dispatch({ type: 'DISMISS_NOTICE' }); continue; }
   dispatch({ type: 'TRAVEL', location: s.location === 'bronx' ? 'ghetto' : 'bronx' });
 }
-ok('game ends by day 31', s.status === 'won' && s.day <= 31);
+ok('game resolves to won or dead by day 31', (s.status === 'won' || s.status === 'dead') && s.day <= 31);
 ok('net worth is finite number', Number.isFinite(netWorth(s)));
-console.log(`  final: day ${s.day}, net worth ${netWorth(s).toLocaleString()}`);
+console.log(`  final: day ${s.day}, status ${s.status}, net worth ${netWorth(s).toLocaleString()}`);
 
 // 5. Full reproducibility: same seed + same action script → identical end state.
 function play(seed: number) {
@@ -89,6 +92,83 @@ function play(seed: number) {
 }
 ok('identical seed+actions → identical state', JSON.stringify(play(555)) === JSON.stringify(play(555)));
 ok('different seed → different state', JSON.stringify(play(555)) !== JSON.stringify(play(556)));
+
+// 6. Phase 2 — encounters & combat.
+const { generateArrival, combatPower, gunSpace } = await import('../src/engine/encounters');
+
+const a1 = generateArrival(321, 9, 'brooklyn', 0.8, 5000);
+const a2 = generateArrival(321, 9, 'brooklyn', 0.8, 5000);
+ok('arrival is deterministic per coord', JSON.stringify(a1) === JSON.stringify(a2));
+
+// Carrying more dope raises encounter odds: sample many coords at 0 vs full load.
+let lowHits = 0, highHits = 0;
+for (let day = 2; day <= 600; day++) {
+  if (generateArrival(9, day, 'bronx', 0, 2000).cops || generateArrival(9, day, 'bronx', 0, 2000).instant) lowHits++;
+  if (generateArrival(9, day, 'bronx', 1, 2000).cops || generateArrival(9, day, 'bronx', 1, 2000).instant) highHits++;
+}
+ok(`heavier load → more encounters (${lowHits} < ${highHits})`, highHits > lowHits);
+
+// Gun shop: buying takes cash + space, adds combat power.
+let g = initialState(2024, 'classic');
+// Force the shop open for the test by finding a coord, or just buy via reducer
+// guard: ensure gunShopOpen on the current state; if not, flip it for the test.
+g = { ...g, gunShopOpen: true };
+const cashBeforeGun = g.cash;
+g = reducer(g, { type: 'BUY_GUN', gun: 'pistol' });
+ok('gun purchase debits cash', g.cash === cashBeforeGun - 850);
+ok('gun owned', (g.guns.pistol ?? 0) === 1);
+ok('gun adds combat power', combatPower(g.guns) === 2);
+ok('gun takes coat space', gunSpace(g.guns) === 4 && spaceUsed(g) === 4);
+
+// Combat: drive a fight to resolution deterministically; outcome reproducible.
+function fightOut(seed: number) {
+  let s = initialState(seed, 'daily');
+  s = { ...s, guns: { magnum: 3 } }; // well-armed
+  // March until a cops encounter appears, then FIGHT to the end.
+  let guard = 0;
+  while (s.status === 'playing' && guard++ < 200) {
+    if (s.pendingEncounter) { s = reducer(s, { type: 'FIGHT' }); continue; }
+    s = reducer(s, { type: 'TRAVEL', location: s.location === 'bronx' ? 'ghetto' : 'bronx' });
+    if (s.notice) s = reducer(s, { type: 'DISMISS_NOTICE' });
+  }
+  return s;
+}
+ok('fight path reproducible', JSON.stringify(fightOut(7777)) === JSON.stringify(fightOut(7777)));
+
+// Death is reachable: unarmed, always FIGHT, across many seeds someone dies.
+function diesUnarmed(seed: number) {
+  let s = initialState(seed, 'daily');
+  let guard = 0;
+  while (s.status === 'playing' && guard++ < 300) {
+    if (s.pendingEncounter) { s = reducer(s, { type: 'FIGHT' }); continue; }
+    s = reducer(s, { type: 'TRAVEL', location: s.location === 'bronx' ? 'ghetto' : 'bronx' });
+    if (s.notice) s = reducer(s, { type: 'DISMISS_NOTICE' });
+  }
+  return s.status === 'dead';
+}
+let deaths = 0;
+for (let seed = 1; seed <= 80; seed++) if (diesUnarmed(seed)) deaths++;
+ok(`death is reachable (${deaths}/80 unarmed runs died)`, deaths > 0);
+
+// Can't act mid-fight: BUY is ignored while an encounter is pending.
+function midFight(seed: number) {
+  let s = initialState(seed, 'daily');
+  let guard = 0;
+  while (s.status === 'playing' && !s.pendingEncounter && guard++ < 200) {
+    s = reducer(s, { type: 'TRAVEL', location: s.location === 'bronx' ? 'ghetto' : 'bronx' });
+    if (s.notice) s = reducer(s, { type: 'DISMISS_NOTICE' });
+  }
+  return s;
+}
+let blocked = false;
+for (let seed = 1; seed <= 60 && !blocked; seed++) {
+  const s = midFight(seed);
+  if (s.pendingEncounter) {
+    const after = reducer(s, { type: 'BUY', drug: 'weed', qty: 5 });
+    blocked = after === s; // unchanged reference: action ignored
+  }
+}
+ok('actions blocked during a gunfight', blocked);
 
 console.log(failures === 0 ? '\nALL PASS' : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

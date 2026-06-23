@@ -2,6 +2,7 @@ import type { GameSnapshot } from '../data/types';
 import { DRUGS } from '../data/gameData';
 import type { GameState } from './types';
 import { spaceUsed } from './reducer';
+import { totalGuns } from './encounters';
 
 /**
  * Flatten GameState into the GameSnapshot the dumb list/stat components render.
@@ -16,7 +17,7 @@ export function toSnapshot(state: GameState): GameSnapshot {
     cash: state.cash,
     bank: state.bank,
     debt: state.debt,
-    guns: state.guns,
+    guns: totalGuns(state.guns),
     health: state.health,
     capacity: state.capacity,
     spaceUsed: spaceUsed(state),

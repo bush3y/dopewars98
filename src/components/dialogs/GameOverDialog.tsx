@@ -5,6 +5,7 @@ import { netWorth } from '../../engine/reducer';
 export function GameOverDialog() {
   const { state, dispatch, ui } = useGame();
   const score = netWorth(state);
+  const died = state.status === 'dead';
 
   const newGame = () => {
     ui.select(null);
@@ -12,9 +13,11 @@ export function GameOverDialog() {
   };
 
   return (
-    <Modal title="Game Over" onClose={() => {}} closable={false}>
+    <Modal title={died ? 'You Died' : 'Game Over'} onClose={() => {}} closable={false}>
       <p className="dlg__message">
-        Day {state.maxDays} is up. You're done dealing.
+        {died
+          ? `The cops gunned you down on day ${state.day}. Game over.`
+          : `Day ${state.maxDays} is up. You're done dealing.`}
       </p>
       <div className="dlg__stats dlg__stats--col">
         <div><span>Cash</span><b>{state.cash.toLocaleString()}</b></div>

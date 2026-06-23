@@ -79,6 +79,12 @@ export function MobileLayout() {
         </section>
       </main>
 
+      {state.gunShopOpen && (
+        <button type="button" className="gunshop-btn mobile__gunshop" onClick={() => ui.open('gun-shop')}>
+          🔫 Dan's Gun Shop is open
+        </button>
+      )}
+
       <nav className="mobile__actions">
         <button type="button" onClick={() => ui.open('travel')}>Travel</button>
         <button type="button" disabled={ui.selected == null} onClick={() => ui.open('buy')}>

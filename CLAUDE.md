@@ -18,10 +18,13 @@ emulator, no reskin. Modern features live behind the faithful core.
   screenshot; mobile portrait reflow renders the same data.
 - **Phase 1 (core loop): DONE.** Seedable PRNG, deterministic market, reducer
   (buy/sell/travel/bank/repay), daily interest, market events with own flavor
-  text, win on day 31 with net-worth score. Engine verified by
-  `scripts/verify-engine.ts`.
-- Next: **Phase 2 — encounters** (Officer Hardass/deputies, guns, health,
-  fight/run, muggings, found bonuses). Keyed RNG per BRIEF §6.
+  text, win on day 31 with net-worth score.
+- **Phase 2 (encounters): DONE.** Deterministic arrival encounters — Officer
+  Hardass + deputies (fight/run gunfight, keyed per round), muggings, found
+  cash/drugs; Dan's Gun Shop (guns take coat space, add combat power); health
+  and death ('dead' status). Engine verified by `scripts/verify-engine.ts`.
+- Next: **Phase 3 — persistence & polish** (save slots, high scores, end-of-run
+  net-worth chart, price sparklines, sound toggle). See BRIEF §7.
 
 ## Commands
 
@@ -51,17 +54,19 @@ npm run lint     # eslint
 
 - `data/` — `types.ts` (domain types + `GameSnapshot` seam), `gameData.ts`
   (drugs, locations), `economy.ts` (price ranges, interest, event flavor text),
-  `menu.ts` (shared menu structure for desktop bar + mobile drawer).
+  `guns.ts` (gun stats), `combat.ts` (encounter tuning + flavor text), `menu.ts`
+  (shared menu structure for desktop bar + mobile drawer).
 - `engine/` — pure game logic, no React. `rng.ts` (seedable PRNG + coord hash),
-  `market.ts` (deterministic price/event generation), `types.ts` (`GameState` +
-  `Action`), `reducer.ts` (the state machine + `initialState`/`netWorth`/
-  `spaceUsed`), `selectors.ts` (`toSnapshot`).
+  `market.ts` (deterministic price/event generation), `encounters.ts`
+  (deterministic arrival encounters + combat round resolvers), `types.ts`
+  (`GameState` + `Action`), `reducer.ts` (the state machine + `initialState`/
+  `netWorth`/`spaceUsed`), `selectors.ts` (`toSnapshot`).
 - `game/` — React glue. `GameContext.tsx` (`useReducer` + UI state: selection,
   open dialog), `menuActions.ts` (maps menu labels → actions).
 - `components/` — dumb presentation: `Led`, `HealthBar`, `StatPanel`,
   `SubwayGrid`, `MarketPane`, `TrenchcoatPane`, `MenuBar`, `MobileDrawer`,
   `DesktopWindow`, `MobileLayout`, `Modal`, `GameDialogs`, and `dialogs/*`
-  (Buy/Sell/Finances/Travel/Event/GameOver/NewGame).
+  (Buy/Sell/Finances/Travel/Notice/Encounter/GunShop/GameOver/NewGame).
 - `hooks/useDragWindow.ts` — titlebar drag (not resizable, by design).
 - `index.css` — all styling, layered on `98.css`. DSEG7 `@font-face` here;
   font files live in `public/fonts/` (SIL OFL, license included).

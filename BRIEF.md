@@ -162,7 +162,7 @@ Every player's world is byte-identical; only decisions differ.
   advance day, interest, price regen. No encounters. Win/lose on day 31. Seedable
   PRNG wired from the start. ✅ DONE
 - **Phase 2 — Encounters.** Officer Hardass / deputies, guns, health, fight/run,
-  muggings, found bonuses. Keyed RNG per §6.
+  muggings, found bonuses. Keyed RNG per §6. ✅ DONE
 - **Phase 3 — Persistence & polish.** Save slots, high scores, net-worth chart,
   sparklines, sound toggle.
 - **Phase 4 — Daily challenge.** Date-seeded mode, deterministic world, share.

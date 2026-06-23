@@ -39,6 +39,12 @@ export function SubwayGrid() {
         </button>
         <button type="button" onClick={() => ui.open('finances')}>Finances</button>
       </div>
+
+      {state.gunShopOpen && (
+        <button type="button" className="gunshop-btn" onClick={() => ui.open('gun-shop')}>
+          🔫 Dan's Gun Shop is open
+        </button>
+      )}
     </div>
   );
 }

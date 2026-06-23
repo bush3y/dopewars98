@@ -675,6 +675,48 @@ body {
   min-height: 44px;
 }
 
+/* --- Combat / encounter --------------------------------------------------- */
+.dlg__feedback {
+  margin: 0;
+  font-size: 12px;
+  font-style: italic;
+  color: #b30000;
+}
+.encounter__health {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.encounter__health .health__label {
+  font-size: 12px;
+}
+
+/* --- Gun shop ------------------------------------------------------------- */
+.gunshop-btn {
+  width: 100%;
+  margin-top: 8px;
+  min-height: 30px;
+  font-weight: 700;
+  color: #7a0000;
+}
+.mobile__gunshop {
+  margin: 0;
+  border-radius: 0;
+  min-height: 40px;
+}
+.grid.shop {
+  margin: 4px 0;
+}
+.grid.shop td,
+.grid.shop th {
+  padding: 3px 6px;
+}
+.shop__buy {
+  min-height: 22px;
+  min-width: 44px;
+  padding: 0 8px;
+}
+
 /* On a phone the modal sits a touch higher and uses larger tap targets. */
 @media (max-width: 640px) {
   .modal-scrim {

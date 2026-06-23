@@ -12,7 +12,7 @@ import type { Action, GameState } from '../engine/types';
 import { reducer, initialState } from '../engine/reducer';
 import { toSnapshot } from '../engine/selectors';
 
-export type DialogKind = 'buy' | 'sell' | 'finances' | 'new-game' | 'travel';
+export type DialogKind = 'buy' | 'sell' | 'finances' | 'new-game' | 'travel' | 'gun-shop';
 
 interface GameUi {
   /** Currently highlighted drug (drives Buy/Sell button enablement). */
