@@ -50,6 +50,9 @@ export function initialState(
     capacity: ECONOMY.capacity,
     inventory: {},
     market: prices,
+    priceHistory: Object.fromEntries(
+      Object.entries(prices).map(([id, p]) => [id, [p]]),
+    ) as GameState['priceHistory'],
     gunShopOpen: arrival.gunShopOpen, // shop may be open day 1, but no cops/loot
     pendingEncounter: null,
     notice: null,
@@ -67,6 +70,9 @@ export function reducer(state: GameState, action: Action): GameState {
   switch (action.type) {
     case 'NEW_GAME':
       return initialState(action.seed, action.mode ?? state.mode);
+
+    case 'LOAD_GAME':
+      return action.state;
 
     case 'DISMISS_NOTICE':
       return state.notice ? { ...state, notice: null } : state;
@@ -131,6 +137,12 @@ export function reducer(state: GameState, action: Action): GameState {
         cash,
         inventory,
         market: prices,
+        priceHistory: Object.fromEntries(
+          Object.entries(prices).map(([id, p]) => [
+            id,
+            [...(state.priceHistory[id as DrugId] ?? []), p],
+          ]),
+        ) as GameState['priceHistory'],
         gunShopOpen: arrival.gunShopOpen,
         pendingEncounter: arrival.cops,
         notice,

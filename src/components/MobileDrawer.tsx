@@ -44,7 +44,10 @@ export function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => 
                   onClose();
                 }}
               >
-                <span>{item.label}</span>
+                <span>
+                  {item.label === 'Sound On / Off' && game.settings.sound ? '✓ ' : ''}
+                  {item.label}
+                </span>
                 {item.phase && <span className="dropdown__hint">P{item.phase}</span>}
               </button>
             ))}

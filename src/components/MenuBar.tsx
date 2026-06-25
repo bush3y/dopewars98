@@ -61,7 +61,10 @@ export function MenuBar() {
                       setOpen(null);
                     }}
                   >
-                    <span>{item.label}</span>
+                    <span>
+                      {item.label === 'Sound On / Off' && game.settings.sound ? '✓ ' : ''}
+                      {item.label}
+                    </span>
                     {item.phase && <span className="dropdown__hint">P{item.phase}</span>}
                   </button>
                 </li>

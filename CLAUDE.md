@@ -22,9 +22,22 @@ emulator, no reskin. Modern features live behind the faithful core.
 - **Phase 2 (encounters): DONE.** Deterministic arrival encounters — Officer
   Hardass + deputies (fight/run gunfight, keyed per round), muggings, found
   cash/drugs; Dan's Gun Shop (guns take coat space, add combat power); health
-  and death ('dead' status). Engine verified by `scripts/verify-engine.ts`.
-- Next: **Phase 3 — persistence & polish** (save slots, high scores, end-of-run
-  net-worth chart, price sparklines, sound toggle). See BRIEF §7.
+  and death ('dead' status).
+- **Phase 3 (persistence & polish): DONE.** localStorage auto-save/restore +
+  3 named save slots + high-score table (`game/storage.ts`), end-of-run
+  net-worth chart, per-drug price sparklines (priceHistory in state), and a
+  synthesized-SFX sound toggle (`game/sound.ts`, Web Audio, no audio files).
+  Engine verified by `scripts/verify-engine.ts`.
+- Next: **Phase 4 — daily challenge** (date-seeded mode, deterministic world,
+  share string). The keyed RNG (BRIEF §6) is already in place. See BRIEF §7.
+
+## Build gotcha (this environment)
+
+The repo lives under iCloud-synced `~/Documents`, which makes `tsc -b` hang on
+its `.tsbuildinfo` write and slows `vite build` (and git) badly. To typecheck
+without the hang use `npx tsc --noEmit -p tsconfig.app.json` (no build-info
+write). For production bundles, stop the dev server first to free disk I/O.
+Moving the repo out of `~/Documents` would fix all of this.
 
 ## Commands
 
@@ -61,8 +74,10 @@ npm run lint     # eslint
   (deterministic arrival encounters + combat round resolvers), `types.ts`
   (`GameState` + `Action`), `reducer.ts` (the state machine + `initialState`/
   `netWorth`/`spaceUsed`), `selectors.ts` (`toSnapshot`).
-- `game/` — React glue. `GameContext.tsx` (`useReducer` + UI state: selection,
-  open dialog), `menuActions.ts` (maps menu labels → actions).
+- `game/` — React glue. `GameContext.tsx` (`useReducer` + UI state + persistence
+  + scores + settings), `menuActions.ts` (maps menu labels → actions),
+  `storage.ts` (versioned localStorage: current game / slots / scores /
+  settings), `sound.ts` (Web Audio SFX).
 - `components/` — dumb presentation: `Led`, `HealthBar`, `StatPanel`,
   `SubwayGrid`, `MarketPane`, `TrenchcoatPane`, `MenuBar`, `MobileDrawer`,
   `DesktopWindow`, `MobileLayout`, `Modal`, `GameDialogs`, and `dialogs/*`

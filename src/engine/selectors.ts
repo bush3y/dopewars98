@@ -21,7 +21,11 @@ export function toSnapshot(state: GameState): GameSnapshot {
     health: state.health,
     capacity: state.capacity,
     spaceUsed: spaceUsed(state),
-    market: DRUGS.map((d) => ({ drug: d.id, price: state.market[d.id] })),
+    market: DRUGS.map((d) => ({
+      drug: d.id,
+      price: state.market[d.id],
+      history: state.priceHistory[d.id] ?? [state.market[d.id]],
+    })),
     trenchcoat: DRUGS.filter((d) => state.inventory[d.id]).map((d) => ({
       drug: d.id,
       qty: state.inventory[d.id]!.qty,

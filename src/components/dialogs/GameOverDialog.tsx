@@ -1,6 +1,7 @@
 import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
 import { netWorth } from '../../engine/reducer';
+import { NetWorthChart } from '../NetWorthChart';
 
 export function GameOverDialog() {
   const { state, dispatch, ui } = useGame();
@@ -28,6 +29,7 @@ export function GameOverDialog() {
           <b className={score >= 0 ? 'pos' : 'neg'}>{score.toLocaleString()}</b>
         </div>
       </div>
+      <NetWorthChart data={state.netWorthHistory} />
       <div className="dlg__actions">
         <button type="button" onClick={newGame}>New Game</button>
       </div>

@@ -8,6 +8,9 @@ import { EncounterDialog } from './dialogs/EncounterDialog';
 import { GunShopDialog } from './dialogs/GunShopDialog';
 import { GameOverDialog } from './dialogs/GameOverDialog';
 import { NewGameDialog } from './dialogs/NewGameDialog';
+import { SaveLoadDialog } from './dialogs/SaveLoadDialog';
+import { HighScoresDialog } from './dialogs/HighScoresDialog';
+import { ChartDialog } from './dialogs/ChartDialog';
 
 /**
  * Single overlay layer rendered once at the app root, above both layouts.
@@ -32,6 +35,14 @@ export function GameDialogs() {
       return <TravelDialog />;
     case 'gun-shop':
       return <GunShopDialog />;
+    case 'save':
+      return <SaveLoadDialog mode="save" />;
+    case 'load':
+      return <SaveLoadDialog mode="load" />;
+    case 'scores':
+      return <HighScoresDialog />;
+    case 'chart':
+      return <ChartDialog />;
     case 'new-game':
       return <NewGameDialog />;
     default:

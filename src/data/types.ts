@@ -36,6 +36,8 @@ export interface Location {
 export interface MarketEntry {
   drug: DrugId;
   price: number;
+  /** Prices seen for this drug over the run, for the inline sparkline. */
+  history: number[];
 }
 
 /** A row in the "Trenchcoat" inventory pane. */

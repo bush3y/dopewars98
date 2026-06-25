@@ -717,6 +717,110 @@ body {
   padding: 0 8px;
 }
 
+/* --- Sparklines (market trend column) ------------------------------------- */
+.grid__col-spark {
+  width: 60px;
+  text-align: center;
+  padding: 0 4px !important;
+}
+.sparkline {
+  display: block;
+  margin: 0 auto;
+}
+.sparkline line,
+.sparkline polyline {
+  stroke: #555;
+  stroke-width: 1;
+}
+.sparkline--up polyline {
+  stroke: #0b8a0b;
+}
+.sparkline--down polyline {
+  stroke: #b30000;
+}
+.is-selected .sparkline polyline,
+.is-selected .sparkline line {
+  stroke: #fff;
+}
+
+/* --- Net-worth chart ------------------------------------------------------ */
+.chart {
+  background: #fff;
+  border: 2px inset #c0c0c0;
+  padding: 4px;
+}
+.chart--empty {
+  text-align: center;
+  color: #808080;
+  font-style: italic;
+  padding: 24px 4px;
+}
+.chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.chart__zero {
+  stroke: #c0c0c0;
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+}
+.chart__line {
+  stroke: #0000c0;
+  stroke-width: 1.5;
+}
+.chart__dot {
+  fill: #0000c0;
+}
+.chart__axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #555;
+  padding: 2px 2px 0;
+}
+
+/* --- Save slots ----------------------------------------------------------- */
+.slots {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid #aaa;
+  padding: 6px 8px;
+  background: #fff;
+}
+.slot__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.slot__meta {
+  font-size: 11px;
+  color: #444;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slot__meta--empty {
+  font-style: italic;
+  color: #999;
+}
+.slot button {
+  min-width: 84px;
+  min-height: 28px;
+}
+
+.grid.scores th,
+.grid.scores td {
+  padding: 2px 8px;
+}
+
 /* On a phone the modal sits a touch higher and uses larger tap targets. */
 @media (max-width: 640px) {
   .modal-scrim {

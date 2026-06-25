@@ -1,5 +1,6 @@
 import { DRUG_NAME } from '../data/gameData';
 import type { DrugId, MarketEntry } from '../data/types';
+import { Sparkline } from './Sparkline';
 
 /** The "Available drugs" list. Rows are selectable to drive Buy/Sell. */
 export function MarketPane({
@@ -22,6 +23,7 @@ export function MarketPane({
           <thead>
             <tr>
               <th className="grid__col-name">Drug</th>
+              <th className="grid__col-spark">Trend</th>
               <th className="grid__col-num">Price</th>
             </tr>
           </thead>
@@ -36,6 +38,9 @@ export function MarketPane({
                 <td>
                   {held?.[row.drug] && <span className="grid__held" aria-label="held">●</span>}
                   {DRUG_NAME[row.drug]}
+                </td>
+                <td className="grid__col-spark">
+                  <Sparkline data={row.history} />
                 </td>
                 <td className="grid__col-num">{row.price.toLocaleString('en-US')}</td>
               </tr>

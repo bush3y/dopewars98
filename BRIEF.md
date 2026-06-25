@@ -164,7 +164,7 @@ Every player's world is byte-identical; only decisions differ.
 - **Phase 2 — Encounters.** Officer Hardass / deputies, guns, health, fight/run,
   muggings, found bonuses. Keyed RNG per §6. ✅ DONE
 - **Phase 3 — Persistence & polish.** Save slots, high scores, net-worth chart,
-  sparklines, sound toggle.
+  sparklines, sound toggle. ✅ DONE
 - **Phase 4 — Daily challenge.** Date-seeded mode, deterministic world, share.
 - **Phase 5 — iOS.** Capacitor wrap. Portrait reflow (§8).
 

@@ -34,6 +34,8 @@ export interface GameState {
   inventory: Partial<Record<DrugId, Holding>>;
   /** Today's prices at the current location. */
   market: Record<DrugId, number>;
+  /** Per-drug sequence of prices seen as you travelled, for sparklines. */
+  priceHistory: Record<DrugId, number[]>;
   /** Dan's Gun Shop is open here today. */
   gunShopOpen: boolean;
   /** Active cops fight awaiting Fight/Run, or null. */
@@ -47,6 +49,7 @@ export interface GameState {
 
 export type Action =
   | { type: 'NEW_GAME'; seed?: number; mode?: GameMode }
+  | { type: 'LOAD_GAME'; state: GameState }
   | { type: 'TRAVEL'; location: LocationId }
   | { type: 'BUY'; drug: DrugId; qty: number }
   | { type: 'SELL'; drug: DrugId; qty: number }
