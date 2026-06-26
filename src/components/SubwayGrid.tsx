@@ -40,11 +40,15 @@ export function SubwayGrid() {
         <button type="button" onClick={() => ui.open('finances')}>Finances</button>
       </div>
 
-      {state.gunShopOpen && (
-        <button type="button" className="gunshop-btn" onClick={() => ui.open('gun-shop')}>
-          🔫 Dan's Gun Shop is open
-        </button>
-      )}
+      {/* Always shown so the shop reads as periodic, not gone — dimmed when shut. */}
+      <button
+        type="button"
+        className="gunshop-btn"
+        disabled={!state.gunShopOpen}
+        onClick={() => ui.open('gun-shop')}
+      >
+        {state.gunShopOpen ? "🔫 Dan's Gun Shop is open" : '🔒 Gun Shop closed'}
+      </button>
     </div>
   );
 }

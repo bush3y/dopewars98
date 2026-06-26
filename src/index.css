@@ -725,6 +725,11 @@ body {
   font-weight: 700;
   color: #7a0000;
 }
+/* Closed: dimmed, normal weight — clearly "not available right now". */
+.gunshop-btn:disabled {
+  color: #808080;
+  font-weight: 400;
+}
 .mobile__gunshop {
   margin: 0;
   border-radius: 0;
