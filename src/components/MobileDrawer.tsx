@@ -45,8 +45,8 @@ export function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => 
                 }}
               >
                 <span>
-                  {item.mode ? (game.state.mode === item.mode ? '● ' : '○ ') : ''}
-                  {item.label === 'Sound On / Off' && game.settings.sound ? '✓ ' : ''}
+                  {((item.mode && game.state.mode === item.mode) ||
+                    (item.label === 'Sound On / Off' && game.settings.sound)) ? '✓ ' : ''}
                   {item.label}
                 </span>
                 {item.phase && <span className="dropdown__hint">P{item.phase}</span>}
