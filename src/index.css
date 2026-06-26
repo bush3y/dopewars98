@@ -581,10 +581,36 @@ body {
 }
 .dw-footer__mode {
   margin-right: auto;
-  font-size: 11px;
-  color: #404040;
   align-self: center;
-  padding-left: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 8px;
+  color: #fff;
+}
+/* Free Play = calm blue; Daily = attention-grabbing amber. */
+.dw-footer__mode--classic {
+  background: #000080;
+}
+.dw-footer__mode--daily {
+  background: #b8860b;
+}
+
+/* Mobile mode badge (top-right of the header). */
+.mobile__mode {
+  width: fit-content;
+  margin: -2px 0 6px auto;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 10px;
+  color: #fff;
+}
+.mobile__mode--classic {
+  background: #000080;
+}
+.mobile__mode--daily {
+  background: #b8860b;
 }
 
 /* ===========================================================================

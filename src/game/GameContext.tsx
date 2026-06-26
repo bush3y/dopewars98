@@ -22,6 +22,7 @@ import {
   loadSettings,
   saveSettings,
   saveDailyResult,
+  saveDailyGame,
   type ScoreEntry,
   type Settings,
 } from './storage';
@@ -96,9 +97,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
     rawDispatch(action);
   }, []);
 
-  // Auto-save the active game on every change.
+  // Auto-save the active game on every change. While today's daily is the active
+  // run, also persist it separately so leaving and returning resumes it (never
+  // restarts — the world is deterministic, so a restart would be save-scumming).
   useEffect(() => {
     saveCurrent(state);
+    const key = todayKey();
+    if (state.mode === 'daily' && state.seed === dailySeed(key) && state.status === 'playing') {
+      saveDailyGame(key, state);
+    }
   }, [state]);
 
   // Outcome sounds + high-score recording on transitions.

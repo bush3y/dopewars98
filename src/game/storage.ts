@@ -11,6 +11,7 @@ const KEY = {
   scores: 'dw:scores',
   settings: 'dw:settings',
   daily: 'dw:daily',
+  dailyGame: 'dw:dailygame',
 };
 
 export const SLOT_COUNT = 3;
@@ -143,6 +144,26 @@ export function saveDailyResult(result: DailyResult): void {
     all[result.date] = result;
     write(KEY.daily, all);
   }
+}
+
+// The in-progress daily run, persisted separately from the active "current"
+// game so switching to Free Play and back resumes it (never restarts). The
+// deterministic world means restarting would be save-scumming with foreknowledge.
+
+interface DailyGameEnvelope {
+  version: number;
+  date: string;
+  state: GameState;
+}
+
+export function saveDailyGame(date: string, state: GameState): void {
+  write(KEY.dailyGame, { version: VERSION, date, state });
+}
+
+/** The saved in-progress daily for `date`, if any (and schema-compatible). */
+export function loadDailyGame(date: string): GameState | null {
+  const env = read<DailyGameEnvelope>(KEY.dailyGame);
+  return env && env.version === VERSION && env.date === date ? env.state : null;
 }
 
 // --- Settings ---------------------------------------------------------------

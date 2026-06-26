@@ -5,6 +5,7 @@ import { MarketPane } from './MarketPane';
 import { TrenchcoatPane } from './TrenchcoatPane';
 import { MobileDrawer } from './MobileDrawer';
 import { useGame } from '../game/GameContext';
+import { modeLabel } from '../game/daily';
 
 /**
  * Portrait reflow (BRIEF.md §2). Full-bleed with safe-area insets and softened
@@ -35,6 +36,9 @@ export function MobileLayout() {
           </button>
           <span className="mobile__brand">DOPE WARS</span>
           <span className="mobile__day">Day {snap.day} / {snap.maxDays}</span>
+        </div>
+        <div className={`mobile__mode mobile__mode--${state.mode}`}>
+          {modeLabel(state.mode, state.seed)}
         </div>
 
         <div className="mobile__stats">

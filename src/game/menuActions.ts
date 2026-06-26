@@ -8,8 +8,11 @@ type Game = ReturnType<typeof useGame>;
  */
 export function runMenuItem(label: string, game: Game): void {
   switch (label) {
-    case 'New Game':
+    case 'Free Play':
       game.ui.open('new-game');
+      break;
+    case 'Daily Challenge':
+      game.ui.open('daily');
       break;
     case 'Save Game':
       game.ui.open('save');
@@ -25,9 +28,6 @@ export function runMenuItem(label: string, game: Game): void {
       break;
     case 'Net Worth Chart':
       game.ui.open('chart');
-      break;
-    case 'Daily Challenge':
-      game.ui.open('daily');
       break;
     case 'Sound On / Off':
       game.toggleSound();

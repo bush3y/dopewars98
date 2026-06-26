@@ -62,6 +62,7 @@ export function MenuBar() {
                     }}
                   >
                     <span>
+                      {item.mode ? (game.state.mode === item.mode ? '● ' : '○ ') : ''}
                       {item.label === 'Sound On / Off' && game.settings.sound ? '✓ ' : ''}
                       {item.label}
                     </span>

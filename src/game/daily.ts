@@ -3,7 +3,7 @@
 // keyed RNG, so "daily" is just: pick today's seed, then share a spoiler-free
 // result.
 
-import type { GameStatus } from '../engine/types';
+import type { GameStatus, GameMode } from '../engine/types';
 
 /** Local-date key, e.g. "2026-06-26". */
 export function todayKey(d: Date = new Date()): string {
@@ -16,6 +16,17 @@ export function todayKey(d: Date = new Date()): string {
 /** Deterministic seed from a date key: 2026-06-26 → 20260626. */
 export function dailySeed(key: string = todayKey()): number {
   return Number(key.replace(/-/g, ''));
+}
+
+/** Inverse: a daily seed back to its date label, 20260626 → "2026-06-26". */
+export function seedDateLabel(seed: number): string {
+  const s = String(seed);
+  return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`;
+}
+
+/** Human label for the active mode (used in the title bar / footer). */
+export function modeLabel(mode: GameMode, seed: number): string {
+  return mode === 'daily' ? `Daily ${seedDateLabel(seed)}` : 'Free Play';
 }
 
 const BLOCKS = '▁▂▃▄▅▆▇█';

@@ -2,23 +2,36 @@ import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
 import { DailyShare } from '../DailyShare';
 import { todayKey, dailySeed } from '../../game/daily';
-import { loadDailyResult } from '../../game/storage';
+import { loadDailyResult, loadDailyGame } from '../../game/storage';
 
 /**
  * Daily challenge: everyone plays the identical 31 days seeded by today's date
- * (BRIEF §6). Play-once — once finished, shows the spoiler-free shareable result.
+ * (BRIEF §6). Start it once, resume it anytime (never restart — the world is
+ * deterministic, so restarting would be save-scumming), and it's locked once
+ * finished. Then share the spoiler-free result.
  */
 export function DailyDialog() {
   const { state, dispatch, ui } = useGame();
   const key = todayKey();
   const seed = dailySeed(key);
-  const result = loadDailyResult(key);
-  const inProgress = state.mode === 'daily' && state.seed === seed && state.status === 'playing';
-  const gameRunning = state.status === 'playing' && !(state.mode === 'daily' && state.seed === seed);
 
-  const play = () => {
+  const result = loadDailyResult(key);
+  const saved = loadDailyGame(key);
+  const activeIsToday = state.mode === 'daily' && state.seed === seed && state.status === 'playing';
+  const inProgress = !result && (activeIsToday || !!saved);
+  // A non-daily game is currently going and would be replaced by a fresh start.
+  const gameRunning = state.status === 'playing' && !activeIsToday;
+
+  const start = () => {
     ui.select(null);
     dispatch({ type: 'NEW_GAME', seed, mode: 'daily' });
+    ui.close();
+  };
+
+  const resume = () => {
+    ui.select(null);
+    // If it's already the active game, just close back to it; otherwise load it.
+    if (!activeIsToday && saved) dispatch({ type: 'LOAD_GAME', state: saved });
     ui.close();
   };
 
@@ -31,9 +44,12 @@ export function DailyDialog() {
         </>
       ) : inProgress ? (
         <>
-          <p className="dlg__message">Today's challenge is in progress — good luck out there.</p>
+          <p className="dlg__message">
+            Today's challenge is underway — pick up where you left off. (You can't restart it.)
+          </p>
           <div className="dlg__actions">
-            <button type="button" onClick={ui.close}>Resume</button>
+            <button type="button" onClick={resume}>Resume Today's Challenge</button>
+            <button type="button" onClick={ui.close}>Cancel</button>
           </div>
         </>
       ) : (
@@ -41,11 +57,13 @@ export function DailyDialog() {
           <p className="dlg__message">
             Everyone plays the same 31 days today. One run, one score — then share it.
           </p>
-          {gameRunning && (
-            <p className="dlg__feedback">Starting it will replace your current game.</p>
-          )}
+          <p className="dlg__feedback">
+            {gameRunning
+              ? 'Starting it will replace your current game. Once started, you commit to today’s run — no restarts.'
+              : 'Once started, you commit to today’s run — you can resume it but not restart it.'}
+          </p>
           <div className="dlg__actions">
-            <button type="button" onClick={play}>Play Today's Challenge</button>
+            <button type="button" onClick={start}>Play Today's Challenge</button>
             <button type="button" onClick={ui.close}>Cancel</button>
           </div>
         </>

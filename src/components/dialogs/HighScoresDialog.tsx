@@ -24,7 +24,7 @@ export function HighScoresDialog() {
                 <td className="grid__col-num">{i + 1}</td>
                 <td className="grid__col-num">{s.score.toLocaleString()}</td>
                 <td>{s.status === 'dead' ? `died d${s.day}` : 'survived'}</td>
-                <td>{s.mode}</td>
+                <td>{s.mode === 'daily' ? 'Daily' : 'Free Play'}</td>
               </tr>
             ))}
           </tbody>

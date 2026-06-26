@@ -13,10 +13,10 @@ export function NewGameDialog() {
   };
 
   return (
-    <Modal title="New Game" onClose={ui.close}>
-      <p className="dlg__message">Start a new game? Your current progress will be lost.</p>
+    <Modal title="New Free Play Game" onClose={ui.close}>
+      <p className="dlg__message">Start a new Free Play game? Your current progress will be lost.</p>
       <div className="dlg__actions">
-        <button type="button" onClick={confirm}>New Game</button>
+        <button type="button" onClick={confirm}>Start</button>
         <button type="button" onClick={ui.close}>Cancel</button>
       </div>
     </Modal>

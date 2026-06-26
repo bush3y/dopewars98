@@ -6,6 +6,7 @@ import { MarketPane } from './MarketPane';
 import { TrenchcoatPane } from './TrenchcoatPane';
 import { useDragWindow } from '../hooks/useDragWindow';
 import { useGame } from '../game/GameContext';
+import { modeLabel } from '../game/daily';
 
 /**
  * The faithful square game window (BRIEF.md §2): a fixed-size 98.css window,
@@ -23,7 +24,7 @@ export function DesktopWindow() {
     <div className="window dw-window" ref={ref}>
       <div className="title-bar" {...titlebarProps}>
         <div className="title-bar-text">
-          Dope Wars, Day {snap.day} of {snap.maxDays}
+          Dope Wars — {modeLabel(state.mode, state.seed)} — Day {snap.day} of {snap.maxDays}
         </div>
         <div className="title-bar-controls">
           <button aria-label="Minimize" />
@@ -58,8 +59,8 @@ export function DesktopWindow() {
       </div>
 
       <div className="status-bar dw-footer">
-        <span className="dw-footer__mode">
-          {state.mode === 'daily' ? 'Daily' : 'Classic'}
+        <span className={`dw-footer__mode dw-footer__mode--${state.mode}`}>
+          {state.mode === 'daily' ? 'Daily Challenge' : 'Free Play'}
         </span>
         <button type="button" onClick={() => ui.open('new-game')}>New Game</button>
         <button type="button" onClick={() => ui.open('new-game')}>Exit</button>
