@@ -5,17 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    watch: {
-      // This project lives under ~/Documents, which is iCloud-synced. iCloud's
-      // background sync fires phantom filesystem events (without changing file
-      // mtimes), which Vite's default FSEvents watcher mistakes for edits and
-      // force-reloads on every minute or two. Polling compares mtimes — which
-      // are stable — so it ignores the iCloud noise and only reacts to real
-      // edits. (Proper long-term fix: move the repo out of ~/Documents.)
-      usePolling: true,
-      interval: 400,
-      ignored: ['**/dist/**'],
-    },
+    // Don't let a production `npm run build` (which writes into dist/) reload a
+    // live dev session.
+    watch: { ignored: ['**/dist/**'] },
   },
   build: {
     // This rolldown-vite version's CSS minifiers crash on our stylesheet
