@@ -848,6 +848,15 @@ body {
 }
 
 /* --- Daily challenge share ------------------------------------------------ */
+.dlg__streak {
+  margin: 0;
+  font-size: 14px;
+}
+.dlg__streak-best {
+  color: #555;
+  font-size: 12px;
+}
+
 .share {
   display: flex;
   flex-direction: column;

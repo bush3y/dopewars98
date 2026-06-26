@@ -23,11 +23,15 @@ import {
   saveSettings,
   saveDailyResult,
   saveDailyGame,
+  loadDailyResult,
+  loadStreak,
+  recordStreak,
   type ScoreEntry,
   type Settings,
+  type DailyStreak,
 } from './storage';
 import { setSoundEnabled, playSfx, type Sfx } from './sound';
-import { todayKey, dailySeed } from './daily';
+import { todayKey, dailySeed, isWin } from './daily';
 
 export type DialogKind =
   | 'buy'
@@ -56,6 +60,7 @@ interface GameContextValue {
   dispatch: Dispatch<Action>;
   ui: GameUi;
   scores: ScoreEntry[];
+  streak: DailyStreak;
   settings: Settings;
   toggleSound: () => void;
   /** Re-read save slots / scores after a write, to refresh dialogs. */
@@ -81,6 +86,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [selected, setSelected] = useState<DrugId | null>(null);
   const [dialog, setDialog] = useState<DialogKind | null>(null);
   const [scores, setScores] = useState<ScoreEntry[]>(() => loadScores());
+  const [streak, setStreak] = useState<DailyStreak>(() => loadStreak());
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [bump, setBump] = useState(0);
 
@@ -129,18 +135,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
             date: Date.now(),
           }),
         );
-        // If this run was today's daily, record it (play-once per date).
+        // If this run was today's daily and not already recorded, record it
+        // (play-once) and update the win streak.
         const key = todayKey();
-        if (state.mode === 'daily' && state.seed === dailySeed(key)) {
+        const score = netWorth(state);
+        if (state.mode === 'daily' && state.seed === dailySeed(key) && !loadDailyResult(key)) {
           saveDailyResult({
             date: key,
             seed: state.seed,
-            score: netWorth(state),
+            score,
             status: state.status,
             day: state.day,
             history: state.netWorthHistory,
             playedAt: Date.now(),
           });
+          setStreak(recordStreak(key, isWin(state.status, score)));
         }
       }
       prevStatus.current = state.status;
@@ -170,12 +179,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
         close: () => setDialog(null),
       },
       scores,
+      streak,
       settings,
       toggleSound,
       bump,
       refresh: () => setBump((b) => b + 1),
     }),
-    [state, dispatch, selected, dialog, scores, settings, toggleSound, bump],
+    [state, dispatch, selected, dialog, scores, streak, settings, toggleSound, bump],
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

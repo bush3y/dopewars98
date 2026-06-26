@@ -11,7 +11,7 @@ import { loadDailyResult, loadDailyGame } from '../../game/storage';
  * finished. Then share the spoiler-free result.
  */
 export function DailyDialog() {
-  const { state, dispatch, ui } = useGame();
+  const { state, dispatch, ui, streak } = useGame();
   const key = todayKey();
   const seed = dailySeed(key);
 
@@ -40,7 +40,11 @@ export function DailyDialog() {
       {result ? (
         <>
           <p className="dlg__message">You've finished today's challenge. Come back tomorrow for a new one.</p>
-          <DailyShare data={result} />
+          <p className="dlg__streak">
+            🔥 Streak: <b>{streak.current}</b>
+            {streak.best > 0 && <span className="dlg__streak-best"> (best {streak.best})</span>}
+          </p>
+          <DailyShare data={result} streak={streak.current} />
         </>
       ) : inProgress ? (
         <>
@@ -55,8 +59,12 @@ export function DailyDialog() {
       ) : (
         <>
           <p className="dlg__message">
-            Everyone plays the same 31 days today. One run, one score — then share it.
+            Everyone plays the same 31 days today. <b>Goal:</b> beat the loan shark — reach
+            day 31 in the black (positive net worth). Win to keep your streak alive.
           </p>
+          {streak.current > 0 && (
+            <p className="dlg__streak">🔥 Current streak: <b>{streak.current}</b></p>
+          )}
           <p className="dlg__feedback">
             {gameRunning
               ? 'Starting it will replace your current game. Once started, you commit to today’s run — no restarts.'

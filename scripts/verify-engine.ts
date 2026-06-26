@@ -204,5 +204,17 @@ ok('sparkline non-empty block chars', spark.length === 6 && /[▁▂▃▄▅▆
 const share = makeShareString({ date: '2026-06-26', score: 12345, status: 'won', day: 31, history: [1, 9, 4] });
 ok('share has date + score, no prices leaked', share.includes('2026-06-26') && share.includes('12,345') && !share.toLowerCase().includes('cocaine'));
 
+// Win/lose objective: beat the loan shark (survive in the black).
+const { outcome, isWin, prevKey } = await import('../src/game/daily');
+ok('survive in the black = win', outcome('won', 5000) === 'win' && isWin('won', 5000));
+ok('survive in the red = loss', outcome('won', -100) === 'red' && !isWin('won', -100));
+ok('survive at zero = loss (not strictly positive)', outcome('won', 0) === 'red');
+ok('death = busted (loss)', outcome('dead', 9999) === 'busted' && !isWin('dead', 9999));
+ok('prevKey steps back a day (incl. month boundary)', prevKey('2026-07-01') === '2026-06-30');
+const wonShare = makeShareString({ date: '2026-06-26', score: 12345, status: 'won', day: 31, history: [1, 9, 4] }, 5);
+ok('win share shows streak + ✅', wonShare.includes('🔥 Streak: 5') && wonShare.includes('✅'));
+const redShare = makeShareString({ date: '2026-06-26', score: -3500, status: 'won', day: 31, history: [1, -2] });
+ok('red share shows -$ and 📉', redShare.includes('-$3,500') && redShare.includes('📉'));
+
 console.log(failures === 0 ? '\nALL PASS' : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

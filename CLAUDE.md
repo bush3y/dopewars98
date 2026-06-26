@@ -40,6 +40,13 @@ emulator, no reskin. Modern features live behind the faithful core.
     in-progress daily is persisted separately (`saveDailyGame`/`loadDailyGame`)
     so leaving and returning resumes it, and it locks once finished. This blocks
     save-scumming a deterministic world.
+  - **Win/lose objective** (`outcome()` in `daily.ts`, both modes): WIN =
+    survive to day 31 in the black (net worth > 0); LOSS = died, or survived in
+    the red. Surfaced in the Game Over title/copy, the share string (✅/📉/💀),
+    and high scores. A **daily win streak** (`recordStreak`, Wordle-style:
+    consecutive winning days; a loss or skipped day resets it) shows on the
+    result/share. The win bar is one function — easy to retune (e.g. a par)
+    later.
 - Next: **Phase 5 — iOS** (Capacitor wrap; the mobile portrait layout is ready).
   See BRIEF §7–§8.
 

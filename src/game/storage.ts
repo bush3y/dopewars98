@@ -1,4 +1,5 @@
 import type { GameState, GameMode, GameStatus } from '../engine/types';
+import { prevKey } from './daily';
 
 // Versioned localStorage persistence: the active game (auto-saved), named save
 // slots, a high-score table, and settings. The schema version guards against
@@ -12,6 +13,7 @@ const KEY = {
   settings: 'dw:settings',
   daily: 'dw:daily',
   dailyGame: 'dw:dailygame',
+  streak: 'dw:streak',
 };
 
 export const SLOT_COUNT = 3;
@@ -164,6 +166,38 @@ export function saveDailyGame(date: string, state: GameState): void {
 export function loadDailyGame(date: string): GameState | null {
   const env = read<DailyGameEnvelope>(KEY.dailyGame);
   return env && env.version === VERSION && env.date === date ? env.state : null;
+}
+
+// --- Daily win streak -------------------------------------------------------
+
+export interface DailyStreak {
+  current: number;
+  best: number;
+  /** Date of the most recent winning daily (for consecutive-day continuity). */
+  lastWinDate: string | null;
+}
+
+const NO_STREAK: DailyStreak = { current: 0, best: 0, lastWinDate: null };
+
+export function loadStreak(): DailyStreak {
+  return read<DailyStreak>(KEY.streak) ?? NO_STREAK;
+}
+
+/**
+ * Update the streak for a finished daily. A win on a day extends the streak only
+ * if the previous calendar day was also a win (skipping a day or losing resets
+ * it — Wordle-style). Returns the new streak.
+ */
+export function recordStreak(date: string, won: boolean): DailyStreak {
+  const s = loadStreak();
+  const current = won ? (s.lastWinDate === prevKey(date) ? s.current + 1 : 1) : 0;
+  const next: DailyStreak = {
+    current,
+    best: Math.max(s.best, current),
+    lastWinDate: won ? date : s.lastWinDate,
+  };
+  write(KEY.streak, next);
+  return next;
 }
 
 // --- Settings ---------------------------------------------------------------

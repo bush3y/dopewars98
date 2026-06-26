@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { makeShareString, type ShareData } from '../game/daily';
 
 /** Spoiler-free shareable result with copy-to-clipboard (Wordle-style). */
-export function DailyShare({ data }: { data: ShareData }) {
+export function DailyShare({ data, streak = 0 }: { data: ShareData; streak?: number }) {
   const [copied, setCopied] = useState(false);
-  const text = makeShareString(data);
+  const text = makeShareString(data, streak);
 
   const copy = async () => {
     try {
