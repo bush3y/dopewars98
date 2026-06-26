@@ -27,14 +27,19 @@ ok('ecstasy within range', m.prices.ecstasy >= 11 && m.prices.ecstasy <= 60);
 
 // 3. Events fire deterministically and only on `expensive`/`cheap` drugs.
 let events = 0;
+let dearOk = true;
+let placeholderLeak = false;
 for (let day = 1; day <= 2000; day++) {
   const r = generateMarket(7, day, 'ghetto');
   if (r.event) {
     events++;
-    if (r.event.kind === 'expensive')
-      ok('expensive event on dear drug', ['cocaine', 'heroin'].includes(r.event.drug));
+    if (r.event.kind === 'expensive' && !['cocaine', 'heroin'].includes(r.event.drug)) dearOk = false;
+    // Regression: the {drug} placeholder must be substituted before display.
+    if (r.event.message.includes('{')) placeholderLeak = true;
   }
 }
+ok('expensive events only on dear drugs', dearOk);
+ok('event messages have no unfilled {placeholder}', !placeholderLeak);
 ok(`event rate ~18% (got ${(events / 2000 * 100).toFixed(1)}%)`, events > 280 && events < 440);
 
 // 4. Reducer playthrough.

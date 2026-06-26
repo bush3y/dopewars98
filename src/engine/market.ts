@@ -1,5 +1,5 @@
 import type { DrugId, LocationId } from '../data/types';
-import { DRUGS } from '../data/gameData';
+import { DRUGS, DRUG_NAME } from '../data/gameData';
 import {
   DRUG_ECONOMY,
   EXPENSIVE_EVENT,
@@ -65,7 +65,9 @@ export function generateMarket(
       event = {
         drug,
         kind: expensive ? 'expensive' : 'cheap',
-        message: er.pick(template.messages),
+        // Fill the {drug} placeholder here so the final message is display-ready
+        // (the unified NoticeDialog shows it verbatim).
+        message: er.pick(template.messages).replace('{drug}', DRUG_NAME[drug]),
       };
     }
   }
