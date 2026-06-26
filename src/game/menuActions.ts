@@ -26,10 +26,13 @@ export function runMenuItem(label: string, game: Game): void {
     case 'Net Worth Chart':
       game.ui.open('chart');
       break;
+    case 'Daily Challenge':
+      game.ui.open('daily');
+      break;
     case 'Sound On / Off':
       game.toggleSound();
       break;
-    // Daily Challenge (P4), Price Sparklines (always-on now), Help — later/N/A.
+    // Help — later/N/A.
     default:
       break;
   }

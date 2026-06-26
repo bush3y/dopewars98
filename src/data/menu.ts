@@ -32,9 +32,9 @@ export const MENUS: Menu[] = [
     accel: 0,
     items: [
       { label: 'Finances' },
+      { label: 'Daily Challenge' },
       { label: 'High Scores' },
       { label: 'Net Worth Chart' },
-      { label: 'Daily Challenge', phase: 4 },
     ],
   },
   {

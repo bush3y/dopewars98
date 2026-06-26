@@ -6,7 +6,9 @@ export function NewGameDialog() {
   const { dispatch, ui } = useGame();
   const confirm = () => {
     ui.select(null);
-    dispatch({ type: 'NEW_GAME' });
+    // A plain New Game is always classic with a fresh random seed; the daily is
+    // entered only via the Daily Challenge flow.
+    dispatch({ type: 'NEW_GAME', mode: 'classic' });
     ui.close();
   };
 

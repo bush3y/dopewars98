@@ -21,10 +21,12 @@ import {
   addScore,
   loadSettings,
   saveSettings,
+  saveDailyResult,
   type ScoreEntry,
   type Settings,
 } from './storage';
 import { setSoundEnabled, playSfx, type Sfx } from './sound';
+import { todayKey, dailySeed } from './daily';
 
 export type DialogKind =
   | 'buy'
@@ -36,7 +38,8 @@ export type DialogKind =
   | 'save'
   | 'load'
   | 'scores'
-  | 'chart';
+  | 'chart'
+  | 'daily';
 
 interface GameUi {
   selected: DrugId | null;
@@ -119,6 +122,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
             date: Date.now(),
           }),
         );
+        // If this run was today's daily, record it (play-once per date).
+        const key = todayKey();
+        if (state.mode === 'daily' && state.seed === dailySeed(key)) {
+          saveDailyResult({
+            date: key,
+            seed: state.seed,
+            score: netWorth(state),
+            status: state.status,
+            day: state.day,
+            history: state.netWorthHistory,
+            playedAt: Date.now(),
+          });
+        }
       }
       prevStatus.current = state.status;
     }

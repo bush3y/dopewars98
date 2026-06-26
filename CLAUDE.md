@@ -27,17 +27,22 @@ emulator, no reskin. Modern features live behind the faithful core.
   3 named save slots + high-score table (`game/storage.ts`), end-of-run
   net-worth chart, per-drug price sparklines (priceHistory in state), and a
   synthesized-SFX sound toggle (`game/sound.ts`, Web Audio, no audio files).
-  Engine verified by `scripts/verify-engine.ts`.
-- Next: **Phase 4 — daily challenge** (date-seeded mode, deterministic world,
-  share string). The keyed RNG (BRIEF §6) is already in place. See BRIEF §7.
+- **Phase 4 (daily challenge): DONE.** Date-seeded mode (seed = today's date,
+  `game/daily.ts`); same world for everyone, only choices differ; play-once per
+  date with a spoiler-free share string (outcome + net worth + block-char
+  net-worth sparkline). Results in localStorage (`storage.ts`). Engine + daily
+  helpers verified by `scripts/verify-engine.ts`.
+- Next: **Phase 5 — iOS** (Capacitor wrap; the mobile portrait layout is ready).
+  See BRIEF §7–§8.
 
-## Build gotcha (this environment)
+## Environment note
 
-The repo lives under iCloud-synced `~/Documents`, which makes `tsc -b` hang on
-its `.tsbuildinfo` write and slows `vite build` (and git) badly. To typecheck
-without the hang use `npx tsc --noEmit -p tsconfig.app.json` (no build-info
-write). For production bundles, stop the dev server first to free disk I/O.
-Moving the repo out of `~/Documents` would fix all of this.
+The repo lives at `~/projects/dw`, deliberately **outside** iCloud-synced
+`~/Documents`. It used to live under `~/Documents`, where iCloud's background
+sync caused phantom Vite reloads, `tsc -b` hangs, slow `vite build`, and git
+lock timeouts. Keep it out of `~/Documents`/`~/Desktop`. (If it ever ends up
+back under iCloud, `tsc --noEmit -p tsconfig.app.json` typechecks without the
+build-info write that hangs.)
 
 ## Commands
 

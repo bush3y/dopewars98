@@ -821,6 +821,30 @@ body {
   padding: 2px 8px;
 }
 
+/* --- Daily challenge share ------------------------------------------------ */
+.share {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+}
+.share__text {
+  margin: 0;
+  padding: 8px 10px;
+  background: #fff;
+  border: 2px inset #c0c0c0;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.share button {
+  align-self: flex-end;
+  min-width: 110px;
+  min-height: 28px;
+}
+
 /* On a phone the modal sits a touch higher and uses larger tap targets. */
 @media (max-width: 640px) {
   .modal-scrim {

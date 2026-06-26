@@ -10,6 +10,7 @@ const KEY = {
   slots: 'dw:slots',
   scores: 'dw:scores',
   settings: 'dw:settings',
+  daily: 'dw:daily',
 };
 
 export const SLOT_COUNT = 3;
@@ -111,6 +112,37 @@ export function addScore(entry: ScoreEntry): ScoreEntry[] {
     .slice(0, MAX_SCORES);
   write(KEY.scores, scores);
   return scores;
+}
+
+// --- Settings ---------------------------------------------------------------
+
+// --- Daily challenge results (one per date) ---------------------------------
+
+export interface DailyResult {
+  date: string; // YYYY-MM-DD
+  seed: number;
+  score: number;
+  status: GameStatus;
+  day: number;
+  history: number[];
+  playedAt: number;
+}
+
+export function loadDailyResults(): Record<string, DailyResult> {
+  return read<Record<string, DailyResult>>(KEY.daily) ?? {};
+}
+
+export function loadDailyResult(date: string): DailyResult | null {
+  return loadDailyResults()[date] ?? null;
+}
+
+export function saveDailyResult(result: DailyResult): void {
+  const all = loadDailyResults();
+  // Keep the player's first finish for the day — daily is play-once.
+  if (!all[result.date]) {
+    all[result.date] = result;
+    write(KEY.daily, all);
+  }
 }
 
 // --- Settings ---------------------------------------------------------------

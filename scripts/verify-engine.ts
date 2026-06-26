@@ -170,5 +170,39 @@ for (let seed = 1; seed <= 60 && !blocked; seed++) {
 }
 ok('actions blocked during a gunfight', blocked);
 
+// 7. Phase 4 — daily challenge helpers.
+const { todayKey, dailySeed, blockSparkline, makeShareString } = await import('../src/game/daily');
+
+ok('date → seed (YYYYMMDD)', dailySeed('2026-06-26') === 20260626);
+ok('todayKey format', /^\d{4}-\d{2}-\d{2}$/.test(todayKey()));
+
+// Same daily seed → byte-identical world (the fairness property, BRIEF §6).
+const seedA = dailySeed('2026-06-26');
+ok(
+  'same daily seed → identical start',
+  JSON.stringify(initialState(seedA, 'daily')) === JSON.stringify(initialState(seedA, 'daily')),
+);
+ok(
+  'different date → different start',
+  JSON.stringify(initialState(dailySeed('2026-06-26'), 'daily')) !==
+    JSON.stringify(initialState(dailySeed('2026-06-27'), 'daily')),
+);
+
+// Two players, same seed, different *choices* → same world, different scores.
+function playChoices(seed: number, buyDay: boolean) {
+  let s = initialState(seed, 'daily');
+  if (buyDay) s = reducer(s, { type: 'BUY', drug: 'weed', qty: 20 });
+  return s;
+}
+const p1 = playChoices(seedA, false);
+const p2 = playChoices(seedA, true);
+ok('same world, choices differ', JSON.stringify(p1.market) === JSON.stringify(p2.market) && p1.cash !== p2.cash);
+
+// Share string: spoiler-free, contains outcome + score + a sparkline.
+const spark = blockSparkline([1, 5, 3, 8, 2, 9]);
+ok('sparkline non-empty block chars', spark.length === 6 && /[▁▂▃▄▅▆▇█]/.test(spark));
+const share = makeShareString({ date: '2026-06-26', score: 12345, status: 'won', day: 31, history: [1, 9, 4] });
+ok('share has date + score, no prices leaked', share.includes('2026-06-26') && share.includes('12,345') && !share.toLowerCase().includes('cocaine'));
+
 console.log(failures === 0 ? '\nALL PASS' : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

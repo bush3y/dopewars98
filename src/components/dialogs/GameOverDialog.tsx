@@ -2,15 +2,18 @@ import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
 import { netWorth } from '../../engine/reducer';
 import { NetWorthChart } from '../NetWorthChart';
+import { DailyShare } from '../DailyShare';
+import { todayKey, dailySeed } from '../../game/daily';
 
 export function GameOverDialog() {
   const { state, dispatch, ui } = useGame();
   const score = netWorth(state);
   const died = state.status === 'dead';
+  const isTodaysDaily = state.mode === 'daily' && state.seed === dailySeed(todayKey());
 
   const newGame = () => {
     ui.select(null);
-    dispatch({ type: 'NEW_GAME' });
+    dispatch({ type: 'NEW_GAME', mode: 'classic' });
   };
 
   return (
@@ -30,6 +33,17 @@ export function GameOverDialog() {
         </div>
       </div>
       <NetWorthChart data={state.netWorthHistory} />
+      {isTodaysDaily && (
+        <DailyShare
+          data={{
+            date: todayKey(),
+            score,
+            status: state.status,
+            day: state.day,
+            history: state.netWorthHistory,
+          }}
+        />
+      )}
       <div className="dlg__actions">
         <button type="button" onClick={newGame}>New Game</button>
       </div>

@@ -11,6 +11,7 @@ import { NewGameDialog } from './dialogs/NewGameDialog';
 import { SaveLoadDialog } from './dialogs/SaveLoadDialog';
 import { HighScoresDialog } from './dialogs/HighScoresDialog';
 import { ChartDialog } from './dialogs/ChartDialog';
+import { DailyDialog } from './dialogs/DailyDialog';
 
 /**
  * Single overlay layer rendered once at the app root, above both layouts.
@@ -43,6 +44,8 @@ export function GameDialogs() {
       return <HighScoresDialog />;
     case 'chart':
       return <ChartDialog />;
+    case 'daily':
+      return <DailyDialog />;
     case 'new-game':
       return <NewGameDialog />;
     default:
