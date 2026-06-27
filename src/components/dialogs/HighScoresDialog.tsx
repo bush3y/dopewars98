@@ -3,6 +3,7 @@ import { useGame } from '../../game/GameContext';
 import { outcome } from '../../game/daily';
 
 const RESULT_LABEL = { win: '✅ won', red: '📉 in the red', busted: '💀 busted' };
+const MODE_LABEL = { classic: 'Classic', endless: 'Endless', daily: 'Daily' };
 
 export function HighScoresDialog() {
   const { scores, ui } = useGame();
@@ -27,7 +28,7 @@ export function HighScoresDialog() {
                 <td className="grid__col-num">{i + 1}</td>
                 <td className="grid__col-num">{s.score.toLocaleString()}</td>
                 <td>{RESULT_LABEL[outcome(s.status, s.score)]}</td>
-                <td>{s.mode === 'daily' ? 'Daily' : 'Free Play'}</td>
+                <td>{MODE_LABEL[s.mode]}</td>
               </tr>
             ))}
           </tbody>

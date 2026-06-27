@@ -7,6 +7,13 @@ import { TrenchcoatPane } from './TrenchcoatPane';
 import { useDragWindow } from '../hooks/useDragWindow';
 import { useGame } from '../game/GameContext';
 import { modeLabel } from '../game/daily';
+import type { GameMode } from '../engine/types';
+
+const MODE_BADGE: Record<GameMode, string> = {
+  classic: 'Classic',
+  endless: 'Endless',
+  daily: 'Daily Challenge',
+};
 
 /**
  * The faithful square game window (BRIEF.md §2): a fixed-size 98.css window,
@@ -15,7 +22,7 @@ import { modeLabel } from '../game/daily';
 export function DesktopWindow() {
   const ref = useRef<HTMLDivElement>(null);
   const { titlebarProps } = useDragWindow(ref);
-  const { snapshot: snap, state, ui } = useGame();
+  const { snapshot: snap, state, ui, requestNewGame } = useGame();
 
   const held: Partial<Record<string, boolean>> = {};
   for (const row of snap.trenchcoat) held[row.drug] = true;
@@ -24,7 +31,8 @@ export function DesktopWindow() {
     <div className="window dw-window" ref={ref}>
       <div className="title-bar" {...titlebarProps}>
         <div className="title-bar-text">
-          Dope Wars — {modeLabel(state.mode, state.seed)} — Day {snap.day} of {snap.maxDays}
+          Dope Wars — {modeLabel(state.mode, state.seed)} — Day {snap.day}
+          {state.mode !== 'endless' && ` of ${snap.maxDays}`}
         </div>
         <div className="title-bar-controls">
           <button aria-label="Minimize" />
@@ -60,10 +68,15 @@ export function DesktopWindow() {
 
       <div className="status-bar dw-footer">
         <span className={`dw-footer__mode dw-footer__mode--${state.mode}`}>
-          {state.mode === 'daily' ? 'Daily Challenge' : 'Free Play'}
+          {MODE_BADGE[state.mode]}
         </span>
-        <button type="button" onClick={() => ui.open('new-game')}>New Game</button>
-        <button type="button" onClick={() => ui.open('new-game')}>Exit</button>
+        <button
+          type="button"
+          onClick={() => requestNewGame(state.mode === 'daily' ? 'classic' : state.mode)}
+        >
+          New Game
+        </button>
+        <button type="button" onClick={() => requestNewGame('classic')}>Exit</button>
       </div>
     </div>
   );

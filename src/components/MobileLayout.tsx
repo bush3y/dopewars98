@@ -36,7 +36,9 @@ export function MobileLayout() {
             ☰
           </button>
           <span className="mobile__brand">DOPE WARS</span>
-          <span className="mobile__day">Day {snap.day} / {snap.maxDays}</span>
+          <span className="mobile__day">
+            Day {snap.day}{state.mode !== 'endless' && ` / ${snap.maxDays}`}
+          </span>
         </div>
         <div className={`mobile__mode mobile__mode--${state.mode}`}>
           {modeLabel(state.mode, state.seed)}

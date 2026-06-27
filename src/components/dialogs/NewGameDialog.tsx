@@ -1,20 +1,27 @@
 import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
 
-/** Confirm before discarding an in-progress run. */
+const LABEL: Record<string, string> = { classic: 'Classic', endless: 'Endless' };
+const BLURB: Record<string, string> = {
+  classic: 'Race to build your fortune over 31 days.',
+  endless: 'Play on with no day limit — the run ends only when the cops get you.',
+};
+
+/** Confirm before discarding an in-progress run, then start the chosen mode. */
 export function NewGameDialog() {
-  const { dispatch, ui } = useGame();
+  const { dispatch, ui, pendingMode } = useGame();
+  const label = LABEL[pendingMode] ?? 'Classic';
+
   const confirm = () => {
     ui.select(null);
-    // A plain New Game is always classic with a fresh random seed; the daily is
-    // entered only via the Daily Challenge flow.
-    dispatch({ type: 'NEW_GAME', mode: 'classic' });
+    dispatch({ type: 'NEW_GAME', mode: pendingMode });
     ui.close();
   };
 
   return (
-    <Modal title="New Free Play Game" onClose={ui.close}>
-      <p className="dlg__message">Start a new Free Play game? Your current progress will be lost.</p>
+    <Modal title={`New ${label} Game`} onClose={ui.close}>
+      <p className="dlg__message">{BLURB[pendingMode]}</p>
+      <p className="dlg__message">Start a new {label} game? Your current progress will be lost.</p>
       <div className="dlg__actions">
         <button type="button" onClick={confirm}>Start</button>
         <button type="button" onClick={ui.close}>Cancel</button>

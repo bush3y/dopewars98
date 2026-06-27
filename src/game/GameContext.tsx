@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { DrugId, GameSnapshot } from '../data/types';
-import type { Action, GameState } from '../engine/types';
+import type { Action, GameState, GameMode } from '../engine/types';
 import { reducer, initialState, netWorth } from '../engine/reducer';
 import { toSnapshot } from '../engine/selectors';
 import {
@@ -64,6 +64,10 @@ interface GameContextValue {
   streak: DailyStreak;
   settings: Settings;
   toggleSound: () => void;
+  /** Mode the New Game confirm will start (Classic or Endless). */
+  pendingMode: GameMode;
+  /** Open the New Game confirm for a given mode. */
+  requestNewGame: (mode: GameMode) => void;
   /** Cosmetic city skin (relabels neighborhoods only). */
   city: CityId;
   setCity: (city: CityId) => void;
@@ -94,7 +98,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [scores, setScores] = useState<ScoreEntry[]>(() => loadScores());
   const [streak, setStreak] = useState<DailyStreak>(() => loadStreak());
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
+  const [pendingMode, setPendingMode] = useState<GameMode>('classic');
   const [bump, setBump] = useState(0);
+
+  const requestNewGame = useCallback((mode: GameMode) => {
+    setPendingMode(mode);
+    setDialog('new-game');
+  }, []);
 
   // Apply persisted sound preference once.
   useEffect(() => {
@@ -208,13 +218,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
       streak,
       settings,
       toggleSound,
+      pendingMode,
+      requestNewGame,
       city: settings.city ?? DEFAULT_CITY,
       setCity,
       randomCity,
       bump,
       refresh: () => setBump((b) => b + 1),
     }),
-    [state, dispatch, selected, dialog, scores, streak, settings, toggleSound, setCity, randomCity, bump],
+    [state, dispatch, selected, dialog, scores, streak, settings, toggleSound, pendingMode, requestNewGame, setCity, randomCity, bump],
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

@@ -32,10 +32,12 @@ emulator, no reskin. Modern features live behind the faithful core.
   date with a spoiler-free share string (outcome + net worth + block-char
   net-worth sparkline). Results in localStorage (`storage.ts`). Engine + daily
   helpers verified by `scripts/verify-engine.ts`.
-  - Modes are surfaced via a dedicated **Mode** menu (radio dot marks the active
-    one), the **title bar** (`Free Play` / `Daily YYYY-MM-DD`), and a footer/
-    mobile badge. "Classic" is labelled **Free Play** (internal id stays
-    `classic`). New Game is always Free Play.
+  - **Three modes** (Mode menu, check marks the active one; shown in title bar +
+    coloured footer/mobile badge): **Classic** (`classic`, the 31-day run),
+    **Endless** (`endless`, no day cap — ends only on death; `maxDays` ignored,
+    history windowed to 60 entries), **Daily** (`daily`). `requestNewGame(mode)`
+    drives the New Game confirm; New Game / Game Over replay the same mode
+    (daily falls back to classic).
   - Daily is **resume-not-restart**: starting today's run commits you; the
     in-progress daily is persisted separately (`saveDailyGame`/`loadDailyGame`)
     so leaving and returning resumes it, and it locks once finished. This blocks

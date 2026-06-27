@@ -20,7 +20,8 @@ export function GameOverDialog() {
 
   const newGame = () => {
     ui.select(null);
-    dispatch({ type: 'NEW_GAME', mode: 'classic' });
+    // Replay the same mode (Endless → Endless); a finished daily falls back to Classic.
+    dispatch({ type: 'NEW_GAME', mode: state.mode === 'daily' ? 'classic' : state.mode });
   };
 
   return (

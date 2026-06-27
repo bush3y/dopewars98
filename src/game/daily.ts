@@ -53,7 +53,9 @@ export function seedDateLabel(seed: number): string {
 
 /** Human label for the active mode (used in the title bar / footer). */
 export function modeLabel(mode: GameMode, seed: number): string {
-  return mode === 'daily' ? `Daily ${seedDateLabel(seed)}` : 'Free Play';
+  if (mode === 'daily') return `Daily ${seedDateLabel(seed)}`;
+  if (mode === 'endless') return 'Endless';
+  return 'Classic';
 }
 
 const BLOCKS = '▁▂▃▄▅▆▇█';

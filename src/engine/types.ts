@@ -3,7 +3,7 @@ import type { GunId } from '../data/guns';
 import type { CopsEncounter } from './encounters';
 
 export type GameStatus = 'playing' | 'won' | 'dead';
-export type GameMode = 'classic' | 'daily';
+export type GameMode = 'classic' | 'endless' | 'daily';
 
 export interface Holding {
   qty: number;

@@ -610,9 +610,12 @@ body {
   border-radius: 8px;
   color: #fff;
 }
-/* Free Play = calm blue; Daily = attention-grabbing amber. */
+/* Classic = calm blue; Endless = green; Daily = attention-grabbing amber. */
 .dw-footer__mode--classic {
   background: #000080;
+}
+.dw-footer__mode--endless {
+  background: #2e7d32;
 }
 .dw-footer__mode--daily {
   background: #b8860b;
@@ -630,6 +633,9 @@ body {
 }
 .mobile__mode--classic {
   background: #000080;
+}
+.mobile__mode--endless {
+  background: #2e7d32;
 }
 .mobile__mode--daily {
   background: #b8860b;

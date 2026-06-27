@@ -15,6 +15,9 @@ import type { Action, GameState, GameMode } from './types';
 
 const START_LOCATION = 'bronx' as const;
 
+/** Cap on per-drug price history and net-worth history (bounds Endless runs). */
+const HISTORY_CAP = 60;
+
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 
 /** Total trenchcoat space currently occupied (drugs + guns). */
@@ -83,8 +86,9 @@ function coreReducer(state: GameState, action: Action): GameState {
       if (state.status !== 'playing' || inFight) return state;
       if (action.location === state.location) return state;
 
-      // The final day's trip ends the run; no day beyond maxDays.
-      if (state.day >= state.maxDays) {
+      // The final day's trip ends a fixed-length run; Endless has no day cap and
+      // ends only on death.
+      if (state.mode !== 'endless' && state.day >= state.maxDays) {
         return { ...state, status: 'won' };
       }
 
@@ -139,17 +143,18 @@ function coreReducer(state: GameState, action: Action): GameState {
         cash,
         inventory,
         market: prices,
+        // Window the history so Endless runs don't grow unbounded.
         priceHistory: Object.fromEntries(
           Object.entries(prices).map(([id, p]) => [
             id,
-            [...(state.priceHistory[id as DrugId] ?? []), p],
+            [...(state.priceHistory[id as DrugId] ?? []), p].slice(-HISTORY_CAP),
           ]),
         ) as GameState['priceHistory'],
         gunShopOpen: arrival.gunShopOpen,
         pendingEncounter: arrival.cops,
         notice,
       };
-      next.netWorthHistory = [...state.netWorthHistory, netWorth(next)];
+      next.netWorthHistory = [...state.netWorthHistory, netWorth(next)].slice(-HISTORY_CAP);
       return next;
     }
 
