@@ -7,7 +7,7 @@ import { prevKey } from './daily';
 // slots, a high-score table, and settings. The schema version guards against
 // loading a game whose shape predates a change (BRIEF §5).
 
-const VERSION = 3;
+const VERSION = 4; // bumped: GameState gained peakNetWorth
 const KEY = {
   current: 'dw:current',
   slots: 'dw:slots',

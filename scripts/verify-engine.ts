@@ -221,5 +221,33 @@ ok('win share shows streak + ✅', wonShare.includes('🔥 Streak: 5') && wonSha
 const redShare = makeShareString({ date: '2026-06-26', score: -3500, status: 'won', day: 31, history: [1, -2] });
 ok('red share shows -$ and 📉', redShare.includes('-$3,500') && redShare.includes('📉'));
 
+// 8. Ranks + peak tracking.
+const { rankName } = await import('../src/data/ranks');
+ok('start (in the red) = Recruit', rankName(-3500) === 'Recruit');
+ok('broke even = Lookout', rankName(0) === 'Lookout');
+ok('$250k = Lieutenant', rankName(250_000) === 'Lieutenant');
+ok('$700k = Captain (Captain > Lieutenant)', rankName(700_000) === 'Captain');
+ok('$5M = Kingpin', rankName(5_000_000) === 'Kingpin');
+
+// peakNetWorth tracks the max seen and never drops below it.
+let pk = initialState(4242, 'classic');
+ok('peak starts at initial net worth', pk.peakNetWorth === netWorth(pk));
+let maxSeen = netWorth(pk);
+let pkGuard = 0;
+const pkDispatch = (action: Action) => {
+  pk = reducer(pk, action);
+  maxSeen = Math.max(maxSeen, netWorth(pk));
+};
+while (pk.status === 'playing' && pkGuard++ < 120) {
+  if (pk.pendingEncounter) { pkDispatch({ type: 'RUN' }); continue; }
+  if (pk.notice) { pkDispatch({ type: 'DISMISS_NOTICE' }); continue; }
+  // Trade a little so net worth actually moves around.
+  pkDispatch({ type: 'BUY', drug: 'weed', qty: 20 });
+  pkDispatch({ type: 'SELL', drug: 'weed', qty: 20 });
+  pkDispatch({ type: 'TRAVEL', location: pk.location === 'bronx' ? 'ghetto' : 'bronx' });
+}
+ok('peakNetWorth equals the max net worth ever seen', pk.peakNetWorth === maxSeen);
+ok('peak >= final net worth', pk.peakNetWorth >= netWorth(pk));
+
 console.log(failures === 0 ? '\nALL PASS' : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

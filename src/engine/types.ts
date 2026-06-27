@@ -44,6 +44,8 @@ export interface GameState {
   notice: Notice | null;
   /** Net worth (cash + bank − debt) at the end of each day, for the chart. */
   netWorthHistory: number[];
+  /** Highest net worth reached this run, for peak rank. */
+  peakNetWorth: number;
   status: GameStatus;
 }
 

@@ -57,13 +57,15 @@ export function initialState(
     pendingEncounter: null,
     notice: null,
     netWorthHistory: [],
+    peakNetWorth: 0,
     status: 'playing',
   };
   base.netWorthHistory = [netWorth(base)];
+  base.peakNetWorth = netWorth(base);
   return base;
 }
 
-export function reducer(state: GameState, action: Action): GameState {
+function coreReducer(state: GameState, action: Action): GameState {
   // While a gunfight is pending, only Fight/Run/dismiss are allowed.
   const inFight = state.pendingEncounter != null;
 
@@ -289,4 +291,16 @@ export function reducer(state: GameState, action: Action): GameState {
     default:
       return state;
   }
+}
+
+/**
+ * Public reducer: runs the core machine, then records the highest net worth
+ * reached this run (for peak rank). Done in one place so individual actions
+ * don't each have to maintain it.
+ */
+export function reducer(state: GameState, action: Action): GameState {
+  const next = coreReducer(state, action);
+  if (next === state) return state;
+  const nw = netWorth(next);
+  return nw > next.peakNetWorth ? { ...next, peakNetWorth: nw } : next;
 }

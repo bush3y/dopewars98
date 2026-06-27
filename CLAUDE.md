@@ -89,8 +89,9 @@ npm run lint     # eslint
   (drugs, locations), `economy.ts` (price ranges, interest, event flavor text),
   `guns.ts` (gun stats), `combat.ts` (encounter tuning + flavor text),
   `cities.ts` (cosmetic city skins — relabel the 6 location slots + transport
-  word; default New York; prices/rules identical), `menu.ts` (shared menu
-  structure for desktop bar + mobile drawer).
+  word; default New York; prices/rules identical), `ranks.ts` (crime-family
+  ranks by net worth: Recruit→Kingpin, `rankName(netWorth)`), `menu.ts` (shared
+  menu structure for desktop bar + mobile drawer).
 - `engine/` — pure game logic, no React. `rng.ts` (seedable PRNG + coord hash),
   `market.ts` (deterministic price/event generation), `encounters.ts`
   (deterministic arrival encounters + combat round resolvers), `types.ts`

@@ -4,6 +4,7 @@ import { netWorth } from '../../engine/reducer';
 import { NetWorthChart } from '../NetWorthChart';
 import { DailyShare } from '../DailyShare';
 import { todayKey, dailySeed, outcome } from '../../game/daily';
+import { rankName } from '../../data/ranks';
 
 const COPY = {
   win: { title: 'You Win!', line: 'You beat the loan shark and walked away in the black.' },
@@ -31,6 +32,7 @@ export function GameOverDialog() {
         <div><span>Cash</span><b>{state.cash.toLocaleString()}</b></div>
         <div><span>Bank</span><b>{state.bank.toLocaleString()}</b></div>
         <div><span>Debt</span><b className="neg">{state.debt.toLocaleString()}</b></div>
+        <div><span>Peak rank</span><b>{rankName(state.peakNetWorth)}</b></div>
         <div className="dlg__score">
           <span>Net worth</span>
           <b className={score >= 0 ? 'pos' : 'neg'}>{score.toLocaleString()}</b>

@@ -1,10 +1,12 @@
 import { Led } from './Led';
 import { HealthBar } from './HealthBar';
+import { rankName } from '../data/ranks';
 import type { GameSnapshot } from '../data/types';
 
-/** The four LED stat rows (Cash / Bank / Debt / Guns) plus the health bar. */
+/** The four LED stat rows (Cash / Bank / Debt / Guns) plus health and rank. */
 export function StatPanel({ snap }: { snap: GameSnapshot }) {
   const fmt = (n: number) => n.toLocaleString('en-US');
+  const netWorth = snap.cash + snap.bank - snap.debt;
 
   return (
     <div className="stats">
@@ -28,6 +30,11 @@ export function StatPanel({ snap }: { snap: GameSnapshot }) {
       <div className="health">
         <span className="health__label">Health :</span>
         <HealthBar value={snap.health} />
+      </div>
+
+      <div className="rank">
+        <span className="rank__label">Rank :</span>
+        <span className="rank__value">{rankName(netWorth)}</span>
       </div>
     </div>
   );

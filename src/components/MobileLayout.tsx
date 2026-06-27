@@ -6,6 +6,7 @@ import { TrenchcoatPane } from './TrenchcoatPane';
 import { MobileDrawer } from './MobileDrawer';
 import { useGame } from '../game/GameContext';
 import { modeLabel } from '../game/daily';
+import { rankName } from '../data/ranks';
 
 /**
  * Portrait reflow (BRIEF.md §2). Full-bleed with safe-area insets and softened
@@ -59,6 +60,7 @@ export function MobileLayout() {
         <div className="mobile__health">
           <span className="health__label">Health</span>
           <HealthBar value={snap.health} />
+          <span className="mobile__rank">{rankName(snap.cash + snap.bank - snap.debt)}</span>
         </div>
       </header>
 
