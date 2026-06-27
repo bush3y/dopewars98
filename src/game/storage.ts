@@ -1,4 +1,6 @@
 import type { GameState, GameMode, GameStatus } from '../engine/types';
+import type { CityId } from '../data/cities';
+import { DEFAULT_CITY } from '../data/cities';
 import { prevKey } from './daily';
 
 // Versioned localStorage persistence: the active game (auto-saved), named save
@@ -204,9 +206,11 @@ export function recordStreak(date: string, won: boolean): DailyStreak {
 
 export interface Settings {
   sound: boolean;
+  /** Cosmetic city skin (relabels neighborhoods); does not affect gameplay. */
+  city: CityId;
 }
 
-const DEFAULT_SETTINGS: Settings = { sound: false };
+const DEFAULT_SETTINGS: Settings = { sound: false, city: DEFAULT_CITY };
 
 export function loadSettings(): Settings {
   return { ...DEFAULT_SETTINGS, ...(read<Settings>(KEY.settings) ?? {}) };

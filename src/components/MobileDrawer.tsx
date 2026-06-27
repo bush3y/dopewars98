@@ -40,12 +40,15 @@ export function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => 
                 type="button"
                 className="drawer__item"
                 onClick={() => {
-                  runMenuItem(item.label, game);
+                  if (item.city) game.setCity(item.city);
+                  else if (item.random) game.randomCity();
+                  else runMenuItem(item.label, game);
                   onClose();
                 }}
               >
                 <span>
                   {((item.mode && game.state.mode === item.mode) ||
+                    (item.city && game.city === item.city) ||
                     (item.label === 'Sound On / Off' && game.settings.sound)) ? '✓ ' : ''}
                   {item.label}
                 </span>

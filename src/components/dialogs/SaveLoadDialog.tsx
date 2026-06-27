@@ -2,15 +2,16 @@ import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
 import { listSlots, saveSlot, loadSlot } from '../../game/storage';
 import { netWorth } from '../../engine/reducer';
+import { locationName } from '../../data/cities';
 
 /** Three named save slots, shared between Save and Load modes. */
 export function SaveLoadDialog({ mode }: { mode: 'save' | 'load' }) {
-  const { state, dispatch, ui, refresh } = useGame();
+  const { state, dispatch, ui, refresh, city } = useGame();
   const slots = listSlots();
 
   const doSave = (i: number) => {
     saveSlot(i, {
-      name: `Day ${state.day} · ${state.location}`,
+      name: `Day ${state.day} · ${locationName(city, state.location)}`,
       savedAt: Date.now(),
       day: state.day,
       netWorth: netWorth(state),

@@ -1,9 +1,10 @@
-import { LOCATIONS, LOCATION_NAME } from '../data/gameData';
+import { LOCATIONS } from '../data/gameData';
+import { locationName, transportWord } from '../data/cities';
 import { useGame } from '../game/GameContext';
 
-/** The "Subway from <location>" grid plus Buy/Sell/Finances, wired to the engine. */
+/** The "<transport> from <neighborhood>" grid plus Buy/Sell/Finances. */
 export function SubwayGrid() {
-  const { state, dispatch, ui } = useGame();
+  const { state, dispatch, ui, city } = useGame();
   const current = state.location;
   const isLastDay = state.day >= state.maxDays;
 
@@ -12,7 +13,7 @@ export function SubwayGrid() {
   return (
     <div className="subway">
       <fieldset className="subway__box">
-        <legend>Subway from {LOCATION_NAME[current]} :</legend>
+        <legend>{transportWord(city)} from {locationName(city, current)} :</legend>
         <div className="subway__grid">
           {LOCATIONS.map((loc) => (
             <button
@@ -22,7 +23,7 @@ export function SubwayGrid() {
               disabled={loc.id === current}
               onClick={() => dispatch({ type: 'TRAVEL', location: loc.id })}
             >
-              {loc.name}
+              {locationName(city, loc.id)}
             </button>
           ))}
         </div>

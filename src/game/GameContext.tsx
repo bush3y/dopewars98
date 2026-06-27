@@ -32,6 +32,7 @@ import {
 } from './storage';
 import { setSoundEnabled, playSfx, type Sfx } from './sound';
 import { todayKey, dailySeed, isWin } from './daily';
+import { CITIES, DEFAULT_CITY, type CityId } from '../data/cities';
 
 export type DialogKind =
   | 'buy'
@@ -63,6 +64,11 @@ interface GameContextValue {
   streak: DailyStreak;
   settings: Settings;
   toggleSound: () => void;
+  /** Cosmetic city skin (relabels neighborhoods only). */
+  city: CityId;
+  setCity: (city: CityId) => void;
+  /** Switch to a different random city. */
+  randomCity: () => void;
   /** Re-read save slots / scores after a write, to refresh dialogs. */
   bump: number;
   refresh: () => void;
@@ -166,6 +172,26 @@ export function GameProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const setCity = useCallback((city: CityId) => {
+    setSettings((s) => {
+      const next = { ...s, city };
+      saveSettings(next);
+      playSfx('click');
+      return next;
+    });
+  }, []);
+
+  const randomCity = useCallback(() => {
+    setSettings((s) => {
+      const others = CITIES.filter((c) => c.id !== s.city);
+      const pick = others[Math.floor(Math.random() * others.length)] ?? CITIES[0];
+      const next = { ...s, city: pick.id };
+      saveSettings(next);
+      playSfx('travel');
+      return next;
+    });
+  }, []);
+
   const value = useMemo<GameContextValue>(
     () => ({
       state,
@@ -182,10 +208,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
       streak,
       settings,
       toggleSound,
+      city: settings.city ?? DEFAULT_CITY,
+      setCity,
+      randomCity,
       bump,
       refresh: () => setBump((b) => b + 1),
     }),
-    [state, dispatch, selected, dialog, scores, streak, settings, toggleSound, bump],
+    [state, dispatch, selected, dialog, scores, streak, settings, toggleSound, setCity, randomCity, bump],
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

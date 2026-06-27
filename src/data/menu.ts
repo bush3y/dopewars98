@@ -3,13 +3,18 @@
 // two never diverge.
 
 import type { GameMode } from '../engine/types';
+import { CITIES, type CityId } from './cities';
 
 export interface MenuItem {
   label: string;
   /** Phase that makes this item functional; shown as a hint while stubbed. */
   phase?: number;
-  /** Mode items render a radio dot marking the active mode. */
+  /** Mode items render a check marking the active mode. */
   mode?: GameMode;
+  /** City items (cosmetic skin) render a check marking the active city. */
+  city?: CityId;
+  /** The "random city" action item. */
+  random?: boolean;
 }
 
 export interface Menu {
@@ -36,6 +41,15 @@ export const MENUS: Menu[] = [
     items: [
       { label: 'Free Play', mode: 'classic' },
       { label: 'Daily Challenge', mode: 'daily' },
+    ],
+  },
+  {
+    // Cosmetic city skin — relabels neighborhoods only. Active city is checked.
+    title: 'City',
+    accel: 0,
+    items: [
+      ...CITIES.map((c) => ({ label: c.name, city: c.id })),
+      { label: '🎲 Random City', random: true },
     ],
   },
   {
