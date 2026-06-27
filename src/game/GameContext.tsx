@@ -32,6 +32,7 @@ import {
 } from './storage';
 import { setSoundEnabled, playSfx, type Sfx } from './sound';
 import { todayKey, dailySeed, isWin } from './daily';
+import { objectivesDone } from './objectives';
 import { CITIES, DEFAULT_CITY, type CityId } from '../data/cities';
 
 export type DialogKind =
@@ -45,7 +46,8 @@ export type DialogKind =
   | 'load'
   | 'scores'
   | 'chart'
-  | 'daily';
+  | 'daily'
+  | 'objectives';
 
 interface GameUi {
   selected: DrugId | null;
@@ -163,6 +165,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
             status: state.status,
             day: state.day,
             history: state.netWorthHistory,
+            objectives: objectivesDone(state.seed, state),
             playedAt: Date.now(),
           });
           setStreak(recordStreak(key, isWin(state.status, score)));

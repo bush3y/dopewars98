@@ -17,6 +17,22 @@ export interface Notice {
   message: string;
 }
 
+/** Accumulated facts about a run, used to check daily objectives. */
+export interface RunStats {
+  /** Unique locations visited (includes the start). */
+  visited: LocationId[];
+  gunsBought: number;
+  /** Most guns held at once. */
+  maxGuns: number;
+  fightsWon: number;
+  /** Largest single sale's total value. */
+  biggestSale: number;
+  /** Most trenchcoat space filled at once (drugs + guns). */
+  maxSpaceUsed: number;
+  /** Highest bank balance held. */
+  maxBank: number;
+}
+
 export interface GameState {
   seed: number;
   mode: GameMode;
@@ -46,6 +62,8 @@ export interface GameState {
   netWorthHistory: number[];
   /** Highest net worth reached this run, for peak rank. */
   peakNetWorth: number;
+  /** Accumulated facts for daily objectives. */
+  stats: RunStats;
   status: GameStatus;
 }
 

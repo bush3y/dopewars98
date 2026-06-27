@@ -7,7 +7,7 @@ import { prevKey } from './daily';
 // slots, a high-score table, and settings. The schema version guards against
 // loading a game whose shape predates a change (BRIEF §5).
 
-const VERSION = 4; // bumped: GameState gained peakNetWorth
+const VERSION = 5; // bumped: GameState gained peakNetWorth, then stats
 const KEY = {
   current: 'dw:current',
   slots: 'dw:slots',
@@ -130,6 +130,8 @@ export interface DailyResult {
   status: GameStatus;
   day: number;
   history: number[];
+  /** Completion of the day's 3 objectives, aligned to dailyObjectives(seed). */
+  objectives: boolean[];
   playedAt: number;
 }
 

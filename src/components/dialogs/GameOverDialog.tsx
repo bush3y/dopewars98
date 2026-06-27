@@ -5,6 +5,7 @@ import { NetWorthChart } from '../NetWorthChart';
 import { DailyShare } from '../DailyShare';
 import { todayKey, dailySeed, outcome } from '../../game/daily';
 import { rankName } from '../../data/ranks';
+import { objectivesDone } from '../../game/objectives';
 
 const COPY = {
   win: { title: 'You Win!', line: 'You beat the loan shark and walked away in the black.' },
@@ -53,6 +54,7 @@ export function GameOverDialog() {
               status: state.status,
               day: state.day,
               history: state.netWorthHistory,
+              objectives: objectivesDone(state.seed, state),
             }}
             streak={streak.current}
           />

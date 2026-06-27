@@ -279,5 +279,39 @@ while (cl.status === 'playing' && clGuard++ < 200) {
 }
 ok('classic still caps at day 31', cl.day <= 31);
 
+// 10. Daily objectives + run-stats.
+const { dailyObjectives, objectivesDone, OBJECTIVES } = await import('../src/game/objectives');
+const obj1 = dailyObjectives(20260627).map((o) => o.id);
+const obj1b = dailyObjectives(20260627).map((o) => o.id);
+ok('daily objectives deterministic per seed', JSON.stringify(obj1) === JSON.stringify(obj1b));
+ok('exactly 3 distinct objectives', obj1.length === 3 && new Set(obj1).size === 3);
+ok('objectives drawn from the pool', obj1.every((id) => OBJECTIVES.some((o) => o.id === id)));
+// Selection varies across seeds (not stuck on one trio).
+const distinctSets = new Set(
+  Array.from({ length: 60 }, (_, i) => JSON.stringify(dailyObjectives(20260600 + i).map((o) => o.id))),
+);
+ok(`objective sets vary across days (${distinctSets.size} distinct in 60)`, distinctSets.size > 10);
+
+// Run-stats accumulate and objectives flip from false → true.
+let st = initialState(777, 'classic');
+ok('stats start: visited has the start, nothing else', st.stats.visited.length === 1 && st.stats.gunsBought === 0);
+st = { ...st, gunShopOpen: true };
+st = reducer(st, { type: 'BUY_GUN', gun: 'pistol' });
+ok('buying a gun updates stats', st.stats.gunsBought === 1 && st.stats.maxGuns === 1);
+const buyGun = OBJECTIVES.find((o) => o.id === 'buyGun')!;
+ok('buyGun objective met after purchase', buyGun.check(st));
+ok('clearDebt objective not met (still owe)', !OBJECTIVES.find((o) => o.id === 'clearDebt')!.check(st));
+
+// Visiting raises the visited count; tour4 flips once 4 are seen.
+const tour4 = OBJECTIVES.find((o) => o.id === 'tour4')!;
+const order = ['manhattan', 'ghetto', 'coney-island', 'central-park'] as const;
+for (const loc of order) {
+  if (st.pendingEncounter) st = reducer(st, { type: 'RUN' });
+  if (st.notice) st = reducer(st, { type: 'DISMISS_NOTICE' });
+  st = reducer(st, { type: 'TRAVEL', location: loc });
+}
+ok('tour4 met after visiting 4+ neighborhoods', tour4.check(st) && st.stats.visited.length >= 4);
+ok('objectivesDone returns 3 booleans', objectivesDone(20260627, st).length === 3);
+
 console.log(failures === 0 ? '\nALL PASS' : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);

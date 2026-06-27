@@ -890,6 +890,42 @@ body {
   font-size: 12px;
 }
 
+/* --- Daily objectives checklist ------------------------------------------- */
+.objectives {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.objectives__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #555;
+}
+.objectives__item.is-done {
+  color: #000;
+  font-weight: 700;
+  background: #f3fff3;
+  border-color: #5aa55a;
+}
+.objectives__mark {
+  width: 18px;
+  text-align: center;
+}
+.footer-objectives {
+  min-height: 20px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
 .share {
   display: flex;
   flex-direction: column;

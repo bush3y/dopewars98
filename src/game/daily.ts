@@ -84,9 +84,11 @@ export interface ShareData {
   status: GameStatus;
   day: number;
   history: number[];
+  /** Completion of the day's 3 objectives (for the ⭐ line). */
+  objectives?: boolean[];
 }
 
-/** Spoiler-free share text: outcome + score + curve shape, no prices/choices. */
+/** Spoiler-free share text: outcome + score + objectives + curve, no prices. */
 export function makeShareString(d: ShareData, streak = 0): string {
   const o = outcome(d.status, d.score);
   const line =
@@ -97,6 +99,9 @@ export function makeShareString(d: ShareData, streak = 0): string {
         : '📉 In the hole';
   const moneyLine = `💰 Net worth ${money(d.score)}`;
   const streakLine = streak > 0 ? `\n🔥 Streak: ${streak}` : '';
+  const starsLine = d.objectives
+    ? `\n${'⭐'.repeat(d.objectives.filter(Boolean).length)}${'▫️'.repeat(d.objectives.filter((x) => !x).length)} ${d.objectives.filter(Boolean).length}/${d.objectives.length}`
+    : '';
   const curve = blockSparkline(d.history);
-  return `Dope Wars — Daily ${d.date}\n${line}\n${moneyLine}${streakLine}\n${curve}`;
+  return `Dope Wars — Daily ${d.date}\n${line}\n${moneyLine}${streakLine}${starsLine}\n${curve}`;
 }

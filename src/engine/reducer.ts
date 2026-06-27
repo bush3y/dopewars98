@@ -6,6 +6,7 @@ import {
   generateArrival,
   combatPower,
   gunSpace,
+  totalGuns,
   combatRng,
   resolveFight,
   resolveRun,
@@ -61,6 +62,15 @@ export function initialState(
     notice: null,
     netWorthHistory: [],
     peakNetWorth: 0,
+    stats: {
+      visited: [START_LOCATION],
+      gunsBought: 0,
+      maxGuns: 0,
+      fightsWon: 0,
+      biggestSale: 0,
+      maxSpaceUsed: 0,
+      maxBank: 0,
+    },
     status: 'playing',
   };
   base.netWorthHistory = [netWorth(base)];
@@ -153,6 +163,9 @@ function coreReducer(state: GameState, action: Action): GameState {
         gunShopOpen: arrival.gunShopOpen,
         pendingEncounter: arrival.cops,
         notice,
+        stats: state.stats.visited.includes(action.location)
+          ? state.stats
+          : { ...state.stats, visited: [...state.stats.visited, action.location] },
       };
       next.netWorthHistory = [...state.netWorthHistory, netWorth(next)].slice(-HISTORY_CAP);
       return next;
@@ -189,6 +202,7 @@ function coreReducer(state: GameState, action: Action): GameState {
             title: 'Busted Them',
             message: `You took them down and grabbed ${reward.toLocaleString()} off the bodies.`,
           },
+          stats: { ...state.stats, fightsWon: state.stats.fightsWon + 1 },
         };
       }
 
@@ -228,10 +242,16 @@ function coreReducer(state: GameState, action: Action): GameState {
       const gun = GUN_BY_ID[action.gun];
       const room = state.capacity - spaceUsed(state);
       if (state.cash < gun.price || room < gun.space) return state;
+      const guns = { ...state.guns, [action.gun]: (state.guns[action.gun] ?? 0) + 1 };
       return {
         ...state,
         cash: state.cash - gun.price,
-        guns: { ...state.guns, [action.gun]: (state.guns[action.gun] ?? 0) + 1 },
+        guns,
+        stats: {
+          ...state.stats,
+          gunsBought: state.stats.gunsBought + 1,
+          maxGuns: Math.max(state.stats.maxGuns, totalGuns(guns)),
+        },
       };
     }
 
@@ -269,7 +289,12 @@ function coreReducer(state: GameState, action: Action): GameState {
       if (held.qty - qty <= 0) delete inventory[action.drug];
       else inventory[action.drug] = { ...held, qty: held.qty - qty };
 
-      return { ...state, cash: state.cash + qty * price, inventory };
+      return {
+        ...state,
+        cash: state.cash + qty * price,
+        inventory,
+        stats: { ...state.stats, biggestSale: Math.max(state.stats.biggestSale, qty * price) },
+      };
     }
 
     case 'DEPOSIT': {
@@ -306,6 +331,13 @@ function coreReducer(state: GameState, action: Action): GameState {
 export function reducer(state: GameState, action: Action): GameState {
   const next = coreReducer(state, action);
   if (next === state) return state;
-  const nw = netWorth(next);
-  return nw > next.peakNetWorth ? { ...next, peakNetWorth: nw } : next;
+  return {
+    ...next,
+    peakNetWorth: Math.max(next.peakNetWorth, netWorth(next)),
+    stats: {
+      ...next.stats,
+      maxSpaceUsed: Math.max(next.stats.maxSpaceUsed, spaceUsed(next)),
+      maxBank: Math.max(next.stats.maxBank, next.bank),
+    },
+  };
 }

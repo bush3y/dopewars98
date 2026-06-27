@@ -17,6 +17,9 @@ export function runMenuItem(label: string, game: Game): void {
     case 'Daily Challenge':
       game.ui.open('daily');
       break;
+    case 'Daily Objectives':
+      game.ui.open('objectives');
+      break;
     case 'Save Game':
       game.ui.open('save');
       break;

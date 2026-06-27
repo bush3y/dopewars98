@@ -42,6 +42,13 @@ emulator, no reskin. Modern features live behind the faithful core.
     in-progress daily is persisted separately (`saveDailyGame`/`loadDailyGame`)
     so leaving and returning resumes it, and it locks once finished. This blocks
     save-scumming a deterministic world.
+  - **Daily objectives** (`game/objectives.ts`): a pool of bonus side-quests;
+    each daily seed deterministically picks **3** (same for everyone), checked
+    live against a **run-stats** layer (`RunStats` on GameState: visited,
+    gunsBought, maxGuns, fightsWon, biggestSale, maxSpaceUsed, maxBank; plus
+    peakNetWorth for rank ones). They're **bonus stars — never gate the win**.
+    Checklist via View → Daily Objectives and a footer `⭐ N/3` button; the count
+    rides the share string. Recorded in DailyResult on finish.
   - **Win/lose objective** (`outcome()` in `daily.ts`, both modes): WIN =
     survive to day 31 in the black (net worth > 0); LOSS = died, or survived in
     the red. Surfaced in the Game Over title/copy, the share string (✅/📉/💀),

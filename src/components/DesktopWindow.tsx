@@ -7,6 +7,7 @@ import { TrenchcoatPane } from './TrenchcoatPane';
 import { useDragWindow } from '../hooks/useDragWindow';
 import { useGame } from '../game/GameContext';
 import { modeLabel } from '../game/daily';
+import { objectivesDone } from '../game/objectives';
 import type { GameMode } from '../engine/types';
 
 const MODE_BADGE: Record<GameMode, string> = {
@@ -70,6 +71,11 @@ export function DesktopWindow() {
         <span className={`dw-footer__mode dw-footer__mode--${state.mode}`}>
           {MODE_BADGE[state.mode]}
         </span>
+        {state.mode === 'daily' && (
+          <button type="button" className="footer-objectives" onClick={() => ui.open('objectives')}>
+            ⭐ {objectivesDone(state.seed, state).filter(Boolean).length}/3
+          </button>
+        )}
         <button
           type="button"
           onClick={() => requestNewGame(state.mode === 'daily' ? 'classic' : state.mode)}
