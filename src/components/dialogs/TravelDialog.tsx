@@ -6,7 +6,7 @@ import { locationName, transportWord } from '../../data/cities';
 /** Mobile travel picker — the destinations the desktop shows inline as the grid. */
 export function TravelDialog() {
   const { state, dispatch, ui, city } = useGame();
-  const isLastDay = state.mode !== 'endless' && state.day >= state.maxDays;
+  const isLastDay = state.mode !== 'dynasty' && state.day >= state.maxDays;
 
   const travel = (location: typeof LOCATIONS[number]['id']) => {
     dispatch({ type: 'TRAVEL', location });

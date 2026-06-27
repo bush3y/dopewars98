@@ -64,7 +64,7 @@ interface GameContextValue {
   streak: DailyStreak;
   settings: Settings;
   toggleSound: () => void;
-  /** Mode the New Game confirm will start (Classic or Endless). */
+  /** Mode the New Game confirm will start (Classic or Dynasty). */
   pendingMode: GameMode;
   /** Open the New Game confirm for a given mode. */
   requestNewGame: (mode: GameMode) => void;

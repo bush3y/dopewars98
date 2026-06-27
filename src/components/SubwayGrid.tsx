@@ -6,7 +6,7 @@ import { useGame } from '../game/GameContext';
 export function SubwayGrid() {
   const { state, dispatch, ui, city } = useGame();
   const current = state.location;
-  const isLastDay = state.mode !== 'endless' && state.day >= state.maxDays;
+  const isLastDay = state.mode !== 'dynasty' && state.day >= state.maxDays;
 
   const canSell = ui.selected != null && !!state.inventory[ui.selected];
 

@@ -249,8 +249,8 @@ while (pk.status === 'playing' && pkGuard++ < 120) {
 ok('peakNetWorth equals the max net worth ever seen', pk.peakNetWorth === maxSeen);
 ok('peak >= final net worth', pk.peakNetWorth >= netWorth(pk));
 
-// 9. Endless mode — no day cap; ends only on death; history is bounded.
-let en = initialState(31337, 'endless');
+// 9. Dynasty mode — no day cap; ends only on death; history is bounded.
+let en = initialState(31337, 'dynasty');
 en = { ...en, guns: { magnum: 3 } }; // armed so it survives a while
 let enGuard = 0;
 let reachedPast31 = false;
@@ -260,10 +260,10 @@ while (en.status === 'playing' && enGuard++ < 300) {
   en = reducer(en, { type: 'TRAVEL', location: en.location === 'bronx' ? 'ghetto' : 'bronx' });
   if (en.day > 31 && en.status === 'playing') reachedPast31 = true;
 }
-ok('endless plays past day 31 (no day cap)', reachedPast31);
-ok('endless ends only by death (never "won")', en.status !== 'won');
-ok('endless net-worth history is bounded', en.netWorthHistory.length <= 60);
-ok('endless price history is bounded', Math.max(...DRUGS_HISTORY_LENGTHS(en)) <= 60);
+ok('dynasty plays past day 31 (no day cap)', reachedPast31);
+ok('dynasty ends only by death (never "won")', en.status !== 'won');
+ok('dynasty net-worth history is bounded', en.netWorthHistory.length <= 60);
+ok('dynasty price history is bounded', Math.max(...DRUGS_HISTORY_LENGTHS(en)) <= 60);
 
 function DRUGS_HISTORY_LENGTHS(s: typeof en): number[] {
   return Object.values(s.priceHistory).map((h) => h.length);

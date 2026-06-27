@@ -3,7 +3,7 @@ import { useGame } from '../../game/GameContext';
 import { outcome } from '../../game/daily';
 
 const RESULT_LABEL = { win: '✅ won', red: '📉 in the red', busted: '💀 busted' };
-const MODE_LABEL = { classic: 'Classic', endless: 'Endless', daily: 'Daily' };
+const MODE_LABEL = { classic: 'Classic', dynasty: 'Dynasty', daily: 'Daily' };
 
 export function HighScoresDialog() {
   const { scores, ui } = useGame();

@@ -34,7 +34,7 @@ emulator, no reskin. Modern features live behind the faithful core.
   helpers verified by `scripts/verify-engine.ts`.
   - **Three modes** (Mode menu, check marks the active one; shown in title bar +
     coloured footer/mobile badge): **Classic** (`classic`, the 31-day run),
-    **Endless** (`endless`, no day cap — ends only on death; `maxDays` ignored,
+    **Dynasty** (`dynasty`, no day cap — ends only on death; `maxDays` ignored,
     history windowed to 60 entries), **Daily** (`daily`). `requestNewGame(mode)`
     drives the New Game confirm; New Game / Game Over replay the same mode
     (daily falls back to classic).

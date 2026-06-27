@@ -610,11 +610,11 @@ body {
   border-radius: 8px;
   color: #fff;
 }
-/* Classic = calm blue; Endless = green; Daily = attention-grabbing amber. */
+/* Classic = calm blue; Dynasty = green; Daily = attention-grabbing amber. */
 .dw-footer__mode--classic {
   background: #000080;
 }
-.dw-footer__mode--endless {
+.dw-footer__mode--dynasty {
   background: #2e7d32;
 }
 .dw-footer__mode--daily {
@@ -634,7 +634,7 @@ body {
 .mobile__mode--classic {
   background: #000080;
 }
-.mobile__mode--endless {
+.mobile__mode--dynasty {
   background: #2e7d32;
 }
 .mobile__mode--daily {

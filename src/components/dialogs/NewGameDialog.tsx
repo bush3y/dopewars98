@@ -1,10 +1,10 @@
 import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
 
-const LABEL: Record<string, string> = { classic: 'Classic', endless: 'Endless' };
+const LABEL: Record<string, string> = { classic: 'Classic', dynasty: 'Dynasty' };
 const BLURB: Record<string, string> = {
   classic: 'Race to build your fortune over 31 days.',
-  endless: 'Play on with no day limit — the run ends only when the cops get you.',
+  dynasty: 'Play on with no day limit — the run ends only when the cops get you.',
 };
 
 /** Confirm before discarding an in-progress run, then start the chosen mode. */

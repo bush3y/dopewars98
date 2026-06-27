@@ -11,8 +11,8 @@ export function runMenuItem(label: string, game: Game): void {
     case 'Classic':
       game.requestNewGame('classic');
       break;
-    case 'Endless':
-      game.requestNewGame('endless');
+    case 'Dynasty':
+      game.requestNewGame('dynasty');
       break;
     case 'Daily Challenge':
       game.ui.open('daily');

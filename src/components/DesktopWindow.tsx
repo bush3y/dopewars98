@@ -11,7 +11,7 @@ import type { GameMode } from '../engine/types';
 
 const MODE_BADGE: Record<GameMode, string> = {
   classic: 'Classic',
-  endless: 'Endless',
+  dynasty: 'Dynasty',
   daily: 'Daily Challenge',
 };
 
@@ -32,7 +32,7 @@ export function DesktopWindow() {
       <div className="title-bar" {...titlebarProps}>
         <div className="title-bar-text">
           Dope Wars — {modeLabel(state.mode, state.seed)} — Day {snap.day}
-          {state.mode !== 'endless' && ` of ${snap.maxDays}`}
+          {state.mode !== 'dynasty' && ` of ${snap.maxDays}`}
         </div>
         <div className="title-bar-controls">
           <button aria-label="Minimize" />

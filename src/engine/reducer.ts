@@ -15,7 +15,7 @@ import type { Action, GameState, GameMode } from './types';
 
 const START_LOCATION = 'bronx' as const;
 
-/** Cap on per-drug price history and net-worth history (bounds Endless runs). */
+/** Cap on per-drug price history and net-worth history (bounds Dynasty runs). */
 const HISTORY_CAP = 60;
 
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
@@ -86,9 +86,9 @@ function coreReducer(state: GameState, action: Action): GameState {
       if (state.status !== 'playing' || inFight) return state;
       if (action.location === state.location) return state;
 
-      // The final day's trip ends a fixed-length run; Endless has no day cap and
+      // The final day's trip ends a fixed-length run; Dynasty has no day cap and
       // ends only on death.
-      if (state.mode !== 'endless' && state.day >= state.maxDays) {
+      if (state.mode !== 'dynasty' && state.day >= state.maxDays) {
         return { ...state, status: 'won' };
       }
 
@@ -143,7 +143,7 @@ function coreReducer(state: GameState, action: Action): GameState {
         cash,
         inventory,
         market: prices,
-        // Window the history so Endless runs don't grow unbounded.
+        // Window the history so Dynasty runs don't grow unbounded.
         priceHistory: Object.fromEntries(
           Object.entries(prices).map(([id, p]) => [
             id,

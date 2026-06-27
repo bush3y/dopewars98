@@ -40,7 +40,7 @@ export const MENUS: Menu[] = [
     accel: 0,
     items: [
       { label: 'Classic', mode: 'classic' },
-      { label: 'Endless', mode: 'endless' },
+      { label: 'Dynasty', mode: 'dynasty' },
       { label: 'Daily Challenge', mode: 'daily' },
     ],
   },

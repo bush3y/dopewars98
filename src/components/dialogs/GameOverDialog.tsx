@@ -20,7 +20,7 @@ export function GameOverDialog() {
 
   const newGame = () => {
     ui.select(null);
-    // Replay the same mode (Endless → Endless); a finished daily falls back to Classic.
+    // Replay the same mode (Dynasty → Dynasty); a finished daily falls back to Classic.
     dispatch({ type: 'NEW_GAME', mode: state.mode === 'daily' ? 'classic' : state.mode });
   };
 

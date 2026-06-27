@@ -1,5 +1,5 @@
 // Crime-family ranks, earned by net worth (cash + bank − debt). Live: your rank
-// rises and falls with your net worth. Kingpin (~$5M) is essentially Endless-only.
+// rises and falls with your net worth. Kingpin (~$5M) is essentially Dynasty-only.
 // Thresholds are easy to retune after playtesting.
 
 export interface Rank {
