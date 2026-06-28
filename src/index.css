@@ -30,6 +30,10 @@ body,
 
 body {
   font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;
+  /* Win9x gray behind safe-area / overscroll on mobile so iOS Safari's status
+     and toolbar strips match the chrome instead of showing white. The desktop
+     teal backdrop paints over this. */
+  background: #c0c0c0;
 }
 
 /* --- Desktop backdrop: classic teal Win9x desktop ------------------------- */
