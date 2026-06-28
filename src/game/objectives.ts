@@ -20,10 +20,10 @@ export const OBJECTIVES: Objective[] = [
   { id: 'winFight', label: 'Win a gunfight', check: (s) => s.stats.fightsWon >= 1 },
   { id: 'clearDebt', label: 'Pay off the loan shark', check: (s) => s.debt === 0 },
   { id: 'fullCoat', label: 'Pack your trenchcoat full', check: (s) => s.stats.maxSpaceUsed >= s.capacity },
-  { id: 'bigBank', label: 'Stash $50,000 in the bank', check: (s) => s.stats.maxBank >= 50_000 },
+  { id: 'bigBank', label: 'Stash $25,000 in the bank', check: (s) => s.stats.maxBank >= 25_000 },
   { id: 'bigSale', label: 'Make a single sale of $20,000+', check: (s) => s.stats.biggestSale >= 20_000 },
-  { id: 'crew', label: 'Reach Crew Member rank', check: (s) => s.peakNetWorth >= 10_000 },
-  { id: 'enforcer', label: 'Reach Enforcer rank', check: (s) => s.peakNetWorth >= 80_000 },
+  { id: 'crew', label: 'Reach Crew Member rank ($10,000 net worth)', check: (s) => s.peakNetWorth >= 10_000 },
+  { id: 'trusted', label: 'Reach Trusted Associate rank ($30,000 net worth)', check: (s) => s.peakNetWorth >= 30_000 },
 ];
 
 /** The 3 objectives for a daily seed — deterministic, identical for everyone. */
