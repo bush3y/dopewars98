@@ -373,14 +373,16 @@ body {
   color: #808080;
   font-variant-numeric: tabular-nums;
 }
+/* Held position uses the health-bar blue — a neutral "you own this" signal, so it
+   isn't confused with profit-green / debt-red or a rising price trend. */
 .grid__col-qty.is-held,
 .grid__col-paid.is-held {
-  color: #0b8a0b;
+  color: #0000c0;
   font-weight: 700;
 }
 .is-selected .grid__col-qty.is-held,
 .is-selected .grid__col-paid.is-held {
-  color: #2e7d32;
+  color: #aaccff;
 }
 .grid__empty {
   color: #808080;
@@ -643,7 +645,8 @@ body {
 .grid--selectable tbody tr:hover:not(.grid__no-hover) {
   background: #d8e4ff;
 }
-.grid--selectable tbody tr.is-selected {
+.grid--selectable tbody tr.is-selected,
+.grid--selectable tbody tr.is-selected:hover {
   background: #000080;
   color: #fff;
 }
