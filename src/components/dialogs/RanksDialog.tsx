@@ -7,7 +7,7 @@ import { RANKS, rankIndexFor } from '../../data/ranks';
  * Highlights the player's current rank. Read-only reference.
  */
 export function RanksDialog() {
-  const { snapshot: snap, ui } = useGame();
+  const { snapshot: snap, ui, rankCounts } = useGame();
   const netWorth = snap.cash + snap.bank - snap.debt;
   const currentIdx = rankIndexFor(netWorth);
   const next = currentIdx + 1 < RANKS.length ? RANKS[currentIdx + 1] : null;
@@ -16,7 +16,8 @@ export function RanksDialog() {
   return (
     <Modal title="Ranks" onClose={ui.close}>
       <p className="dlg__message">
-        Your rank rises and falls with your <b>net worth</b> (cash + bank − debt).
+        Your rank rises and falls with your <b>net worth</b> (cash + bank − debt).{' '}
+        <b>Reached</b> counts how many games you've hit each rank in.
       </p>
       <p className="dlg__message">
         {next ? (
@@ -35,22 +36,28 @@ export function RanksDialog() {
           <tr>
             <th>Rank</th>
             <th className="grid__col-num">Net worth</th>
+            <th className="grid__col-num">Reached</th>
           </tr>
         </thead>
         <tbody>
           {RANKS.map((r, i) => ({ r, i }))
             .reverse()
-            .map(({ r, i }) => (
-              <tr key={r.name} className={i === currentIdx ? 'is-current' : ''}>
-                <td>
-                  {i === currentIdx && <span className="ranks-table__here">🎖</span>}
-                  {r.name}
-                </td>
-                <td className="grid__col-num">
-                  {r.min === -Infinity ? '—' : `$${r.min.toLocaleString('en-US')}+`}
-                </td>
-              </tr>
-            ))}
+            .map(({ r, i }) => {
+              const count = rankCounts[i] ?? 0;
+              const cls = i === currentIdx ? 'is-current' : count === 0 ? 'is-locked' : '';
+              return (
+                <tr key={r.name} className={cls}>
+                  <td>
+                    {i === currentIdx && <span className="ranks-table__here">🎖</span>}
+                    {r.name}
+                  </td>
+                  <td className="grid__col-num">
+                    {r.min === -Infinity ? '—' : `$${r.min.toLocaleString('en-US')}+`}
+                  </td>
+                  <td className="grid__col-num">{count > 0 ? `×${count}` : '—'}</td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
       <div className="dlg__actions">

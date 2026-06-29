@@ -16,6 +16,8 @@ const KEY = {
   daily: 'dw:daily',
   dailyGame: 'dw:dailygame',
   streak: 'dw:streak',
+  rankCounts: 'dw:rankcounts',
+  rankCredit: 'dw:rankcredit',
 };
 
 export const SLOT_COUNT = 3;
@@ -220,4 +222,32 @@ export function loadSettings(): Settings {
 
 export function saveSettings(settings: Settings): void {
   write(KEY.settings, settings);
+}
+
+// --- Rank achievements (lifetime) -------------------------------------------
+// rankCounts[i] = number of games in which rank i was reached (counted once per
+// game). rankCredit tracks, per current game (keyed by a mode:seed signature),
+// how high we've already credited and whether the Kingpin popup has shown — so
+// reloads and resumes never double-count or re-congratulate.
+
+export function loadRankCounts(): number[] {
+  return read<number[]>(KEY.rankCounts) ?? [];
+}
+
+export function saveRankCounts(counts: number[]): void {
+  write(KEY.rankCounts, counts);
+}
+
+export interface RankCredit {
+  sig: string;
+  creditedUpTo: number;
+  kingpinShown: boolean;
+}
+
+export function loadRankCredit(): RankCredit | null {
+  return read<RankCredit>(KEY.rankCredit);
+}
+
+export function saveRankCredit(rec: RankCredit): void {
+  write(KEY.rankCredit, rec);
 }

@@ -478,6 +478,10 @@ body {
   color: #fff;
   font-weight: 700;
 }
+/* Ranks you've never reached yet — dimmed, so the goal is visible. */
+.ranks-table tbody tr.is-locked {
+  color: #999;
+}
 .ranks-table__here {
   margin-right: 5px;
 }

@@ -26,10 +26,15 @@ import {
   loadDailyResult,
   loadStreak,
   recordStreak,
+  loadRankCounts,
+  saveRankCounts,
+  loadRankCredit,
+  saveRankCredit,
   type ScoreEntry,
   type Settings,
   type DailyStreak,
 } from './storage';
+import { rankIndexFor, RANKS } from '../data/ranks';
 import { setSoundEnabled, playSfx, type Sfx } from './sound';
 import { todayKey, dailySeed, isWin } from './daily';
 import { objectivesDone } from './objectives';
@@ -50,7 +55,8 @@ export type DialogKind =
   | 'objectives'
   | 'ranks'
   | 'help'
-  | 'about';
+  | 'about'
+  | 'kingpin';
 
 interface GameUi {
   selected: DrugId | null;
@@ -67,6 +73,8 @@ interface GameContextValue {
   ui: GameUi;
   scores: ScoreEntry[];
   streak: DailyStreak;
+  /** Lifetime per-rank achievement counts (once per game), indexed like RANKS. */
+  rankCounts: number[];
   settings: Settings;
   toggleSound: () => void;
   /** Mode the New Game confirm will start (Classic or Dynasty). */
@@ -102,6 +110,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [dialog, setDialog] = useState<DialogKind | null>(null);
   const [scores, setScores] = useState<ScoreEntry[]>(() => loadScores());
   const [streak, setStreak] = useState<DailyStreak>(() => loadStreak());
+  const [rankCounts, setRankCounts] = useState<number[]>(() => loadRankCounts());
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [pendingMode, setPendingMode] = useState<GameMode>('classic');
   const [bump, setBump] = useState(0);
@@ -134,6 +143,37 @@ export function GameProvider({ children }: { children: ReactNode }) {
       saveDailyGame(key, state);
     }
   }, [state]);
+
+  // Credit rank achievements (lifetime, once per game) as net worth climbs, and
+  // fire the Kingpin popup the first time the top rank is reached. Keyed by a
+  // mode:seed game signature persisted in storage, so reloads/resumes never
+  // double-count or re-congratulate.
+  useEffect(() => {
+    const sig = `${state.mode}:${state.seed}`;
+    const peakRank = rankIndexFor(state.peakNetWorth);
+    const prev = loadRankCredit();
+    const sameGame = prev?.sig === sig;
+    let creditedUpTo = sameGame ? prev!.creditedUpTo : -1;
+    let kingpinShown = sameGame ? prev!.kingpinShown : false;
+    let changed = !sameGame;
+
+    if (peakRank > creditedUpTo) {
+      const counts = loadRankCounts();
+      for (let i = creditedUpTo + 1; i <= peakRank; i++) counts[i] = (counts[i] ?? 0) + 1;
+      saveRankCounts(counts);
+      setRankCounts(counts.slice());
+      creditedUpTo = peakRank;
+      changed = true;
+    }
+
+    if (peakRank >= RANKS.length - 1 && !kingpinShown) {
+      kingpinShown = true;
+      changed = true;
+      setDialog('kingpin');
+    }
+
+    if (changed) saveRankCredit({ sig, creditedUpTo, kingpinShown });
+  }, [state.mode, state.seed, state.peakNetWorth]);
 
   // Outcome sounds + high-score recording on transitions.
   const prevEnc = useRef(state.pendingEncounter != null);
@@ -222,6 +262,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       },
       scores,
       streak,
+      rankCounts,
       settings,
       toggleSound,
       pendingMode,
@@ -232,7 +273,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       bump,
       refresh: () => setBump((b) => b + 1),
     }),
-    [state, dispatch, selected, dialog, scores, streak, settings, toggleSound, pendingMode, requestNewGame, setCity, randomCity, bump],
+    [state, dispatch, selected, dialog, scores, streak, rankCounts, settings, toggleSound, pendingMode, requestNewGame, setCity, randomCity, bump],
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
