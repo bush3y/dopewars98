@@ -28,7 +28,11 @@ export function MobileLayout() {
   const fmt = (n: number) => n.toLocaleString('en-US');
 
   const heldQty: Partial<Record<DrugId, number>> = {};
-  for (const row of snap.trenchcoat) heldQty[row.drug] = row.qty;
+  const heldAvg: Partial<Record<DrugId, number>> = {};
+  for (const row of snap.trenchcoat) {
+    heldQty[row.drug] = row.qty;
+    heldAvg[row.drug] = row.price; // avg price paid
+  }
   const canSell = ui.selected != null && !!state.inventory[ui.selected];
   const netWorth = snap.cash + snap.bank - snap.debt;
   const objCount =
@@ -88,6 +92,7 @@ export function MobileLayout() {
             selected={ui.selected}
             onSelect={ui.select}
             heldQty={heldQty}
+            heldAvg={heldAvg}
             captionRight={`Coat ${snap.capacity - snap.spaceUsed}/${snap.capacity} free`}
           />
         </section>

@@ -13,6 +13,7 @@ export function MarketPane({
   onSelect,
   held,
   heldQty,
+  heldAvg,
   captionRight,
 }: {
   market: MarketEntry[];
@@ -22,6 +23,8 @@ export function MarketPane({
   held?: Partial<Record<DrugId, boolean>>;
   /** Mobile (unified): quantity carried per drug → adds a "Held" column. */
   heldQty?: Partial<Record<DrugId, number>>;
+  /** Mobile (unified): average price paid per held drug → shows a "paid" note. */
+  heldAvg?: Partial<Record<DrugId, number>>;
   /** Optional right-aligned caption text (e.g. coat space). */
   captionRight?: string;
 }) {
@@ -58,6 +61,11 @@ export function MarketPane({
                       <span className="grid__held" aria-label="held">●</span>
                     )}
                     {DRUG_NAME[row.drug]}
+                    {unified && qty > 0 && (
+                      <span className="grid__paid">
+                        paid {(heldAvg?.[row.drug] ?? 0).toLocaleString('en-US')}
+                      </span>
+                    )}
                   </td>
                   {unified && (
                     <td className={`grid__col-held ${qty > 0 ? 'is-held' : ''}`}>
