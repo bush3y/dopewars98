@@ -2,25 +2,26 @@ import { useState } from 'react';
 import { Led } from './Led';
 import { HealthBar } from './HealthBar';
 import { MarketPane } from './MarketPane';
-import { TrenchcoatPane } from './TrenchcoatPane';
 import { MobileDrawer } from './MobileDrawer';
 import { useGame } from '../game/GameContext';
 import { modeLabel } from '../game/daily';
 import { rankName } from '../data/ranks';
+import type { DrugId } from '../data/types';
 
 /**
  * Portrait reflow (BRIEF.md §2). Full-bleed with safe-area insets and softened
- * corners. Header carries the menu (☰ drawer), LED stats and a slim health bar;
- * Market and Trenchcoat are stacked, both visible, no tabs. Action bar wires the
- * loop (Travel/Buy/Sell/Finances). Same state as desktop — presentation only.
+ * corners. Header carries the menu (☰ drawer), LED stats and a slim health bar.
+ * A single unified drug list shows your Held qty inline (no separate trenchcoat
+ * pane — saves vertical room so all drugs fit). Action bar wires the loop. Same
+ * state as desktop — presentation only.
  */
 export function MobileLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { snapshot: snap, state, ui } = useGame();
   const fmt = (n: number) => n.toLocaleString('en-US');
 
-  const held: Partial<Record<string, boolean>> = {};
-  for (const row of snap.trenchcoat) held[row.drug] = true;
+  const heldQty: Partial<Record<DrugId, number>> = {};
+  for (const row of snap.trenchcoat) heldQty[row.drug] = row.qty;
   const canSell = ui.selected != null && !!state.inventory[ui.selected];
 
   return (
@@ -72,17 +73,8 @@ export function MobileLayout() {
             market={snap.market}
             selected={ui.selected}
             onSelect={ui.select}
-            held={held}
-          />
-        </section>
-        <section className="mobile__section mobile__section--coat">
-          <TrenchcoatPane
-            trenchcoat={snap.trenchcoat}
-            spaceUsed={snap.spaceUsed}
-            capacity={snap.capacity}
-            emptyText="Empty — buy drugs to fill your trenchcoat."
-            selected={ui.selected}
-            onSelect={ui.select}
+            heldQty={heldQty}
+            captionRight={`Coat ${snap.capacity - snap.spaceUsed}/${snap.capacity} free`}
           />
         </section>
       </main>

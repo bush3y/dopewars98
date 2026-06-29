@@ -314,8 +314,14 @@ body {
   min-height: 0;
 }
 .pane__caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   font-size: 12px;
   margin-bottom: 2px;
+}
+.pane__caption-right {
+  color: #404040;
 }
 .pane__list {
   background: #fff;
@@ -352,6 +358,20 @@ body {
 }
 .grid__col-name {
   width: 60%;
+}
+/* Unified mobile list: the "Held" column (qty carried). */
+.grid__col-held {
+  width: 44px;
+  text-align: center;
+  color: #808080;
+  font-variant-numeric: tabular-nums;
+}
+.grid__col-held.is-held {
+  color: #0b8a0b;
+  font-weight: 700;
+}
+.is-selected .grid__col-held.is-held {
+  color: #7fff7f;
 }
 .grid__empty {
   color: #808080;
