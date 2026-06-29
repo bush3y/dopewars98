@@ -249,12 +249,6 @@ body {
   font-size: 13px;
   color: #000080;
 }
-.mobile__rank {
-  font-weight: 700;
-  font-size: 12px;
-  color: #000080;
-  white-space: nowrap;
-}
 .healthbar {
   position: relative;
   flex: 1;
@@ -421,9 +415,50 @@ body {
   font-weight: 700;
   letter-spacing: 1px;
 }
+/* Right-aligned chip group on the title row: rank + mode. */
+.mobile__badges {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mobile__rank-chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #808080;
+  white-space: nowrap;
+}
+
+/* Location + day line. */
+.mobile__where {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 6px 0;
+}
+.mobile__loc {
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .mobile__day {
   font-size: 12px;
-  margin-left: auto;
+  white-space: nowrap;
+}
+/* Tappable daily-objectives chip. */
+.mobile__obj-chip {
+  font-size: 11px;
+  font-weight: 700;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 10px;
+  white-space: nowrap;
 }
 .mobile__stats {
   display: grid;
@@ -646,15 +681,14 @@ body {
   background: #b8860b;
 }
 
-/* Mobile mode badge (top-right of the header). */
+/* Mobile mode badge (a chip in the title-row badge group). */
 .mobile__mode {
-  width: fit-content;
-  margin: -2px 0 6px auto;
   font-size: 11px;
   font-weight: 700;
   padding: 2px 10px;
   border-radius: 10px;
   color: #fff;
+  white-space: nowrap;
 }
 .mobile__mode--classic {
   background: #000080;
