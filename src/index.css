@@ -356,8 +356,10 @@ body {
 }
 /* Unified mobile list: Qty held + avg Price paid as their own columns. Both turn
    green for held drugs to tie them together as one position. */
+/* Let the Drug column soak up all slack so Qty/Paid pack together on the right
+   instead of being spread out by the table's auto layout. */
 .grid--unified .grid__col-name {
-  width: auto;
+  width: 100%;
 }
 .grid__col-qty {
   width: 38px;
