@@ -32,7 +32,7 @@ export function DesktopWindow() {
     <div className="window dw-window" ref={ref}>
       <div className="title-bar" {...titlebarProps}>
         <div className="title-bar-text">
-          Dope Wars — {modeLabel(state.mode, state.seed)} — Day {snap.day}
+          Dope Wars 98 — {modeLabel(state.mode, state.seed)} — Day {snap.day}
           {state.mode !== 'dynasty' && ` of ${snap.maxDays}`}
         </div>
         <div className="title-bar-controls">

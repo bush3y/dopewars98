@@ -6,7 +6,7 @@ export function AboutDialog() {
   const { ui } = useGame();
 
   return (
-    <Modal title="About Dope Wars" onClose={ui.close}>
+    <Modal title="About Dope Wars 98" onClose={ui.close}>
       <p className="dlg__message">
         <b>Dope Wars 98</b> — a browser homage to the classic Windows dopewars, rebuilt in the
         Win98 style. Clean-room recreation: no original code or assets.

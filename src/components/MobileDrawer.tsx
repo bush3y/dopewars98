@@ -50,7 +50,7 @@ export function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => 
       />
       <aside className={`drawer ${open ? 'is-open' : ''}`} role="menu" aria-hidden={!open}>
         <div className="drawer__head">
-          <span className="drawer__brand">DOPE WARS</span>
+          <span className="drawer__brand">DOPE WARS <span className="brand-98">98</span></span>
           <button type="button" className="drawer__close" onClick={onClose} aria-label="Close menu">
             ✕
           </button>

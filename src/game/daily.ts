@@ -103,5 +103,5 @@ export function makeShareString(d: ShareData, streak = 0): string {
     ? `\n${'⭐'.repeat(d.objectives.filter(Boolean).length)}${'▫️'.repeat(d.objectives.filter((x) => !x).length)} ${d.objectives.filter(Boolean).length}/${d.objectives.length}`
     : '';
   const curve = blockSparkline(d.history);
-  return `Dope Wars — Daily ${d.date}\n${line}\n${moneyLine}${streakLine}${starsLine}\n${curve}`;
+  return `Dope Wars 98 — Daily ${d.date}\n${line}\n${moneyLine}${streakLine}${starsLine}\n${curve}`;
 }

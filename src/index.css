@@ -447,6 +447,10 @@ body {
   font-weight: 700;
   letter-spacing: 1px;
 }
+/* The "98" reads as a retro logo accent in the Win9x desktop teal. */
+.brand-98 {
+  color: #008080;
+}
 /* Rank chip lives on the Health line (player status), labeled with a medal.
    It's a button (opens the Ranks dialog) but keeps its flat pill form — reset the
    98.css button chrome so it looks identical to a static chip. */

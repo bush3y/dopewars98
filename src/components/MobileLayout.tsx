@@ -50,7 +50,7 @@ export function MobileLayout() {
           >
             ☰
           </button>
-          <span className="mobile__brand">DOPE WARS</span>
+          <span className="mobile__brand">DOPE WARS <span className="brand-98">98</span></span>
           <span className={`mobile__mode mobile__mode--${state.mode}`}>
             {MODE_SHORT[state.mode]}
           </span>
