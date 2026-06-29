@@ -10,11 +10,25 @@ export function RanksDialog() {
   const { snapshot: snap, ui } = useGame();
   const netWorth = snap.cash + snap.bank - snap.debt;
   const currentIdx = rankIndexFor(netWorth);
+  const next = currentIdx + 1 < RANKS.length ? RANKS[currentIdx + 1] : null;
+  const toNext = next ? next.min - netWorth : 0;
 
   return (
     <Modal title="Ranks" onClose={ui.close}>
       <p className="dlg__message">
         Your rank rises and falls with your <b>net worth</b> (cash + bank − debt).
+      </p>
+      <p className="dlg__message">
+        {next ? (
+          <>
+            You're a <b>{RANKS[currentIdx].name}</b> — <b>${toNext.toLocaleString('en-US')}</b> to{' '}
+            <b>{next.name}</b>.
+          </>
+        ) : (
+          <>
+            You've reached the top rank — <b>{RANKS[currentIdx].name}</b>. 👑
+          </>
+        )}
       </p>
       <table className="grid ranks-table">
         <thead>

@@ -1,10 +1,12 @@
 import { Led } from './Led';
 import { HealthBar } from './HealthBar';
 import { rankName } from '../data/ranks';
+import { useGame } from '../game/GameContext';
 import type { GameSnapshot } from '../data/types';
 
 /** The four LED stat rows (Cash / Bank / Debt / Guns) plus health and rank. */
 export function StatPanel({ snap }: { snap: GameSnapshot }) {
+  const { ui } = useGame();
   const fmt = (n: number) => n.toLocaleString('en-US');
   const netWorth = snap.cash + snap.bank - snap.debt;
 
@@ -34,7 +36,14 @@ export function StatPanel({ snap }: { snap: GameSnapshot }) {
 
       <div className="rank">
         <span className="rank__label">Rank :</span>
-        <span className="rank__value">{rankName(netWorth)}</span>
+        <button
+          type="button"
+          className="rank__value"
+          onClick={() => ui.open('ranks')}
+          aria-label="View ranks"
+        >
+          {rankName(netWorth)}
+        </button>
       </div>
     </div>
   );
