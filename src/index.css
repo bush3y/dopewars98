@@ -665,12 +665,40 @@ body {
   border-bottom: 1px solid #a0a0a0;
 }
 .drawer__group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  cursor: pointer;
+  text-align: left;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #555;
-  padding: 6px 16px 2px;
+  padding: 10px 16px;
+  min-height: 40px;
+}
+.drawer__group-title:active {
+  box-shadow: none;
+  background: rgba(0, 0, 0, 0.05);
+}
+.drawer__chevron {
+  font-size: 9px;
+  width: 10px;
+  flex-shrink: 0;
+}
+.drawer__group-hint {
+  margin-left: auto;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: #333;
 }
 .drawer__item {
   display: flex;
