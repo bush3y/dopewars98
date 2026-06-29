@@ -38,7 +38,12 @@ export function runMenuItem(label: string, game: Game): void {
     case 'Sound On / Off':
       game.toggleSound();
       break;
-    // Help — later/N/A.
+    case 'How to Play':
+      game.ui.open('help');
+      break;
+    case 'About':
+      game.ui.open('about');
+      break;
     default:
       break;
   }

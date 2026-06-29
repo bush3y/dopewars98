@@ -482,6 +482,21 @@ body {
   margin-right: 5px;
 }
 
+/* Help dialog: scrollable on short screens, with compact section headings. */
+.help {
+  max-height: 58vh;
+  overflow-y: auto;
+}
+.help__h {
+  margin: 10px 0 2px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.dlg__message--muted {
+  color: #555;
+  font-size: 12px;
+}
+
 /* Location + day line. */
 .mobile__where {
   display: flex;
