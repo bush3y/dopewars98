@@ -769,7 +769,10 @@ body {
 .modal-scrim {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  /* Fairly dark: iOS Safari tints its status/toolbar bars from whatever covers the
+     safe areas, so a dark scrim keeps them a charcoal-ish frame (not light gray)
+     while a dialog is open — and focuses attention on the dialog. */
+  background: rgba(0, 0, 0, 0.62);
   display: flex;
   align-items: center;
   justify-content: center;

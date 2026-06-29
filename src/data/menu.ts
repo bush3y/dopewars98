@@ -50,7 +50,7 @@ export const MENUS: Menu[] = [
     accel: 0,
     items: [
       ...CITIES.map((c) => ({ label: c.name, city: c.id })),
-      { label: '🎲 Random City', random: true },
+      { label: 'Random City', random: true },
     ],
   },
   {
