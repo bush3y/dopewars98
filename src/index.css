@@ -30,10 +30,11 @@ body,
 
 body {
   font-family: 'Pixelated MS Sans Serif', Arial, sans-serif;
-  /* Win9x gray behind safe-area / overscroll on mobile so iOS Safari's status
-     and toolbar strips match the chrome instead of showing white. The desktop
-     teal backdrop paints over this. */
-  background: #c0c0c0;
+  /* iOS Safari tints its status/toolbar strips to the page (body) background, not
+     the theme-color meta — so this charcoal matches the theme-color that Chrome/
+     Firefox use, giving the same dark frame across browsers. The app chrome
+     (.mobile) and the desktop teal backdrop paint over this everywhere else. */
+  background: #2b2b2b;
 }
 
 /* --- Desktop backdrop: classic teal Win9x desktop ------------------------- */
