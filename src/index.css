@@ -1029,4 +1029,10 @@ body {
   .dlg__qty input {
     min-height: 36px;
   }
+  /* iOS Safari auto-zooms when focusing an input under 16px; 16px stops it. */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
 }
