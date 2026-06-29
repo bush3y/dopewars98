@@ -6,7 +6,7 @@ import { MobileDrawer } from './MobileDrawer';
 import { useGame } from '../game/GameContext';
 import { objectivesDone } from '../game/objectives';
 import { rankName } from '../data/ranks';
-import { locationName } from '../data/cities';
+import { locationName, CITY_BY_ID } from '../data/cities';
 import type { DrugId } from '../data/types';
 import type { GameMode } from '../engine/types';
 
@@ -57,7 +57,10 @@ export function MobileLayout() {
         </div>
 
         <div className="mobile__where">
-          <span className="mobile__loc">📍 {locationName(city, snap.location)}</span>
+          <span className="mobile__loc">
+            📍 <span className="mobile__loc-city">{CITY_BY_ID[city].name} ·</span>{' '}
+            {locationName(city, snap.location)}
+          </span>
           <span className="mobile__day">
             Day {snap.day}{state.mode !== 'dynasty' && ` / ${snap.maxDays}`}
           </span>

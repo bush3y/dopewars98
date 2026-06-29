@@ -520,6 +520,11 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* City is secondary context; the neighborhood (which changes as you travel) leads. */
+.mobile__loc-city {
+  font-weight: 400;
+  color: #555;
+}
 .mobile__day {
   font-size: 12px;
   white-space: nowrap;
