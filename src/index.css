@@ -415,13 +415,7 @@ body {
   font-weight: 700;
   letter-spacing: 1px;
 }
-/* Right-aligned chip group on the title row: rank + mode. */
-.mobile__badges {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+/* Rank chip lives on the Health line (player status), labeled with a medal. */
 .mobile__rank-chip {
   font-size: 11px;
   font-weight: 700;
@@ -430,6 +424,7 @@ body {
   background: #fff;
   border: 1px solid #808080;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Location + day line. */
@@ -449,15 +444,6 @@ body {
 }
 .mobile__day {
   font-size: 12px;
-  white-space: nowrap;
-}
-/* Tappable daily-objectives chip. */
-.mobile__obj-chip {
-  font-size: 11px;
-  font-weight: 700;
-  min-height: 24px;
-  padding: 0 10px;
-  border-radius: 10px;
   white-space: nowrap;
 }
 .mobile__stats {
@@ -681,8 +667,9 @@ body {
   background: #b8860b;
 }
 
-/* Mobile mode badge (a chip in the title-row badge group). */
+/* Mobile mode badge — right-aligned chip on the title row. */
 .mobile__mode {
+  margin-left: auto;
   font-size: 11px;
   font-weight: 700;
   padding: 2px 10px;
@@ -821,6 +808,24 @@ body {
   margin: 0;
   border-radius: 0;
   min-height: 40px;
+}
+/* Split bar below the list: gun shop + (daily) objectives, side by side. */
+.mobile__subbar {
+  display: flex;
+}
+.mobile__subbar > button {
+  flex: 1;
+  width: auto;
+  margin: 0;
+  min-height: 40px;
+  border-radius: 0;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mobile__obj-btn {
+  color: #7a5c00;
 }
 .grid.shop {
   margin: 4px 0;

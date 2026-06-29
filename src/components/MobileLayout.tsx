@@ -47,25 +47,13 @@ export function MobileLayout() {
             ☰
           </button>
           <span className="mobile__brand">DOPE WARS</span>
-          <span className="mobile__badges">
-            <span className="mobile__rank-chip">🎖 {rankName(netWorth)}</span>
-            <span className={`mobile__mode mobile__mode--${state.mode}`}>
-              {MODE_SHORT[state.mode]}
-            </span>
+          <span className={`mobile__mode mobile__mode--${state.mode}`}>
+            {MODE_SHORT[state.mode]}
           </span>
         </div>
 
         <div className="mobile__where">
           <span className="mobile__loc">📍 {locationName(city, snap.location)}</span>
-          {state.mode === 'daily' && (
-            <button
-              type="button"
-              className="mobile__obj-chip"
-              onClick={() => ui.open('objectives')}
-            >
-              ⭐ {objCount}/3 ›
-            </button>
-          )}
           <span className="mobile__day">
             Day {snap.day}{state.mode !== 'dynasty' && ` / ${snap.maxDays}`}
           </span>
@@ -89,6 +77,7 @@ export function MobileLayout() {
         <div className="mobile__health">
           <span className="health__label">Health</span>
           <HealthBar value={snap.health} />
+          <span className="mobile__rank-chip">🎖 {rankName(netWorth)}</span>
         </div>
       </header>
 
@@ -104,14 +93,21 @@ export function MobileLayout() {
         </section>
       </main>
 
-      <button
-        type="button"
-        className="gunshop-btn mobile__gunshop"
-        disabled={!state.gunShopOpen}
-        onClick={() => ui.open('gun-shop')}
-      >
-        {state.gunShopOpen ? "🔫 Dan's Gun Shop is open" : '🔒 Gun Shop closed'}
-      </button>
+      <div className="mobile__subbar">
+        <button
+          type="button"
+          className="gunshop-btn mobile__gunshop"
+          disabled={!state.gunShopOpen}
+          onClick={() => ui.open('gun-shop')}
+        >
+          {state.gunShopOpen ? "🔫 Dan's Gun Shop" : '🔒 Gun Shop closed'}
+        </button>
+        {state.mode === 'daily' && (
+          <button type="button" className="gunshop-btn mobile__obj-btn" onClick={() => ui.open('objectives')}>
+            ⭐ Objectives {objCount}/3
+          </button>
+        )}
+      </div>
 
       <nav className="mobile__actions">
         <button type="button" onClick={() => ui.open('travel')}>Travel</button>
