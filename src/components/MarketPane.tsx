@@ -61,15 +61,17 @@ export function MarketPane({
                       <span className="grid__held" aria-label="held">●</span>
                     )}
                     {DRUG_NAME[row.drug]}
-                    {unified && qty > 0 && (
-                      <span className="grid__paid">
-                        paid {(heldAvg?.[row.drug] ?? 0).toLocaleString('en-US')}
-                      </span>
-                    )}
                   </td>
                   {unified && (
                     <td className={`grid__col-held ${qty > 0 ? 'is-held' : ''}`}>
-                      {qty > 0 ? qty : ''}
+                      {qty > 0 && (
+                        <>
+                          <span className="grid__held-qty">{qty}</span>
+                          <span className="grid__held-paid">
+                            @{(heldAvg?.[row.drug] ?? 0).toLocaleString('en-US')}
+                          </span>
+                        </>
+                      )}
                     </td>
                   )}
                   <td className="grid__col-spark">

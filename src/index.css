@@ -354,9 +354,9 @@ body {
 .grid__col-name {
   width: 60%;
 }
-/* Unified mobile list: the "Held" column (qty carried). */
+/* Unified mobile list: the "Held" column — qty carried over the avg price paid. */
 .grid__col-held {
-  width: 44px;
+  width: 62px;
   text-align: center;
   color: #808080;
   font-variant-numeric: tabular-nums;
@@ -368,15 +368,17 @@ body {
 .is-selected .grid__col-held.is-held {
   color: #7fff7f;
 }
-/* "paid <avg>" note under a held drug's name (unified mobile list). */
-.grid__paid {
+.grid__held-qty {
   display: block;
-  font-size: 11px;
+}
+/* Avg price paid, under the qty (e.g. "@27"). */
+.grid__held-paid {
+  display: block;
+  font-size: 10px;
   font-weight: 400;
   color: #777;
-  margin-top: 1px;
 }
-.is-selected .grid__paid {
+.is-selected .grid__held-paid {
   color: #cfe0ff;
 }
 .grid__empty {
