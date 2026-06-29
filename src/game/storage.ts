@@ -18,6 +18,8 @@ const KEY = {
   streak: 'dw:streak',
   rankCounts: 'dw:rankcounts',
   rankCredit: 'dw:rankcredit',
+  campaign: 'dw:campaign',
+  lastDate: 'dw:lastdate',
 };
 
 export const SLOT_COUNT = 3;
@@ -250,4 +252,36 @@ export function loadRankCredit(): RankCredit | null {
 
 export function saveRankCredit(rec: RankCredit): void {
   write(KEY.rankCredit, rec);
+}
+
+// --- Campaign stash (in-progress non-daily game) ----------------------------
+// The Daily is "home"; this keeps your Classic/Dynasty run saved while you play
+// the Daily, so you can return to it. Mirrors the active game while playing a
+// non-daily mode; cleared when that run ends.
+
+export function saveCampaign(state: GameState): void {
+  write(KEY.campaign, { version: VERSION, state });
+}
+
+export function loadCampaign(): GameState | null {
+  const env = read<Envelope>(KEY.campaign);
+  return env && env.version === VERSION ? env.state : null;
+}
+
+export function clearCampaign(): void {
+  try {
+    localStorage.removeItem(KEY.campaign);
+  } catch {
+    /* ignore */
+  }
+}
+
+// --- Last active calendar day (for the "returned next day" prompt) -----------
+
+export function loadLastDate(): string | null {
+  return read<string>(KEY.lastDate);
+}
+
+export function saveLastDate(date: string): void {
+  write(KEY.lastDate, date);
 }

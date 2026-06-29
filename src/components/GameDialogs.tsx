@@ -17,6 +17,7 @@ import { RanksDialog } from './dialogs/RanksDialog';
 import { HelpDialog } from './dialogs/HelpDialog';
 import { AboutDialog } from './dialogs/AboutDialog';
 import { KingpinDialog } from './dialogs/KingpinDialog';
+import { SwitchDailyDialog } from './dialogs/SwitchDailyDialog';
 
 /**
  * Single overlay layer rendered once at the app root, above both layouts.
@@ -61,6 +62,8 @@ export function GameDialogs() {
       return <AboutDialog />;
     case 'kingpin':
       return <KingpinDialog />;
+    case 'switch-daily':
+      return <SwitchDailyDialog />;
     case 'new-game':
       return <NewGameDialog />;
     default:

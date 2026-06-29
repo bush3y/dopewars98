@@ -23,7 +23,13 @@ import {
   saveSettings,
   saveDailyResult,
   saveDailyGame,
+  loadDailyGame,
   loadDailyResult,
+  saveCampaign,
+  loadCampaign,
+  clearCampaign,
+  loadLastDate,
+  saveLastDate,
   loadStreak,
   recordStreak,
   loadRankCounts,
@@ -56,7 +62,8 @@ export type DialogKind =
   | 'ranks'
   | 'help'
   | 'about'
-  | 'kingpin';
+  | 'kingpin'
+  | 'switch-daily';
 
 interface GameUi {
   selected: DrugId | null;
@@ -104,8 +111,49 @@ const ACTION_SFX: Partial<Record<Action['type'], Sfx>> = {
   REPAY_DEBT: 'cash',
 };
 
+/**
+ * Decide what to show on launch (BRIEF: Daily is "home"). Resume today's daily or
+ * an in-progress non-daily run; default first-timers to the Daily; and when a
+ * non-daily run is in progress on a *new* day, surface a prompt to continue it or
+ * switch to today's Daily (the run stays stashed either way).
+ */
+function decideStartup(): { initial: GameState; switchPrompt: boolean } {
+  const today = todayKey();
+  const todaySeed = dailySeed(today);
+  const lastDate = loadLastDate();
+  const current = loadCurrent();
+
+  // Active game is today's daily, still going → resume it.
+  if (
+    current &&
+    current.mode === 'daily' &&
+    current.seed === todaySeed &&
+    current.status === 'playing'
+  ) {
+    return { initial: current, switchPrompt: false };
+  }
+
+  // In-progress non-daily run (the active game, or one stashed when we last
+  // jumped to the Daily). Resume silently the same day; prompt on a new day.
+  const campaign =
+    current && current.mode !== 'daily' && current.status === 'playing'
+      ? current
+      : loadCampaign();
+  if (campaign && campaign.mode !== 'daily' && campaign.status === 'playing') {
+    return { initial: campaign, switchPrompt: lastDate !== today };
+  }
+
+  // Otherwise default to today's Daily: resume a mid-run, start a fresh one if
+  // available, or (already finished today) fall back to a fresh Classic game.
+  const savedDaily = loadDailyGame(today);
+  if (savedDaily) return { initial: savedDaily, switchPrompt: false };
+  if (!loadDailyResult(today)) return { initial: initialState(todaySeed, 'daily'), switchPrompt: false };
+  return { initial: initialState(), switchPrompt: false };
+}
+
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [state, rawDispatch] = useReducer(reducer, undefined, () => loadCurrent() ?? initialState());
+  const [startup] = useState(decideStartup);
+  const [state, rawDispatch] = useReducer(reducer, startup.initial);
   const [selected, setSelected] = useState<DrugId | null>(null);
   const [dialog, setDialog] = useState<DialogKind | null>(null);
   const [scores, setScores] = useState<ScoreEntry[]>(() => loadScores());
@@ -120,9 +168,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setDialog('new-game');
   }, []);
 
-  // Apply persisted sound preference once.
+  // Apply persisted sound preference once, and (on a new day with a non-daily run
+  // in progress) offer to continue it or switch to today's Daily.
   useEffect(() => {
     setSoundEnabled(settings.sound);
+    if (startup.switchPrompt) setDialog('switch-daily');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -138,9 +188,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
   // restarts — the world is deterministic, so a restart would be save-scumming).
   useEffect(() => {
     saveCurrent(state);
+    saveLastDate(todayKey());
     const key = todayKey();
-    if (state.mode === 'daily' && state.seed === dailySeed(key) && state.status === 'playing') {
-      saveDailyGame(key, state);
+    if (state.mode === 'daily') {
+      if (state.seed === dailySeed(key) && state.status === 'playing') saveDailyGame(key, state);
+    } else if (state.status === 'playing') {
+      saveCampaign(state); // stash the in-progress run so the Daily can't lose it
+    } else {
+      clearCampaign(); // run ended — nothing to come back to
     }
   }, [state]);
 
