@@ -37,11 +37,12 @@ export function MarketPane({
         {captionRight && <span className="pane__caption-right">{captionRight}</span>}
       </div>
       <div className="pane__list">
-        <table className="grid grid--selectable">
+        <table className={`grid grid--selectable ${unified ? 'grid--unified' : ''}`}>
           <thead>
             <tr>
               <th className="grid__col-name">Drug</th>
-              {unified && <th className="grid__col-held">Held</th>}
+              {unified && <th className="grid__col-qty">Qty</th>}
+              {unified && <th className="grid__col-paid">Paid</th>}
               <th className="grid__col-spark">Trend</th>
               <th className="grid__col-num">Price</th>
             </tr>
@@ -49,6 +50,7 @@ export function MarketPane({
           <tbody>
             {market.map((row) => {
               const qty = heldQty?.[row.drug] ?? 0;
+              const heldCls = qty > 0 ? 'is-held' : '';
               return (
                 <tr
                   key={row.drug}
@@ -63,15 +65,11 @@ export function MarketPane({
                     {DRUG_NAME[row.drug]}
                   </td>
                   {unified && (
-                    <td className={`grid__col-held ${qty > 0 ? 'is-held' : ''}`}>
-                      {qty > 0 && (
-                        <>
-                          <span className="grid__held-qty">{qty}</span>
-                          <span className="grid__held-paid">
-                            @{(heldAvg?.[row.drug] ?? 0).toLocaleString('en-US')}
-                          </span>
-                        </>
-                      )}
+                    <td className={`grid__col-qty ${heldCls}`}>{qty > 0 ? qty : ''}</td>
+                  )}
+                  {unified && (
+                    <td className={`grid__col-paid ${heldCls}`}>
+                      {qty > 0 ? (heldAvg?.[row.drug] ?? 0).toLocaleString('en-US') : ''}
                     </td>
                   )}
                   <td className="grid__col-spark">
