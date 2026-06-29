@@ -81,7 +81,14 @@ export function MobileLayout() {
         <div className="mobile__health">
           <span className="health__label">Health</span>
           <HealthBar value={snap.health} />
-          <span className="mobile__rank-chip">🎖 {rankName(netWorth)}</span>
+          <button
+            type="button"
+            className="mobile__rank-chip"
+            onClick={() => ui.open('ranks')}
+            aria-label="View ranks"
+          >
+            🎖 {rankName(netWorth)}
+          </button>
         </div>
       </header>
 

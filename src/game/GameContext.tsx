@@ -47,7 +47,8 @@ export type DialogKind =
   | 'scores'
   | 'chart'
   | 'daily'
-  | 'objectives';
+  | 'objectives'
+  | 'ranks';
 
 interface GameUi {
   selected: DrugId | null;
