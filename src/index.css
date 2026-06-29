@@ -1054,6 +1054,11 @@ body {
 .grid.scores td {
   padding: 2px 8px;
 }
+.scores__date {
+  white-space: nowrap;
+  text-align: right;
+  color: #555;
+}
 
 /* --- Daily challenge share ------------------------------------------------ */
 .dlg__streak {

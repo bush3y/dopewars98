@@ -20,6 +20,7 @@ export function HighScoresDialog() {
               <th className="grid__col-num">Net Worth</th>
               <th>Result</th>
               <th>Mode</th>
+              <th className="scores__date">Date</th>
             </tr>
           </thead>
           <tbody>
@@ -29,6 +30,13 @@ export function HighScoresDialog() {
                 <td className="grid__col-num">{s.score.toLocaleString()}</td>
                 <td>{RESULT_LABEL[outcome(s.status, s.score)]}</td>
                 <td>{MODE_LABEL[s.mode]}</td>
+                <td className="scores__date">
+                  {new Date(s.date).toLocaleDateString(undefined, {
+                    year: '2-digit',
+                    month: 'numeric',
+                    day: 'numeric',
+                  })}
+                </td>
               </tr>
             ))}
           </tbody>
