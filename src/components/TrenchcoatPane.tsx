@@ -1,5 +1,6 @@
 import { DRUG_NAME } from '../data/gameData';
 import type { DrugId, InventoryEntry } from '../data/types';
+import { HeatBadge } from './HeatBadge';
 
 /** The "Trenchcoat. Space: X/Y" inventory list. Rows selectable to drive Sell. */
 export function TrenchcoatPane({
@@ -9,6 +10,7 @@ export function TrenchcoatPane({
   emptyText,
   selected,
   onSelect,
+  heat,
 }: {
   trenchcoat: InventoryEntry[];
   spaceUsed: number;
@@ -17,11 +19,16 @@ export function TrenchcoatPane({
   emptyText?: string;
   selected?: DrugId | null;
   onSelect?: (drug: DrugId) => void;
+  /** Police heat (0–1) from cargo; shows a 🔥 badge when > 0. */
+  heat?: number;
 }) {
   return (
     <div className="pane">
       <div className="pane__caption">
-        Trenchcoat. Space : {capacity - spaceUsed}/{capacity}
+        <span>Trenchcoat. Space : {capacity - spaceUsed}/{capacity}</span>
+        {heat != null && heat > 0 && (
+          <span className="pane__caption-right"><HeatBadge heat={heat} /></span>
+        )}
       </div>
       <div className="pane__list">
         <table className="grid grid--selectable">

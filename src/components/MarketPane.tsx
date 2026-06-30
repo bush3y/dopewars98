@@ -1,6 +1,7 @@
 import { DRUG_NAME } from '../data/gameData';
 import type { DrugId, MarketEntry } from '../data/types';
 import { Sparkline } from './Sparkline';
+import { HeatBadge } from './HeatBadge';
 
 /**
  * The "Available drugs" list. Rows are selectable to drive Buy/Sell.
@@ -15,6 +16,7 @@ export function MarketPane({
   heldQty,
   heldAvg,
   captionRight,
+  heat,
 }: {
   market: MarketEntry[];
   selected?: DrugId | null;
@@ -27,6 +29,8 @@ export function MarketPane({
   heldAvg?: Partial<Record<DrugId, number>>;
   /** Optional right-aligned caption text (e.g. coat space). */
   captionRight?: string;
+  /** Police heat (0–1) from cargo; shows a 🔥 badge in the caption when > 0. */
+  heat?: number;
 }) {
   const unified = heldQty != null;
 
@@ -34,7 +38,10 @@ export function MarketPane({
     <div className="pane">
       <div className="pane__caption">
         <span>Available drugs :</span>
-        {captionRight && <span className="pane__caption-right">{captionRight}</span>}
+        <span className="pane__caption-right">
+          {heat != null && <HeatBadge heat={heat} />}
+          {captionRight}
+        </span>
       </div>
       <div className="pane__list">
         <table className={`grid grid--selectable ${unified ? 'grid--unified' : ''}`}>

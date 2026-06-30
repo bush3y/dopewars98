@@ -333,6 +333,23 @@ body {
 }
 .pane__caption-right {
   color: #404040;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+/* Police-heat badge (🔥 Low/Med/High) by your cargo. */
+.heat {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.heat--low {
+  color: #888;
+}
+.heat--med {
+  color: #c66000;
+}
+.heat--high {
+  color: #c00000;
 }
 .pane__list {
   background: #fff;

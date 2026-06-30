@@ -1,5 +1,5 @@
 import type { DrugId } from '../data/types';
-import { ECONOMY } from '../data/economy';
+import { ECONOMY, DRUG_HEAT } from '../data/economy';
 import { GUN_BY_ID } from '../data/guns';
 import { generateMarket } from './market';
 import {
@@ -26,6 +26,19 @@ export function spaceUsed(state: GameState): number {
   let used = gunSpace(state.guns);
   for (const id in state.inventory) used += state.inventory[id as DrugId]!.qty;
   return used;
+}
+
+/**
+ * How "hot" the current cargo is, 0–1. Soft drugs (heat 1) add nothing; hard
+ * drugs (heat 3) add the most. A full coat of hard product → 1. Feeds the police
+ * encounter chance so carrying harder product draws a little extra heat.
+ */
+export function heatFraction(state: GameState): number {
+  let weighted = 0;
+  for (const id in state.inventory) {
+    weighted += state.inventory[id as DrugId]!.qty * (DRUG_HEAT[id as DrugId] - 1);
+  }
+  return Math.min(1, weighted / (state.capacity * 2));
 }
 
 /** The score: cash + bank − debt. */
@@ -127,7 +140,14 @@ function coreReducer(state: GameState, action: Action): GameState {
       const { prices, event } = generateMarket(state.seed, day, action.location);
 
       const carriedFraction = spaceUsed(state) / state.capacity;
-      const arrival = generateArrival(state.seed, day, action.location, carriedFraction, state.cash);
+      const arrival = generateArrival(
+        state.seed,
+        day,
+        action.location,
+        carriedFraction,
+        state.cash,
+        heatFraction(state),
+      );
 
       let cash = state.cash;
       let inventory = state.inventory;

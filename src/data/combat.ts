@@ -2,10 +2,12 @@
 // (clean-room, BRIEF §3); the flavor strings are our own wording.
 
 export const COMBAT = {
-  // Chance of *any* arrival encounter = base + load * (carried fraction of coat).
-  // Carrying more dope draws more heat.
+  // Chance of *any* arrival encounter = base + load * (carried fraction of coat)
+  // + heat * (heat fraction). Carrying more dope draws heat; carrying *harder*
+  // product draws a little extra.
   encounterBase: 0.1,
   encounterLoad: 0.35,
+  encounterHeat: 0.1,
 
   // Given an encounter, the split between trouble types (must sum to 1).
   weights: {

@@ -41,6 +41,25 @@ export const DRUG_ECONOMY: Record<DrugId, DrugEconomy> = {
   ecstasy: { min: 11, max: 60, cheap: true },
 };
 
+/**
+ * Street "heat" tier: 1 = soft, 2 = mid, 3 = hard. Not the legal schedule (those
+ * lump weed in with heroin) — a game scale for how much police attention a drug
+ * draws. Carrying more, harder product raises your encounter odds.
+ */
+export const DRUG_HEAT: Record<DrugId, 1 | 2 | 3> = {
+  cocaine: 3,
+  crack: 3,
+  heroin: 3,
+  smack: 3,
+  opium: 3,
+  ecstasy: 2,
+  speed: 2,
+  weed: 1,
+  hashish: 1,
+  shrooms: 1,
+  peyote: 1,
+};
+
 export interface EventTemplate {
   /** Price multiplier applied to the affected drug. */
   multiplier: [min: number, max: number];

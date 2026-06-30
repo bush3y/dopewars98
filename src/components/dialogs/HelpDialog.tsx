@@ -37,6 +37,8 @@ export function HelpDialog() {
         <p className="dlg__message">
           When <b>Dan's Gun Shop</b> is open you can arm up. In a fight, your guns and{' '}
           <b>health</b> decide whether you win, run, or get hurt. Don't let your health hit zero.
+          Carrying more — and <b>harder</b> — drugs draws more police heat (watch the 🔥 by your
+          coat), so hard product pays well but runs hot.
         </p>
 
         <h4 className="help__h">Rank &amp; objectives</h4>
