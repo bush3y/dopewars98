@@ -1,6 +1,6 @@
 import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
-import { loadCampaign } from '../../game/storage';
+import { loadModeGame } from '../../game/storage';
 
 const LABEL: Record<string, string> = { classic: 'Classic', dynasty: 'Dynasty' };
 const BLURB: Record<string, string> = {
@@ -9,18 +9,15 @@ const BLURB: Record<string, string> = {
 };
 
 /**
- * Pick a mode. If a game of that mode is already in progress (auto-saved), offer
- * to resume it rather than silently discarding it; otherwise confirm a new game
- * (warning if it would replace an in-progress run of another mode).
+ * Pick a mode. Each mode keeps its own auto-saved run, so if one's in progress we
+ * offer to resume it rather than discarding it; otherwise start a new one.
  */
 export function NewGameDialog() {
   const { dispatch, ui, pendingMode } = useGame();
   const label = LABEL[pendingMode] ?? 'Classic';
 
-  const campaign = loadCampaign();
-  const inProgress = campaign && campaign.status === 'playing' ? campaign : null;
-  const resumable = inProgress && inProgress.mode === pendingMode ? inProgress : null;
-  const otherInProgress = inProgress && inProgress.mode !== pendingMode ? inProgress : null;
+  const saved = loadModeGame(pendingMode);
+  const resumable = saved && saved.status === 'playing' ? saved : null;
 
   const resume = () => {
     ui.select(null);
@@ -52,11 +49,7 @@ export function NewGameDialog() {
   return (
     <Modal title={`New ${label} Game`} onClose={ui.close}>
       <p className="dlg__message">{BLURB[pendingMode]}</p>
-      <p className="dlg__message">
-        Start a new {label} game?
-        {otherInProgress &&
-          ` This replaces your in-progress ${LABEL[otherInProgress.mode]} game (Day ${otherInProgress.day}).`}
-      </p>
+      <p className="dlg__message">Start a new {label} game?</p>
       <div className="dlg__actions">
         <button type="button" onClick={startNew}>Start</button>
         <button type="button" onClick={ui.close}>Cancel</button>

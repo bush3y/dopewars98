@@ -18,7 +18,6 @@ const KEY = {
   streak: 'dw:streak',
   rankCounts: 'dw:rankcounts',
   rankCredit: 'dw:rankcredit',
-  campaign: 'dw:campaign',
   lastDate: 'dw:lastdate',
 };
 
@@ -254,23 +253,27 @@ export function saveRankCredit(rec: RankCredit): void {
   write(KEY.rankCredit, rec);
 }
 
-// --- Campaign stash (in-progress non-daily game) ----------------------------
-// The Daily is "home"; this keeps your Classic/Dynasty run saved while you play
-// the Daily, so you can return to it. Mirrors the active game while playing a
-// non-daily mode; cleared when that run ends.
+// --- Per-mode in-progress games (Classic / Dynasty) -------------------------
+// Each non-daily mode keeps its own auto-saved run, so you can bounce between
+// Classic, Dynasty, and the Daily without losing any. Mirrors the active game
+// while playing that mode; cleared when the run ends. (Daily uses dailyGame.)
 
-export function saveCampaign(state: GameState): void {
-  write(KEY.campaign, { version: VERSION, state });
+function modeKey(mode: GameMode): string {
+  return `dw:game:${mode}`;
 }
 
-export function loadCampaign(): GameState | null {
-  const env = read<Envelope>(KEY.campaign);
+export function saveModeGame(state: GameState): void {
+  write(modeKey(state.mode), { version: VERSION, state });
+}
+
+export function loadModeGame(mode: GameMode): GameState | null {
+  const env = read<Envelope>(modeKey(mode));
   return env && env.version === VERSION ? env.state : null;
 }
 
-export function clearCampaign(): void {
+export function clearModeGame(mode: GameMode): void {
   try {
-    localStorage.removeItem(KEY.campaign);
+    localStorage.removeItem(modeKey(mode));
   } catch {
     /* ignore */
   }

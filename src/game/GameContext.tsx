@@ -25,9 +25,8 @@ import {
   saveDailyGame,
   loadDailyGame,
   loadDailyResult,
-  saveCampaign,
-  loadCampaign,
-  clearCampaign,
+  saveModeGame,
+  clearModeGame,
   loadLastDate,
   saveLastDate,
   loadStreak,
@@ -123,24 +122,18 @@ function decideStartup(): { initial: GameState; switchPrompt: boolean } {
   const lastDate = loadLastDate();
   const current = loadCurrent();
 
-  // Active game is today's daily, still going → resume it.
-  if (
-    current &&
-    current.mode === 'daily' &&
-    current.seed === todaySeed &&
-    current.status === 'playing'
-  ) {
-    return { initial: current, switchPrompt: false };
-  }
-
-  // In-progress non-daily run (the active game, or one stashed when we last
-  // jumped to the Daily). Resume silently the same day; prompt on a new day.
-  const campaign =
-    current && current.mode !== 'daily' && current.status === 'playing'
-      ? current
-      : loadCampaign();
-  if (campaign && campaign.mode !== 'daily' && campaign.status === 'playing') {
-    return { initial: campaign, switchPrompt: lastDate !== today };
+  // Resume the last active game if it's still in progress.
+  if (current && current.status === 'playing') {
+    // Today's daily → just resume it.
+    if (current.mode === 'daily' && current.seed === todaySeed) {
+      return { initial: current, switchPrompt: false };
+    }
+    // A non-daily run → resume; prompt to switch to the Daily on a new day. (Each
+    // mode keeps its own slot, so the others stay saved and reachable via the menu.)
+    if (current.mode !== 'daily') {
+      return { initial: current, switchPrompt: lastDate !== today };
+    }
+    // An old daily still 'playing' (not today's) falls through to the default.
   }
 
   // Otherwise default to today's Daily: resume a mid-run, start a fresh one if
@@ -193,9 +186,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
     if (state.mode === 'daily') {
       if (state.seed === dailySeed(key) && state.status === 'playing') saveDailyGame(key, state);
     } else if (state.status === 'playing') {
-      saveCampaign(state); // stash the in-progress run so the Daily can't lose it
+      saveModeGame(state); // per-mode slot so each run persists independently
     } else {
-      clearCampaign(); // run ended — nothing to come back to
+      clearModeGame(state.mode); // run ended — nothing to come back to
     }
   }, [state]);
 
