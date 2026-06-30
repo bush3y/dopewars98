@@ -7,7 +7,7 @@ export const COMBAT = {
   // product draws a little extra.
   encounterBase: 0.1,
   encounterLoad: 0.35,
-  encounterHeat: 0.1,
+  encounterHeat: 0.05,
 
   // Given an encounter, the split between trouble types (must sum to 1).
   weights: {
