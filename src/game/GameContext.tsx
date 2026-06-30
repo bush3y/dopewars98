@@ -221,7 +221,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
       changed = true;
     }
 
-    if (peakRank >= RANKS.length - 1 && !kingpinShown) {
+    // Only Dynasty celebrates Kingpin with a popup — it's the endless mode's
+    // climax. Classic/Daily end at day 31, where the game-over screen already
+    // shows your peak rank, so a mid-run popup would just interrupt.
+    if (state.mode === 'dynasty' && peakRank >= RANKS.length - 1 && !kingpinShown) {
       kingpinShown = true;
       changed = true;
       setDialog('kingpin');
