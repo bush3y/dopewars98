@@ -4,6 +4,7 @@
 // result.
 
 import type { GameStatus, GameMode } from '../engine/types';
+import { rankName } from '../data/ranks';
 
 /** Local-date key, e.g. "2026-06-26". */
 export function todayKey(d: Date = new Date()): string {
@@ -104,4 +105,31 @@ export function makeShareString(d: ShareData, streak = 0): string {
     : '';
   const curve = blockSparkline(d.history);
   return `Dope Wars 98 — Daily ${d.date}\n${line}\n${moneyLine}${streakLine}${starsLine}\n${curve}\nhttps://dopewars98.myke.org`;
+}
+
+export interface RunShareData {
+  mode: GameMode;
+  status: GameStatus;
+  day: number;
+  score: number;
+  history: number[];
+  peakNetWorth: number;
+}
+
+/** Share text for a finished Classic/Dynasty run: outcome + score + peak rank. */
+export function makeRunShareString(d: RunShareData): string {
+  const o = outcome(d.status, d.score);
+  const line =
+    d.mode === 'dynasty'
+      ? `💀 Lasted ${d.day} days`
+      : o === 'busted'
+        ? `💀 Busted on day ${d.day}`
+        : o === 'win'
+          ? '✅ Beat the street'
+          : '📉 In the hole';
+  const moneyLine = `💰 Net worth ${money(d.score)}`;
+  const rankLine = `\n🎖 Peak: ${rankName(d.peakNetWorth)}`;
+  const curve = blockSparkline(d.history);
+  const modeLabel = d.mode === 'dynasty' ? 'Dynasty' : 'Classic';
+  return `Dope Wars 98 — ${modeLabel}\n${line}\n${moneyLine}${rankLine}\n${curve}\nhttps://dopewars98.myke.org`;
 }

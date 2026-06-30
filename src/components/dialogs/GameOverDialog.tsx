@@ -3,7 +3,8 @@ import { useGame } from '../../game/GameContext';
 import { netWorth } from '../../engine/reducer';
 import { NetWorthChart } from '../NetWorthChart';
 import { DailyShare } from '../DailyShare';
-import { todayKey, dailySeed, outcome } from '../../game/daily';
+import { ShareCard } from '../ShareCard';
+import { todayKey, dailySeed, outcome, makeRunShareString } from '../../game/daily';
 import { rankName } from '../../data/ranks';
 import { objectivesDone } from '../../game/objectives';
 
@@ -59,6 +60,18 @@ export function GameOverDialog() {
             streak={streak.current}
           />
         </>
+      )}
+      {state.mode !== 'daily' && (
+        <ShareCard
+          text={makeRunShareString({
+            mode: state.mode,
+            status: state.status,
+            day: state.day,
+            score,
+            history: state.netWorthHistory,
+            peakNetWorth: state.peakNetWorth,
+          })}
+        />
       )}
       <div className="dlg__actions">
         <button type="button" onClick={newGame}>New Game</button>
