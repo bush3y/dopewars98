@@ -1132,10 +1132,13 @@ body {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.share button {
-  align-self: flex-end;
-  min-width: 110px;
-  min-height: 28px;
+.share__actions {
+  display: flex;
+  gap: 8px;
+}
+.share__actions button {
+  flex: 1;
+  min-height: 34px;
 }
 
 /* On a phone the modal sits a touch higher and uses larger tap targets. */
