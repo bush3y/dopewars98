@@ -31,6 +31,9 @@ export interface RunStats {
   maxSpaceUsed: number;
   /** Highest bank balance held. */
   maxBank: number;
+  /** Cumulative sale revenue by heat tier (for objectives). */
+  soldSoft: number;
+  soldHard: number;
 }
 
 export interface GameState {

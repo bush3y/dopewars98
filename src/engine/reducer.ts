@@ -102,6 +102,8 @@ export function initialState(
       biggestSale: 0,
       maxSpaceUsed: 0,
       maxBank: 0,
+      soldSoft: 0,
+      soldHard: 0,
     },
     status: 'playing',
   };
@@ -328,11 +330,18 @@ function coreReducer(state: GameState, action: Action): GameState {
       if (held.qty - qty <= 0) delete inventory[action.drug];
       else inventory[action.drug] = { ...held, qty: held.qty - qty };
 
+      const saleValue = qty * price;
+      const heat = DRUG_HEAT[action.drug];
       return {
         ...state,
-        cash: state.cash + qty * price,
+        cash: state.cash + saleValue,
         inventory,
-        stats: { ...state.stats, biggestSale: Math.max(state.stats.biggestSale, qty * price) },
+        stats: {
+          ...state.stats,
+          biggestSale: Math.max(state.stats.biggestSale, saleValue),
+          soldSoft: (state.stats.soldSoft ?? 0) + (heat === 1 ? saleValue : 0),
+          soldHard: (state.stats.soldHard ?? 0) + (heat === 3 ? saleValue : 0),
+        },
       };
     }
 

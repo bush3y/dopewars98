@@ -24,6 +24,8 @@ export const OBJECTIVES: Objective[] = [
   { id: 'bigSale', label: 'Make a single sale of $20,000+', check: (s) => s.stats.biggestSale >= 20_000 },
   { id: 'crew', label: 'Reach Crew Member rank ($10,000 net worth)', check: (s) => s.peakNetWorth >= 10_000 },
   { id: 'trusted', label: 'Reach Trusted Associate rank ($30,000 net worth)', check: (s) => s.peakNetWorth >= 30_000 },
+  { id: 'softSeller', label: 'Earn $20,000 selling soft drugs (weed/hash/shrooms/peyote)', check: (s) => (s.stats.soldSoft ?? 0) >= 20_000 },
+  { id: 'hardSeller', label: 'Earn $100,000 selling hard drugs (coke/crack/heroin/smack/opium)', check: (s) => (s.stats.soldHard ?? 0) >= 100_000 },
 ];
 
 /** The 3 objectives for a daily seed — deterministic, identical for everyone. */
