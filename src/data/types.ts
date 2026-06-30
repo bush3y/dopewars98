@@ -63,7 +63,6 @@ export interface GameSnapshot {
   health: number; // 0..100
   capacity: number; // 100
   spaceUsed: number;
-  heat: number; // 0..1 — police heat from the hardness of current cargo
   market: MarketEntry[];
   trenchcoat: InventoryEntry[];
 }

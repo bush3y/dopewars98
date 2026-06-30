@@ -63,7 +63,6 @@ export function DesktopWindow() {
             capacity={snap.capacity}
             selected={ui.selected}
             onSelect={ui.select}
-            heat={snap.heat}
           />
         </div>
       </div>

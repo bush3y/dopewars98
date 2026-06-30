@@ -74,15 +74,11 @@ export function generateArrival(
   location: LocationId,
   carriedFraction: number,
   cash: number,
-  heatFraction = 0,
 ): ArrivalEncounter {
   const gunShopOpen = makeRng(seed, day, location, 'gunshop').chance(COMBAT.gunShopChance);
 
   const er = makeRng(seed, day, location, 'encounter');
-  const chance =
-    COMBAT.encounterBase +
-    COMBAT.encounterLoad * clamp(carriedFraction, 0, 1) +
-    COMBAT.encounterHeat * clamp(heatFraction, 0, 1);
+  const chance = COMBAT.encounterBase + COMBAT.encounterLoad * clamp(carriedFraction, 0, 1);
   if (!er.chance(chance)) return { cops: null, instant: null, gunShopOpen };
 
   // Choose the trouble type from weighted bands.
