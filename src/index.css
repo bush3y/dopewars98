@@ -1015,12 +1015,47 @@ body {
 .chart__dot {
   fill: #0000c0;
 }
-.chart__axis {
+.chart__head {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
+  align-items: baseline;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+.chart__title {
   color: #555;
-  padding: 2px 2px 0;
+}
+.chart__body {
+  display: flex;
+  gap: 5px;
+  align-items: stretch;
+}
+.chart__body .chart__svg {
+  flex: 1;
+  min-width: 0;
+}
+/* Net-worth scale: max at the top, min at the bottom. */
+.chart__yaxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #777;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.chart__zero-label {
+  fill: #999;
+  font-size: 8px;
+}
+/* Day range across the bottom. */
+.chart__x {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #777;
+  margin-top: 2px;
 }
 
 /* --- Save slots ----------------------------------------------------------- */
