@@ -1,6 +1,6 @@
 import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
-import { netWorth } from '../../engine/reducer';
+import { netWorth, inventoryValue } from '../../engine/reducer';
 import { NetWorthChart } from '../NetWorthChart';
 import { DailyShare } from '../DailyShare';
 import { ShareCard } from '../ShareCard';
@@ -16,7 +16,8 @@ const COPY = {
 
 export function GameOverDialog() {
   const { state, dispatch, ui, streak } = useGame();
-  const score = netWorth(state);
+  const heldValue = inventoryValue(state); // unsold drugs at local price — counts at the end
+  const score = netWorth(state) + heldValue;
   const result = outcome(state.status, score);
   const isTodaysDaily = state.mode === 'daily' && state.seed === dailySeed(todayKey());
 
@@ -35,6 +36,9 @@ export function GameOverDialog() {
         <div><span>Cash</span><b>{state.cash.toLocaleString()}</b></div>
         <div><span>Bank</span><b>{state.bank.toLocaleString()}</b></div>
         <div><span>Debt</span><b className="neg">{state.debt.toLocaleString()}</b></div>
+        {heldValue > 0 && (
+          <div><span>Drugs (held)</span><b className="pos">{heldValue.toLocaleString()}</b></div>
+        )}
         <div><span>Peak rank</span><b>{rankName(state.peakNetWorth)}</b></div>
         <div className="dlg__score">
           <span>Net worth</span>

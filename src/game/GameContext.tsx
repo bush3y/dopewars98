@@ -12,7 +12,7 @@ import {
 } from 'react';
 import type { DrugId, GameSnapshot } from '../data/types';
 import type { Action, GameState, GameMode } from '../engine/types';
-import { reducer, initialState, netWorth } from '../engine/reducer';
+import { reducer, initialState, finalScore } from '../engine/reducer';
 import { toSnapshot } from '../engine/selectors';
 import {
   loadCurrent,
@@ -242,9 +242,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
       if (state.status === 'won') playSfx('cash');
       if (state.status === 'dead') playSfx('lose');
       if (state.status === 'won' || state.status === 'dead') {
+        // Held drugs count toward the final score (Option 1), valued at local price.
+        const score = finalScore(state);
         setScores(
           addScore({
-            score: netWorth(state),
+            score,
             day: state.day,
             status: state.status,
             mode: state.mode,
@@ -254,7 +256,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
         // If this run was today's daily and not already recorded, record it
         // (play-once) and update the win streak.
         const key = todayKey();
-        const score = netWorth(state);
         if (state.mode === 'daily' && state.seed === dailySeed(key) && !loadDailyResult(key)) {
           saveDailyResult({
             date: key,

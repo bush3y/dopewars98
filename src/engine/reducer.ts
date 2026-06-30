@@ -33,6 +33,25 @@ export function netWorth(state: GameState): number {
   return state.cash + state.bank - state.debt;
 }
 
+/** Market value of drugs currently held, at the current location's prices. */
+export function inventoryValue(state: GameState): number {
+  let total = 0;
+  for (const id in state.inventory) {
+    const drug = id as DrugId;
+    total += state.inventory[drug]!.qty * (state.market[drug] ?? 0);
+  }
+  return total;
+}
+
+/**
+ * Final score when a run ends: net worth plus the value of any unsold drugs at
+ * local prices. Held inventory only counts at the end (Option 1) — mid-game net
+ * worth / rank stay cash-based.
+ */
+export function finalScore(state: GameState): number {
+  return netWorth(state) + inventoryValue(state);
+}
+
 export function initialState(
   seed: number = Date.now() >>> 0,
   mode: GameMode = 'classic',
