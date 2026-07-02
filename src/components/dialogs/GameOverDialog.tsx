@@ -7,12 +7,16 @@ import { ShareCard } from '../ShareCard';
 import { todayKey, dailySeed, outcome, makeRunShareString } from '../../game/daily';
 import { rankName } from '../../data/ranks';
 import { objectivesDone } from '../../game/objectives';
+import { loadModeGame } from '../../game/storage';
+import type { GameState } from '../../engine/types';
 
 const COPY = {
   win: { title: 'You Win!', line: 'You beat the loan shark and walked away in the black.' },
   red: { title: 'Game Over', line: "You survived day 31, but the loan shark still owns you — in the red." },
   busted: { title: 'Busted', line: (day: number) => `The cops gunned you down on day ${day}.` },
 };
+
+const MODE_LABEL: Record<string, string> = { classic: 'Classic', dynasty: 'Dynasty' };
 
 export function GameOverDialog() {
   const { state, dispatch, ui, streak } = useGame();
@@ -21,10 +25,22 @@ export function GameOverDialog() {
   const result = outcome(state.status, score);
   const isTodaysDaily = state.mode === 'daily' && state.seed === dailySeed(todayKey());
 
+  // Your other in-progress runs (e.g. a Classic/Dynasty saved while you played the
+  // Daily) — offer to resume them so "New Game" isn't the only, destructive option.
+  const ongoing = (['classic', 'dynasty'] as const)
+    .map((m) => loadModeGame(m))
+    .filter((g): g is GameState => !!g && g.status === 'playing');
+
+  const resume = (g: GameState) => {
+    ui.select(null);
+    dispatch({ type: 'LOAD_GAME', state: g });
+  };
+
+  // Replay the same mode (Dynasty → Dynasty); a finished daily falls back to Classic.
+  const newMode = state.mode === 'daily' ? 'classic' : state.mode;
   const newGame = () => {
     ui.select(null);
-    // Replay the same mode (Dynasty → Dynasty); a finished daily falls back to Classic.
-    dispatch({ type: 'NEW_GAME', mode: state.mode === 'daily' ? 'classic' : state.mode });
+    dispatch({ type: 'NEW_GAME', mode: newMode });
   };
 
   return (
@@ -78,7 +94,12 @@ export function GameOverDialog() {
         />
       )}
       <div className="dlg__actions">
-        <button type="button" onClick={newGame}>New Game</button>
+        {ongoing.map((g) => (
+          <button key={g.mode} type="button" onClick={() => resume(g)}>
+            Resume {MODE_LABEL[g.mode]} · Day {g.day}
+          </button>
+        ))}
+        <button type="button" onClick={newGame}>New {MODE_LABEL[newMode]} Game</button>
       </div>
     </Modal>
   );
