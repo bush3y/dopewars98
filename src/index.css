@@ -822,11 +822,19 @@ body {
 }
 .modal {
   width: min(360px, 100%);
+  /* Cap height and scroll the body so tall dialogs never push their buttons
+     off-screen (the title bar stays put). */
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 .modal__body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .dlg__stats {
@@ -870,6 +878,12 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 6px;
+  /* Stay visible when the body scrolls (tall dialogs like game-over). The silver
+     background matches the window body so scrolled content doesn't show through. */
+  position: sticky;
+  bottom: 0;
+  background: silver;
+  padding-top: 10px;
 }
 .dlg__actions button {
   min-width: 80px;
@@ -1180,10 +1194,11 @@ body {
 @media (max-width: 640px) {
   .modal-scrim {
     align-items: flex-start;
-    padding-top: 12vh;
+    padding-top: 8dvh;
   }
   .modal {
     width: min(420px, 100%);
+    max-height: 84dvh;
   }
   .dlg__actions button {
     min-height: 44px;
