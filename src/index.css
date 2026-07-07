@@ -1214,23 +1214,13 @@ body {
   .modal__body {
     gap: 8px;
   }
-  /* The net-worth chart flexes to fill whatever vertical space is left after the
-     fixed rows, instead of forcing the dialog to scroll. It shrinks on short
-     screens (down to min-height) and grows on tall ones (up to max-height). */
-  .modal__body > .chart--fit {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 0;
-    min-height: 76px;
-    max-height: 180px;
-    min-width: 0;
-  }
-  .chart--fit .chart__body {
-    flex: 1 1 auto;
-    min-height: 0;
-  }
+  /* The net-worth chart scales with viewport height so the game-over dialog fits
+     without scrolling (smaller on short phones, taller on big ones). Uses a
+     deterministic svg height rather than flex + height:100% — mobile Safari
+     mis-sizes an SVG stretched inside a flex column, spilling it over the row
+     below. clamp() keeps the box height exact, so nothing can overlap. */
   .chart--fit .chart__svg {
-    height: 100%;
+    height: clamp(68px, 12dvh, 140px);
   }
   /* A touch more compact so the share block earns its keep on small screens. */
   .share__text {
