@@ -836,6 +836,15 @@ body {
   min-height: 0;
   overflow-y: auto;
 }
+/* Actions live in a fixed footer outside the scrolling body, so tall dialogs
+   never paint their buttons over the scrollable content. Matches the
+   window-body's horizontal margin so the buttons line up with the content. */
+.modal__footer {
+  flex-shrink: 0;
+  /* Align with the window-body's 8px margin; the body's own margin-bottom
+     supplies the gap above the buttons. */
+  margin: 0 8px 8px;
+}
 
 .dlg__stats {
   display: grid;
@@ -878,12 +887,6 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 6px;
-  /* Stay visible when the body scrolls (tall dialogs like game-over). The silver
-     background matches the window body so scrolled content doesn't show through. */
-  position: sticky;
-  bottom: 0;
-  background: silver;
-  padding-top: 10px;
 }
 .dlg__actions button {
   min-width: 80px;
@@ -1194,11 +1197,11 @@ body {
 @media (max-width: 640px) {
   .modal-scrim {
     align-items: flex-start;
-    padding-top: 8dvh;
+    padding-top: 6dvh;
   }
   .modal {
     width: min(420px, 100%);
-    max-height: 84dvh;
+    max-height: 88dvh;
   }
   .dlg__actions button {
     min-height: 44px;
@@ -1206,6 +1209,33 @@ body {
   }
   .dlg__qty input {
     min-height: 36px;
+  }
+  /* Tighter stacking so tall dialogs (game-over) fit without scrolling. */
+  .modal__body {
+    gap: 8px;
+  }
+  /* The net-worth chart flexes to fill whatever vertical space is left after the
+     fixed rows, instead of forcing the dialog to scroll. It shrinks on short
+     screens (down to min-height) and grows on tall ones (up to max-height). */
+  .modal__body > .chart--fit {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 76px;
+    max-height: 180px;
+    min-width: 0;
+  }
+  .chart--fit .chart__body {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .chart--fit .chart__svg {
+    height: 100%;
+  }
+  /* A touch more compact so the share block earns its keep on small screens. */
+  .share__text {
+    padding: 6px 8px;
+    line-height: 1.3;
   }
   /* iOS Safari auto-zooms when focusing an input under 16px; 16px stops it. */
   input,

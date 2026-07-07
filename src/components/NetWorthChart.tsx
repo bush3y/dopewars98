@@ -3,7 +3,7 @@
  * the latest day; the dashed line is $0 (break-even). Proper axes: net-worth
  * scale (max/min) down the left, day range across the bottom.
  */
-export function NetWorthChart({ data }: { data: number[] }) {
+export function NetWorthChart({ data, fit = false }: { data: number[]; fit?: boolean }) {
   const width = 300;
   const height = 132;
   const padX = 4;
@@ -26,7 +26,7 @@ export function NetWorthChart({ data }: { data: number[] }) {
   const fmt = (n: number) => n.toLocaleString('en-US');
 
   return (
-    <div className="chart">
+    <div className={fit ? 'chart chart--fit' : 'chart'}>
       <div className="chart__head">
         <span className="chart__title">Net worth by day</span>
       </div>

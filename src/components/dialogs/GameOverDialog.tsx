@@ -61,7 +61,7 @@ export function GameOverDialog() {
           <b className={score >= 0 ? 'pos' : 'neg'}>{score.toLocaleString()}</b>
         </div>
       </div>
-      <NetWorthChart data={state.netWorthHistory} />
+      <NetWorthChart data={state.netWorthHistory} fit />
       {isTodaysDaily && (
         <>
           <p className="dlg__streak">
