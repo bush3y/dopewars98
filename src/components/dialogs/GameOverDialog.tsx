@@ -8,7 +8,7 @@ import { todayKey, dailySeed, outcome, makeRunShareString } from '../../game/dai
 import { rankName } from '../../data/ranks';
 import { objectivesDone } from '../../game/objectives';
 import { loadModeGame } from '../../game/storage';
-import type { GameState } from '../../engine/types';
+import type { GameState, GameMode } from '../../engine/types';
 
 const COPY = {
   win: { title: 'You Win!', line: 'You beat the loan shark and walked away in the black.' },
@@ -25,22 +25,22 @@ export function GameOverDialog() {
   const result = outcome(state.status, score);
   const isTodaysDaily = state.mode === 'daily' && state.seed === dailySeed(todayKey());
 
-  // Your other in-progress runs (e.g. a Classic/Dynasty saved while you played the
-  // Daily) — offer to resume them so "New Game" isn't the only, destructive option.
-  const ongoing = (['classic', 'dynasty'] as const)
-    .map((m) => loadModeGame(m))
-    .filter((g): g is GameState => !!g && g.status === 'playing');
+  // Always two choices: one Classic slot, one Dynasty slot. Each resumes that
+  // mode if a run of it is in progress, otherwise starts a fresh one. The mode
+  // that just ended is never resumable (its slot is cleared on game-over), so it
+  // shows "New". This keeps both modes one tap away and avoids duplicate buttons.
+  const slots = (['classic', 'dynasty'] as const).map((mode) => {
+    const saved = state.mode === mode ? null : loadModeGame(mode);
+    return { mode, resumable: saved && saved.status === 'playing' ? saved : null };
+  });
 
   const resume = (g: GameState) => {
     ui.select(null);
     dispatch({ type: 'LOAD_GAME', state: g });
   };
-
-  // Replay the same mode (Dynasty → Dynasty); a finished daily falls back to Classic.
-  const newMode = state.mode === 'daily' ? 'classic' : state.mode;
-  const newGame = () => {
+  const startNew = (mode: GameMode) => {
     ui.select(null);
-    dispatch({ type: 'NEW_GAME', mode: newMode });
+    dispatch({ type: 'NEW_GAME', mode });
   };
 
   return (
@@ -94,12 +94,17 @@ export function GameOverDialog() {
         />
       )}
       <div className="dlg__actions">
-        {ongoing.map((g) => (
-          <button key={g.mode} type="button" onClick={() => resume(g)}>
-            Resume {MODE_LABEL[g.mode]} · Day {g.day}
-          </button>
-        ))}
-        <button type="button" onClick={newGame}>New {MODE_LABEL[newMode]} Game</button>
+        {slots.map(({ mode, resumable }) =>
+          resumable ? (
+            <button key={mode} type="button" onClick={() => resume(resumable)}>
+              Resume {MODE_LABEL[mode]} · Day {resumable.day}
+            </button>
+          ) : (
+            <button key={mode} type="button" onClick={() => startNew(mode)}>
+              New {MODE_LABEL[mode]}
+            </button>
+          ),
+        )}
       </div>
     </Modal>
   );
