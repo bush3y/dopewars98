@@ -175,6 +175,12 @@ export function loadDailyGame(date: string): GameState | null {
   return env && env.version === VERSION && env.date === date ? env.state : null;
 }
 
+/** Drop the saved in-progress daily once the run ends, so a finished daily can't
+ * be resumed as 'playing' and re-completed (which would double-count scores). */
+export function clearDailyGame(): void {
+  localStorage.removeItem(KEY.dailyGame);
+}
+
 // --- Daily win streak -------------------------------------------------------
 
 export interface DailyStreak {
