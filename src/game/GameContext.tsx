@@ -24,6 +24,7 @@ import {
   saveDailyResult,
   saveDailyGame,
   loadDailyGame,
+  clearDailyGame,
   loadDailyResult,
   saveModeGame,
   clearModeGame,
@@ -122,6 +123,18 @@ function decideStartup(): { initial: GameState; switchPrompt: boolean } {
   const lastDate = loadLastDate();
   const current = loadCurrent();
 
+  // Returning to a finished daily → re-show its game-over result (with the score)
+  // instead of silently starting a new game. It's terminal, so it can't be
+  // re-played, and its result/high-score are already recorded.
+  if (
+    current &&
+    current.mode === 'daily' &&
+    current.seed === todaySeed &&
+    current.status !== 'playing'
+  ) {
+    return { initial: current, switchPrompt: false };
+  }
+
   // Resume the last active game if it's still in progress.
   if (current && current.status === 'playing') {
     // Today's daily → just resume it.
@@ -184,7 +197,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
     saveLastDate(todayKey());
     const key = todayKey();
     if (state.mode === 'daily') {
-      if (state.seed === dailySeed(key) && state.status === 'playing') saveDailyGame(key, state);
+      if (state.seed === dailySeed(key)) {
+        // Keep the in-progress snapshot so leaving/returning resumes it, but drop
+        // it the moment the run ends — otherwise a finished daily gets resumed as
+        // 'playing' and can be re-won, double-counting the high score.
+        if (state.status === 'playing') saveDailyGame(key, state);
+        else clearDailyGame();
+      }
     } else if (state.status === 'playing') {
       saveModeGame(state); // per-mode slot so each run persists independently
     } else {
@@ -240,30 +259,35 @@ export function GameProvider({ children }: { children: ReactNode }) {
       if (state.status === 'won' || state.status === 'dead') {
         // Held drugs count toward the final score (Option 1), valued at local price.
         const score = finalScore(state);
-        setScores(
-          addScore({
-            score,
-            day: state.day,
-            status: state.status,
-            mode: state.mode,
-            date: Date.now(),
-          }),
-        );
-        // If this run was today's daily and not already recorded, record it
-        // (play-once) and update the win streak.
         const key = todayKey();
-        if (state.mode === 'daily' && state.seed === dailySeed(key) && !loadDailyResult(key)) {
-          saveDailyResult({
-            date: key,
-            seed: state.seed,
-            score,
-            status: state.status,
-            day: state.day,
-            history: state.netWorthHistory,
-            objectives: objectivesDone(state.seed, state),
-            playedAt: Date.now(),
-          });
-          setStreak(recordStreak(key, isWin(state.status, score)));
+        const isTodaysDaily = state.mode === 'daily' && state.seed === dailySeed(key);
+        // The daily is play-once: if today's result is already saved, this is a
+        // re-completion (e.g. a resumed finished run) — don't record it again.
+        if (isTodaysDaily && loadDailyResult(key)) {
+          // already scored today's daily; skip
+        } else {
+          setScores(
+            addScore({
+              score,
+              day: state.day,
+              status: state.status,
+              mode: state.mode,
+              date: Date.now(),
+            }),
+          );
+          if (isTodaysDaily) {
+            saveDailyResult({
+              date: key,
+              seed: state.seed,
+              score,
+              status: state.status,
+              day: state.day,
+              history: state.netWorthHistory,
+              objectives: objectivesDone(state.seed, state),
+              playedAt: Date.now(),
+            });
+            setStreak(recordStreak(key, isWin(state.status, score)));
+          }
         }
       }
       prevStatus.current = state.status;
