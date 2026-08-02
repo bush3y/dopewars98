@@ -1,0 +1,90 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#3a3a3a;font-family:-apple-system,Helvetica,sans-serif;padding:44px 30px}
+  .row{display:flex;gap:56px;justify-content:center;align-items:flex-start}
+  .cell{text-align:center;color:#eee;width:340px}
+  .label{margin-top:16px;font-size:22px;font-weight:600}
+  .sub{font-size:14px;color:#aaa;margin-top:2px}
+  .tile{width:340px;height:340px;border-radius:76px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  svg{display:block;width:100%;height:100%}
+  .home{margin-top:54px;padding:26px 30px;border-radius:34px;background:linear-gradient(160deg,#5b6b8c,#2d3448);display:inline-flex;gap:36px}
+  .mini{width:100px;height:100px;border-radius:23px;overflow:hidden}
+  .homewrap{text-align:center}.homelabel{color:#ccc;font-size:14px;margin-top:10px}
+  .dol{font-family:Arial,Helvetica,sans-serif;font-weight:800}
+</style></head>
+<body>
+<div class="row">
+
+  <!-- V1 : light paper transit map -->
+  <div class="cell">
+    <div class="tile">
+      <svg viewBox="0 0 340 340">
+        <rect width="340" height="340" fill="#f1ede1"/>
+        <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="24">
+          <path d="M30 118 H150 L230 198 H310" stroke="#00933C"/>
+          <path d="M118 30 V118 L198 198 V310" stroke="#EE352E"/>
+          <path d="M30 262 H118 L188 192" stroke="#0039A6"/>
+        </g>
+        <g>
+          <!-- stations: white disc + colored ring + green $ -->
+          <g transform="translate(150 118)"><circle r="27" fill="#fff" stroke="#00933C" stroke-width="7"/><text class="dol" x="0" y="12" font-size="38" fill="#0a7a34" text-anchor="middle">$</text></g>
+          <g transform="translate(230 198)"><circle r="27" fill="#fff" stroke="#00933C" stroke-width="7"/><text class="dol" x="0" y="12" font-size="38" fill="#0a7a34" text-anchor="middle">$</text></g>
+          <g transform="translate(118 118)"><circle r="27" fill="#fff" stroke="#EE352E" stroke-width="7"/><text class="dol" x="0" y="12" font-size="38" fill="#0a7a34" text-anchor="middle">$</text></g>
+          <g transform="translate(198 198)"><circle r="27" fill="#fff" stroke="#EE352E" stroke-width="7"/><text class="dol" x="0" y="12" font-size="38" fill="#0a7a34" text-anchor="middle">$</text></g>
+        </g>
+      </svg>
+    </div>
+    <div class="label">V1 · Paper transit map</div>
+    <div class="sub">Classic MTA look. Colored lines, “$” stations. Reads “city + money.”</div>
+  </div>
+
+  <!-- V2 : dark neon transit map (LED bridge) -->
+  <div class="cell">
+    <div class="tile">
+      <svg viewBox="0 0 340 340">
+        <defs><filter id="g" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <rect width="340" height="340" fill="#0a0d0c"/>
+        <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" filter="url(#g)">
+          <path d="M30 118 H150 L230 198 H310" stroke="#2dff6a"/>
+          <path d="M118 30 V118 L198 198 V310" stroke="#2dd4ff"/>
+          <path d="M30 262 H118 L188 192" stroke="#ff6b3d"/>
+        </g>
+        <g filter="url(#g)">
+          <g transform="translate(150 118)"><circle r="26" fill="#0a0d0c" stroke="#2dff6a" stroke-width="6"/><text class="dol" x="0" y="11" font-size="36" fill="#2dff6a" text-anchor="middle">$</text></g>
+          <g transform="translate(230 198)"><circle r="26" fill="#0a0d0c" stroke="#2dff6a" stroke-width="6"/><text class="dol" x="0" y="11" font-size="36" fill="#2dff6a" text-anchor="middle">$</text></g>
+          <g transform="translate(118 118)"><circle r="26" fill="#0a0d0c" stroke="#2dd4ff" stroke-width="6"/><text class="dol" x="0" y="11" font-size="36" fill="#2dff6a" text-anchor="middle">$</text></g>
+          <g transform="translate(198 198)"><circle r="26" fill="#0a0d0c" stroke="#2dd4ff" stroke-width="6"/><text class="dol" x="0" y="11" font-size="36" fill="#2dff6a" text-anchor="middle">$</text></g>
+        </g>
+      </svg>
+    </div>
+    <div class="label">V2 · Neon transit map</div>
+    <div class="sub">Same map, glowing on black — keeps the LED vibe you liked.</div>
+  </div>
+
+  <!-- V3 : minimal single route + big $ stops -->
+  <div class="cell">
+    <div class="tile">
+      <svg viewBox="0 0 340 340">
+        <rect width="340" height="340" fill="#111"/>
+        <path d="M60 90 H150 L210 150 V230 H280" fill="none" stroke="#2dff6a" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+        <g>
+          <g transform="translate(60 90)"><circle r="34" fill="#111" stroke="#2dff6a" stroke-width="8"/><text class="dol" x="0" y="16" font-size="50" fill="#2dff6a" text-anchor="middle">$</text></g>
+          <g transform="translate(210 150)"><circle r="34" fill="#111" stroke="#2dff6a" stroke-width="8"/><text class="dol" x="0" y="16" font-size="50" fill="#2dff6a" text-anchor="middle">$</text></g>
+          <g transform="translate(280 230)"><circle r="34" fill="#111" stroke="#2dff6a" stroke-width="8"/><text class="dol" x="0" y="16" font-size="50" fill="#2dff6a" text-anchor="middle">$</text></g>
+        </g>
+      </svg>
+    </div>
+    <div class="label">V3 · Minimal route</div>
+    <div class="sub">One line, three big “$” stops. Cleanest at tiny sizes.</div>
+  </div>
+</div>
+
+<div class="homewrap"><div class="home">
+  <div class="mini"><svg viewBox="0 0 340 340"><rect width="340" height="340" fill="#f1ede1"/><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"><path d="M30 118 H150 L230 198 H310" stroke="#00933C"/><path d="M118 30 V118 L198 198 V310" stroke="#EE352E"/><path d="M30 262 H118 L188 192" stroke="#0039A6"/></g><g><g transform="translate(150 118)"><circle r="27" fill="#fff" stroke="#00933C" stroke-width="7"/><text class="dol" y="12" font-size="38" fill="#0a7a34" text-anchor="middle">$</text></g><g transform="translate(230 198)"><circle r="27" fill="#fff" stroke="#00933C" stroke-width="7"/><text class="dol" y="12" font-size="38" fill="#0a7a34" text-anchor="middle">$</text></g><g transform="translate(118 118)"><circle r="27" fill="#fff" stroke="#EE352E" stroke-width="7"/><text class="dol" y="12" font-size="38" fill="#0a7a34" text-anchor="middle">$</text></g><g transform="translate(198 198)"><circle r="27" fill="#fff" stroke="#EE352E" stroke-width="7"/><text class="dol" y="12" font-size="38" fill="#0a7a34" text-anchor="middle">$</text></g></g></svg></div>
+  <div class="mini"><svg viewBox="0 0 340 340"><defs><filter id="g2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="340" height="340" fill="#0a0d0c"/><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="20" filter="url(#g2)"><path d="M30 118 H150 L230 198 H310" stroke="#2dff6a"/><path d="M118 30 V118 L198 198 V310" stroke="#2dd4ff"/><path d="M30 262 H118 L188 192" stroke="#ff6b3d"/></g><g filter="url(#g2)"><g transform="translate(150 118)"><circle r="26" fill="#0a0d0c" stroke="#2dff6a" stroke-width="6"/><text class="dol" y="11" font-size="36" fill="#2dff6a" text-anchor="middle">$</text></g><g transform="translate(230 198)"><circle r="26" fill="#0a0d0c" stroke="#2dff6a" stroke-width="6"/><text class="dol" y="11" font-size="36" fill="#2dff6a" text-anchor="middle">$</text></g><g transform="translate(118 118)"><circle r="26" fill="#0a0d0c" stroke="#2dd4ff" stroke-width="6"/><text class="dol" y="11" font-size="36" fill="#2dff6a" text-anchor="middle">$</text></g><g transform="translate(198 198)"><circle r="26" fill="#0a0d0c" stroke="#2dd4ff" stroke-width="6"/><text class="dol" y="11" font-size="36" fill="#2dff6a" text-anchor="middle">$</text></g></g></svg></div>
+  <div class="mini"><svg viewBox="0 0 340 340"><rect width="340" height="340" fill="#111"/><path d="M60 90 H150 L210 150 V230 H280" fill="none" stroke="#2dff6a" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/><g><g transform="translate(60 90)"><circle r="34" fill="#111" stroke="#2dff6a" stroke-width="8"/><text class="dol" y="16" font-size="50" fill="#2dff6a" text-anchor="middle">$</text></g><g transform="translate(210 150)"><circle r="34" fill="#111" stroke="#2dff6a" stroke-width="8"/><text class="dol" y="16" font-size="50" fill="#2dff6a" text-anchor="middle">$</text></g><g transform="translate(280 230)"><circle r="34" fill="#111" stroke="#2dff6a" stroke-width="8"/><text class="dol" y="16" font-size="50" fill="#2dff6a" text-anchor="middle">$</text></g></g></svg></div>
+</div><div class="homelabel">↑ same three at ~100px (home-screen size)</div></div>
+</body></html>

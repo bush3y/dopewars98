@@ -1,0 +1,72 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#3a3a3a;font-family:-apple-system,Helvetica,sans-serif;padding:50px 40px}
+  .wrap{display:flex;gap:64px;align-items:center;justify-content:center}
+  .big{width:420px;height:420px;border-radius:94px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.55)}
+  .ladder{display:flex;gap:34px;align-items:flex-end}
+  .i{border-radius:22%;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.5)}
+  .cap{color:#bbb;font-size:13px;text-align:center;margin-top:8px}
+  .col{text-align:center;color:#eee}
+  svg{display:block;width:100%;height:100%}
+  h2{color:#fff;text-align:center;font-size:24px;margin-bottom:8px}
+  .note{color:#aaa;text-align:center;font-size:15px;margin-bottom:34px}
+  .dol{font-family:Arial,Helvetica,sans-serif;font-weight:800}
+</style></head>
+<body>
+<h2>V3 · Minimal route — polished master</h2>
+<div class="note">single green line · three big “$” stops · subtle glow · centered</div>
+
+<div class="wrap">
+  <div class="col">
+    <div class="big">
+      <svg viewBox="0 0 340 340" id="m">
+        <defs>
+          <radialGradient id="bg" cx="50%" cy="36%" r="82%">
+            <stop offset="0%" stop-color="#141a18"/><stop offset="100%" stop-color="#050807"/>
+          </radialGradient>
+          <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="340" height="340" fill="url(#bg)"/>
+        <g filter="url(#glow)">
+          <path d="M64 106 H150 L210 166 V242 H276" fill="none"
+                stroke="#2dff6a" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+          <g transform="translate(64 106)">
+            <circle r="35" fill="#070a09" stroke="#2dff6a" stroke-width="8"/>
+            <text class="dol" y="18" font-size="52" fill="#2dff6a" text-anchor="middle">$</text>
+          </g>
+          <g transform="translate(210 166)">
+            <circle r="35" fill="#070a09" stroke="#2dff6a" stroke-width="8"/>
+            <text class="dol" y="18" font-size="52" fill="#2dff6a" text-anchor="middle">$</text>
+          </g>
+          <g transform="translate(276 242)">
+            <circle r="35" fill="#070a09" stroke="#2dff6a" stroke-width="8"/>
+            <text class="dol" y="18" font-size="52" fill="#2dff6a" text-anchor="middle">$</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="cap">master (shown ~420px)</div>
+  </div>
+
+  <div class="col">
+    <div class="ladder">
+      <div><div class="i" style="width:120px;height:120px" id="s120"></div><div class="cap">120px</div></div>
+      <div><div class="i" style="width:80px;height:80px" id="s80"></div><div class="cap">80px</div></div>
+      <div><div class="i" style="width:48px;height:48px" id="s48"></div><div class="cap">48px</div></div>
+    </div>
+    <div class="cap" style="margin-top:22px;max-width:360px;color:#999">
+      Legibility ladder — home-screen (~120), Settings (~80), Spotlight (~48).
+    </div>
+  </div>
+</div>
+
+<script>
+  var src=document.getElementById('m');
+  ['s120','s80','s48'].forEach(function(id){document.getElementById(id).appendChild(src.cloneNode(true));});
+</script>
+</body></html>
