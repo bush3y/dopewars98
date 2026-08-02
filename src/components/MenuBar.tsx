@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { MENUS } from '../data/menu';
 import { useGame } from '../game/GameContext';
 import { runMenuItem } from '../game/menuActions';
+import { isNativeApp } from '../platform';
 
 /** Renders a title with its accelerator letter underlined (e.g. "File"). */
 function Title({ text, accel }: { text: string; accel: number }) {
@@ -51,7 +52,9 @@ export function MenuBar() {
 
           {open === menu.title && (
             <ul className="dropdown" role="menu">
-              {menu.items.map((item) => (
+              {menu.items
+                .filter((item) => !item.nativeOnly || isNativeApp())
+                .map((item) => (
                 <li key={item.label} role="menuitem">
                   <button
                     type="button"

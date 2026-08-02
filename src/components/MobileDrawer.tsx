@@ -3,6 +3,7 @@ import { MENUS } from '../data/menu';
 import { CITIES } from '../data/cities';
 import { useGame } from '../game/GameContext';
 import { runMenuItem } from '../game/menuActions';
+import { isNativeApp } from '../platform';
 
 // Sections start collapsed so the drawer is a short, tidy category list.
 const DEFAULT_COLLAPSED = MENUS.map((m) => m.title);
@@ -72,7 +73,9 @@ export function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => 
                 {isCollapsed && hint && <span className="drawer__group-hint">{hint}</span>}
               </button>
               {!isCollapsed &&
-                menu.items.map((item) => (
+                menu.items
+                  .filter((item) => !item.nativeOnly || isNativeApp())
+                  .map((item) => (
                   <button
                     key={item.label}
                     type="button"
