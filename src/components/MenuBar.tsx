@@ -66,7 +66,9 @@ export function MenuBar() {
                     <span>
                       {((item.mode && game.state.mode === item.mode) ||
                         (item.city && game.city === item.city) ||
-                        (item.label === 'Sound On / Off' && game.settings.sound)) ? '✓ ' : ''}
+                        (item.label === 'Sound On / Off' && game.settings.sound) ||
+                        (item.label === 'Daily Reminder On / Off' &&
+                          game.settings.dailyReminder)) ? '✓ ' : ''}
                       {item.label}
                     </span>
                     {item.phase && <span className="dropdown__hint">P{item.phase}</span>}
