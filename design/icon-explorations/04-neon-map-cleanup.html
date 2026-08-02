@@ -1,0 +1,83 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#3a3a3a;font-family:-apple-system,Helvetica,sans-serif;padding:50px 40px}
+  .wrap{display:flex;gap:60px;align-items:center;justify-content:center}
+  .big{width:420px;height:420px;border-radius:94px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.55)}
+  .ladder{display:flex;gap:34px;align-items:flex-end}
+  .ladder .i{border-radius:22%;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.5)}
+  .cap{color:#bbb;font-size:13px;text-align:center;margin-top:8px}
+  .col{text-align:center;color:#eee}
+  svg{display:block;width:100%;height:100%}
+  h2{color:#fff;text-align:center;font-size:24px;margin-bottom:8px}
+  .note{color:#aaa;text-align:center;font-size:15px;margin-bottom:34px}
+  .dol{font-family:Arial,Helvetica,sans-serif;font-weight:800}
+</style></head>
+<body>
+<h2>V2 · Neon transit map — cleaned up</h2>
+<div class="note">3 well-spaced stops · center interchange · bigger bold “$” · no overlaps</div>
+
+<div class="wrap">
+  <div class="col">
+    <div class="big">
+      <!-- MASTER SVG -->
+      <svg viewBox="0 0 340 340" id="m">
+        <defs>
+          <radialGradient id="bg" cx="50%" cy="34%" r="80%">
+            <stop offset="0%" stop-color="#141a18"/><stop offset="100%" stop-color="#050807"/>
+          </radialGradient>
+          <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="3.4" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="340" height="340" fill="url(#bg)"/>
+        <g filter="url(#glow)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <!-- cyan secondary line, crosses at the interchange -->
+          <path d="M248 96 L170 170 L96 244" stroke="#2dd4ff" stroke-width="20"/>
+          <!-- green main line: stair through all three stops -->
+          <path d="M85 110 H175 V230 H265" stroke="#2dff6a" stroke-width="22"/>
+        </g>
+        <g filter="url(#glow)">
+          <!-- A terminal (green) -->
+          <g transform="translate(85 110)">
+            <circle r="33" fill="#070a09" stroke="#2dff6a" stroke-width="7"/>
+            <text class="dol" y="16" font-size="48" fill="#2dff6a" text-anchor="middle">$</text>
+          </g>
+          <!-- B interchange (bigger, both lines) -->
+          <g transform="translate(175 170)">
+            <circle r="41" fill="#070a09" stroke="#2dff6a" stroke-width="8"/>
+            <text class="dol" y="19" font-size="58" fill="#2dff6a" text-anchor="middle">$</text>
+          </g>
+          <!-- C terminal (green) -->
+          <g transform="translate(265 230)">
+            <circle r="33" fill="#070a09" stroke="#2dff6a" stroke-width="7"/>
+            <text class="dol" y="16" font-size="48" fill="#2dff6a" text-anchor="middle">$</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="cap">master (shown ~420px)</div>
+  </div>
+
+  <div class="col">
+    <div class="ladder">
+      <div><div class="i" style="width:120px;height:120px" id="s120"></div><div class="cap">120px</div></div>
+      <div><div class="i" style="width:80px;height:80px" id="s80"></div><div class="cap">80px</div></div>
+      <div><div class="i" style="width:48px;height:48px" id="s48"></div><div class="cap">48px</div></div>
+    </div>
+    <div class="cap" style="margin-top:22px;max-width:360px;color:#999">
+      Legibility ladder — home-screen (~120), Settings (~80), Spotlight (~48).
+    </div>
+  </div>
+</div>
+
+<script>
+  // clone the master svg into each size box so all render identically
+  var src = document.getElementById('m');
+  ['s120','s80','s48'].forEach(function(id){
+    document.getElementById(id).appendChild(src.cloneNode(true));
+  });
+</script>
+</body></html>

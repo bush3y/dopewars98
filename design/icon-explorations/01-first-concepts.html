@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'DSEG7';
+    src: url('file:///Users/mbushey/projects/dw/public/fonts/DSEG7Classic-Bold.woff2') format('woff2');
+    font-weight: bold;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#3a3a3a; font-family:-apple-system,Helvetica,sans-serif; padding:40px; }
+  .row { display:flex; gap:48px; align-items:flex-start; justify-content:center; }
+  .cell { text-align:center; color:#eee; }
+  .label { margin-top:16px; font-size:22px; font-weight:600; }
+  .sub { font-size:14px; color:#aaa; margin-top:2px; max-width:340px; }
+
+  /* --- Base tile --- */
+  .tile { width:340px; height:340px; border-radius:76px; position:relative;
+          overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.5); }
+
+  /* seven-segment dollar mark */
+  .led { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .seg { position:relative; font-family:'DSEG7'; line-height:1; }
+  .ghost { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+           font-family:'DSEG7'; color:rgba(60,255,120,.10); }
+  /* vertical bar to turn the seven-seg "5"(=S) into a "$" */
+  .bar { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+         width:5%; height:96%; border-radius:4px; }
+
+  /* ===== A: Black LED panel ===== */
+  .A { background:radial-gradient(120% 120% at 50% 30%, #14181a 0%, #050706 75%); }
+  .A .ghost { font-size:200px; }
+  .A .seg  { font-size:200px; color:#2dff6a; text-shadow:0 0 18px rgba(45,255,106,.75); }
+  .A .bar  { background:#2dff6a; box-shadow:0 0 18px rgba(45,255,106,.8); }
+
+  /* ===== B: Win98 gray, beveled, with LED $ ===== */
+  .B { background:#c3c7cb;
+       border-top:8px solid #fff; border-left:8px solid #fff;
+       border-right:8px solid #7b7d7e; border-bottom:8px solid #7b7d7e; }
+  .B .panel { position:absolute; inset:56px; border-radius:24px;
+       background:radial-gradient(120% 120% at 50% 30%, #14181a 0%, #050706 80%);
+       border-top:6px solid #5a5c5e; border-left:6px solid #5a5c5e;
+       border-right:6px solid #d8dadc; border-bottom:6px solid #d8dadc; }
+  .B .ghost { font-size:150px; }
+  .B .seg  { font-size:150px; color:#2dff6a; text-shadow:0 0 14px rgba(45,255,106,.7); }
+  .B .bar  { height:70%; background:#2dff6a; box-shadow:0 0 14px rgba(45,255,106,.8); }
+
+  /* ===== C: Mini Windows-98 window ===== */
+  .C { background:#c3c7cb;
+       border-top:6px solid #fff; border-left:6px solid #fff;
+       border-right:6px solid #7b7d7e; border-bottom:6px solid #7b7d7e; }
+  .titlebar { position:absolute; top:14px; left:14px; right:14px; height:74px;
+       background:linear-gradient(90deg,#000082 0%, #1084d0 100%);
+       display:flex; align-items:center; padding:0 18px; gap:12px; }
+  .titlebar .t { color:#fff; font-weight:700; font-size:30px; letter-spacing:.5px; }
+  .titlebar .t b { color:#2dd4ff; }
+  .titlebar .btns { margin-left:auto; display:flex; gap:8px; }
+  .titlebar .btns i { width:26px; height:26px; background:#c3c7cb;
+       border-top:3px solid #fff; border-left:3px solid #fff;
+       border-right:3px solid #7b7d7e; border-bottom:3px solid #7b7d7e; }
+  .C .body { position:absolute; top:104px; left:14px; right:14px; bottom:14px;
+       background:radial-gradient(120% 120% at 50% 40%, #14181a 0%, #050706 80%);
+       border-top:5px solid #5a5c5e; border-left:5px solid #5a5c5e;
+       border-right:5px solid #d8dadc; border-bottom:5px solid #d8dadc;
+       display:flex; align-items:center; justify-content:center; }
+  .C .segwrap { position:relative; }
+  .C .ghost { font-size:120px; }
+  .C .seg  { font-size:120px; color:#2dff6a; text-shadow:0 0 12px rgba(45,255,106,.7); }
+  .C .bar  { height:76%; background:#2dff6a; box-shadow:0 0 12px rgba(45,255,106,.8); }
+
+  /* small home-screen preview strip */
+  .home { margin-top:56px; padding:26px 30px; border-radius:34px;
+          background:linear-gradient(160deg,#5b6b8c,#2d3448); display:inline-flex; gap:34px; }
+  .home .mini { width:96px; height:96px; border-radius:22px; overflow:hidden; position:relative; }
+  .home .mini .seg, .home .mini .ghost { font-size:56px; }
+  .home .mini .bar { width:5%; }
+  .homewrap { text-align:center; }
+  .homelabel { color:#ccc; font-size:14px; margin-top:10px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="cell">
+      <div class="tile A"><div class="led"><div class="seg">5<div class="ghost">8</div><div class="bar"></div></div></div></div>
+      <div class="label">A · Black LED</div>
+      <div class="sub">Pure LED identity. Seven-segment “$” glowing on the display panel.</div>
+    </div>
+    <div class="cell">
+      <div class="tile B"><div class="panel"></div><div class="led"><div class="seg">5<div class="ghost">8</div><div class="bar"></div></div></div></div>
+      <div class="label">B · Win98 chrome + LED</div>
+      <div class="sub">Beveled gray 98.css tile framing the LED readout. Marries both halves.</div>
+    </div>
+    <div class="cell">
+      <div class="tile C">
+        <div class="titlebar"><span class="t">DW<b>98</b></span><span class="btns"><i></i></span></div>
+        <div class="body"><div class="segwrap"><div class="seg">5<div class="ghost">8</div><div class="bar"></div></div></div></div>
+      </div>
+      <div class="label">C · Mini Win98 window</div>
+      <div class="sub">Literal “app in a window.” Most on-theme, busiest at small size.</div>
+    </div>
+  </div>
+
+  <div class="homewrap">
+    <div class="home">
+      <div><div class="mini A"><div class="led"><div class="seg">5<div class="ghost">8</div><div class="bar"></div></div></div></div></div>
+      <div><div class="mini B"><div class="panel" style="inset:14px;border-width:2px"></div><div class="led"><div class="seg">5<div class="ghost">8</div><div class="bar"></div></div></div></div></div>
+      <div><div class="mini C"><div class="titlebar" style="height:22px;top:5px;left:5px;right:5px;padding:0 5px"><span class="t" style="font-size:10px">DW<b>98</b></span></div><div class="body" style="top:30px;left:5px;right:5px;bottom:5px"><div class="seg">5<div class="ghost">8</div><div class="bar"></div></div></div></div></div>
+    </div>
+    <div class="homelabel">↑ same three at ~96px (home-screen size)</div>
+  </div>
+</body>
+</html>

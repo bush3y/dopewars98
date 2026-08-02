@@ -1,0 +1,31 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0}
+  html,body{width:1024px;height:1024px;overflow:hidden;background:#050807}
+  svg{display:block;width:1024px;height:1024px}
+  .dol{font-family:Arial,Helvetica,sans-serif;font-weight:800}
+</style></head>
+<body>
+  <svg viewBox="0 0 340 340">
+    <defs>
+      <radialGradient id="bg" cx="50%" cy="36%" r="82%">
+        <stop offset="0%" stop-color="#141a18"/><stop offset="100%" stop-color="#050807"/>
+      </radialGradient>
+      <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="3" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <rect width="340" height="340" fill="url(#bg)"/>
+    <g filter="url(#glow)">
+      <path d="M66 108 H116 L160 152 H206 L250 196 V236" fill="none"
+            stroke="#2dff6a" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="116" cy="108" r="10" fill="#2dff6a"/>
+      <circle cx="160" cy="152" r="10" fill="#2dff6a"/>
+      <g transform="translate(66 108)"><circle r="33" fill="#070a09" stroke="#2dff6a" stroke-width="8"/><text class="dol" y="17" font-size="49" fill="#2dff6a" text-anchor="middle">$</text></g>
+      <g transform="translate(206 152)"><circle r="33" fill="#070a09" stroke="#2dff6a" stroke-width="8"/><text class="dol" y="17" font-size="49" fill="#2dff6a" text-anchor="middle">$</text></g>
+      <g transform="translate(250 236)"><circle r="33" fill="#070a09" stroke="#2dff6a" stroke-width="8"/><text class="dol" y="17" font-size="49" fill="#2dff6a" text-anchor="middle">$</text></g>
+    </g>
+  </svg>
+</body></html>

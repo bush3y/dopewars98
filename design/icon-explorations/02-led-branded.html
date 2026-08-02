@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'DSEG7';
+    src: url('file:///Users/mbushey/projects/dw/public/fonts/DSEG7Classic-Bold.woff2') format('woff2');
+    font-weight: bold;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#3a3a3a; font-family:-apple-system,Helvetica,sans-serif; padding:44px 30px; }
+  .row { display:flex; gap:56px; align-items:flex-start; justify-content:center; }
+  .cell { text-align:center; color:#eee; width:340px; }
+  .label { margin-top:16px; font-size:22px; font-weight:600; }
+  .sub { font-size:14px; color:#aaa; margin-top:2px; }
+
+  .tile { width:340px; height:340px; border-radius:76px; position:relative;
+          overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.5);
+          background:radial-gradient(120% 120% at 50% 30%, #14181a 0%, #050706 78%); }
+  .green { color:#2dff6a; text-shadow:0 0 16px rgba(45,255,106,.75); }
+  .teal  { color:#2dd4ff; text-shadow:0 0 14px rgba(45,212,255,.7); }
+  .seg   { font-family:'DSEG7'; position:relative; line-height:1; }
+  .ghost { position:absolute; inset:0; font-family:'DSEG7'; color:rgba(60,255,120,.09); }
+  .bar   { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+           width:9%; height:112%; border-radius:5px; background:#2dff6a;
+           box-shadow:0 0 16px rgba(45,255,106,.85); }
+
+  /* ---- R1: big $ + teal 98 in corner ---- */
+  .R1 .big { position:absolute; top:50%; left:50%; transform:translate(-50%,-58%); }
+  .R1 .big .seg { font-size:210px; }
+  .R1 .big .ghost { font-size:210px; }
+  .R1 .tag { position:absolute; right:34px; bottom:30px; }
+  .R1 .tag .seg { font-size:66px; }
+
+  /* ---- R2: LED price readout "$98" ---- */
+  .R2 .read { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:14px; }
+  .R2 .read .seg { font-size:120px; }
+  .R2 .read .ghost { font-size:120px; }
+  .R2 .dollar { position:relative; }
+
+  /* ---- R3: Win98 titlebar + $ + teal 98 ---- */
+  .R3 { background:#c3c7cb; border-top:6px solid #fff; border-left:6px solid #fff;
+        border-right:6px solid #7b7d7e; border-bottom:6px solid #7b7d7e; }
+  .R3 .tbar { position:absolute; top:12px; left:12px; right:12px; height:56px;
+        background:linear-gradient(90deg,#000082,#1084d0); display:flex; align-items:center;
+        padding:0 14px; }
+  .R3 .tbar .ttl { color:#fff; font-weight:800; font-size:26px; letter-spacing:1px; }
+  .R3 .tbar .ttl b { color:#2dd4ff; }
+  .R3 .tbar .x { margin-left:auto; width:26px; height:26px; background:#c3c7cb;
+        border-top:3px solid #fff; border-left:3px solid #fff;
+        border-right:3px solid #7b7d7e; border-bottom:3px solid #7b7d7e; }
+  .R3 .body { position:absolute; top:80px; left:12px; right:12px; bottom:12px;
+        background:radial-gradient(120% 120% at 50% 40%, #14181a 0%, #050706 82%);
+        border-top:5px solid #5a5c5e; border-left:5px solid #5a5c5e;
+        border-right:5px solid #d8dadc; border-bottom:5px solid #d8dadc;
+        display:flex; align-items:center; justify-content:center; }
+  .R3 .body .seg { font-size:130px; }
+  .R3 .body .ghost { font-size:130px; }
+
+  /* home-screen strip */
+  .home { margin-top:54px; padding:26px 30px; border-radius:34px;
+          background:linear-gradient(160deg,#5b6b8c,#2d3448); display:inline-flex; gap:36px; }
+  .mini { width:100px; height:100px; border-radius:23px; overflow:hidden; position:relative;
+          background:radial-gradient(120% 120% at 50% 30%, #14181a 0%, #050706 78%); }
+  .homewrap { text-align:center; }
+  .homelabel { color:#ccc; font-size:14px; margin-top:10px; }
+  /* mini scaled variants */
+  .m1 .big{position:absolute;top:50%;left:50%;transform:translate(-50%,-58%)} .m1 .big .seg,.m1 .big .ghost{font-size:62px}
+  .m1 .tag{position:absolute;right:9px;bottom:8px} .m1 .tag .seg{font-size:20px} .m1 .bar{width:9%}
+  .m2 .read{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:4px}
+  .m2 .read .seg,.m2 .read .ghost{font-size:36px} .m2 .bar{width:9%}
+  .m3{background:#c3c7cb;border-top:2px solid #fff;border-left:2px solid #fff;border-right:2px solid #7b7d7e;border-bottom:2px solid #7b7d7e}
+  .m3 .tbar{position:absolute;top:4px;left:4px;right:4px;height:17px;background:linear-gradient(90deg,#000082,#1084d0)}
+  .m3 .tbar .ttl{color:#fff;font-weight:800;font-size:9px;padding:2px 4px} .m3 .tbar .ttl b{color:#2dd4ff}
+  .m3 .body{position:absolute;top:25px;left:4px;right:4px;bottom:4px;background:#070908;display:flex;align-items:center;justify-content:center}
+  .m3 .body .seg,.m3 .body .ghost{font-size:40px} .m3 .bar{width:9%}
+</style>
+</head>
+<body>
+  <div class="row">
+    <!-- R1 -->
+    <div class="cell">
+      <div class="tile R1">
+        <div class="big"><div class="seg green">5<div class="ghost">8</div><div class="bar"></div></div></div>
+        <div class="tag"><div class="seg teal">98<div class="ghost" style="color:rgba(45,212,255,.10)">88</div></div></div>
+      </div>
+      <div class="label">R1 · $ + teal “98”</div>
+      <div class="sub">LED cash mark, branded. Green + teal breaks the terminal look.</div>
+    </div>
+    <!-- R2 -->
+    <div class="cell">
+      <div class="tile R2">
+        <div class="read">
+          <div class="dollar"><div class="seg green">5<div class="ghost">8</div><div class="bar"></div></div></div>
+          <div class="seg teal">98<div class="ghost" style="color:rgba(45,212,255,.10)">88</div></div>
+        </div>
+      </div>
+      <div class="label">R2 · “$98” readout</div>
+      <div class="sub">Reads like the in-game cash counter. Most literally “money.”</div>
+    </div>
+    <!-- R3 -->
+    <div class="cell">
+      <div class="tile R3">
+        <div class="tbar"><span class="ttl">DOPE<b>98</b></span><span class="x"></span></div>
+        <div class="body"><div class="seg green">5<div class="ghost">8</div><div class="bar"></div></div></div>
+      </div>
+      <div class="label">R3 · Win98 window + $</div>
+      <div class="sub">“It’s a 90s program.” Strongest game/retro cue; busiest small.</div>
+    </div>
+  </div>
+
+  <div class="homewrap">
+    <div class="home">
+      <div class="mini m1"><div class="big"><div class="seg green">5<div class="ghost">8</div><div class="bar"></div></div></div><div class="tag"><div class="seg teal">98</div></div></div>
+      <div class="mini m2"><div class="read"><div class="dollar"><div class="seg green">5<div class="ghost">8</div><div class="bar"></div></div></div><div class="seg teal">98</div></div></div>
+      <div class="mini m3"><div class="tbar"><span class="ttl">DOPE<b>98</b></span></div><div class="body"><div class="seg green">5<div class="ghost">8</div><div class="bar"></div></div></div></div>
+    </div>
+    <div class="homelabel">↑ same three at ~100px (home-screen size)</div>
+  </div>
+</body>
+</html>
