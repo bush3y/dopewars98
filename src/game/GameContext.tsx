@@ -42,6 +42,7 @@ import {
 } from './storage';
 import { rankIndexFor, RANKS } from '../data/ranks';
 import { setSoundEnabled, playSfx, type Sfx } from './sound';
+import { scheduleDailyReminder, cancelDailyReminder } from './notifications';
 import { todayKey, dailySeed, isWin } from './daily';
 import { objectivesDone } from './objectives';
 import { CITIES, DEFAULT_CITY, type CityId } from '../data/cities';
@@ -84,6 +85,8 @@ interface GameContextValue {
   rankCounts: number[];
   settings: Settings;
   toggleSound: () => void;
+  /** Native-only: toggle the daily-challenge reminder notification. */
+  toggleDailyReminder: () => void;
   /** Mode the New Game confirm will start (Classic or Dynasty). */
   pendingMode: GameMode;
   /** Open the New Game confirm for a given mode. */
@@ -178,6 +181,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   // in progress) offer to continue it or switch to today's Daily.
   useEffect(() => {
     setSoundEnabled(settings.sound);
+    // Re-arm the native daily reminder on launch if it was left enabled (a
+    // reinstall/OS restart clears pending notifications). No-op on web.
+    if (settings.dailyReminder) void scheduleDailyReminder();
     if (startup.switchPrompt) setDialog('switch-daily');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -304,6 +310,20 @@ export function GameProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const toggleDailyReminder = useCallback(() => {
+    setSettings((s) => {
+      const next = { ...s, dailyReminder: !s.dailyReminder };
+      saveSettings(next);
+      playSfx('click');
+      // Fire-and-forget; both are no-ops on web. If the OS denies permission
+      // the schedule silently fails — the stored preference still flips so the
+      // user can retry, and we re-arm on next launch.
+      if (next.dailyReminder) void scheduleDailyReminder();
+      else void cancelDailyReminder();
+      return next;
+    });
+  }, []);
+
   const setCity = useCallback((city: CityId) => {
     setSettings((s) => {
       const next = { ...s, city };
@@ -341,6 +361,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       rankCounts,
       settings,
       toggleSound,
+      toggleDailyReminder,
       pendingMode,
       requestNewGame,
       city: settings.city ?? DEFAULT_CITY,
@@ -349,7 +370,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       bump,
       refresh: () => setBump((b) => b + 1),
     }),
-    [state, dispatch, selected, dialog, scores, streak, rankCounts, settings, toggleSound, pendingMode, requestNewGame, setCity, randomCity, bump],
+    [state, dispatch, selected, dialog, scores, streak, rankCounts, settings, toggleSound, toggleDailyReminder, pendingMode, requestNewGame, setCity, randomCity, bump],
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

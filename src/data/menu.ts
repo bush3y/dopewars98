@@ -66,7 +66,12 @@ export const MENUS: Menu[] = [
   {
     title: 'Sounds',
     accel: 0,
-    items: [{ label: 'Sound On / Off' }],
+    items: [
+      { label: 'Sound On / Off' },
+      // Native app only (iOS/Android): schedules an on-device daily-challenge
+      // reminder. Harmless no-op on the web build.
+      { label: 'Daily Reminder On / Off' },
+    ],
   },
   {
     title: 'Help',

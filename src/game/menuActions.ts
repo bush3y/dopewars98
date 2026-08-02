@@ -38,6 +38,9 @@ export function runMenuItem(label: string, game: Game): void {
     case 'Sound On / Off':
       game.toggleSound();
       break;
+    case 'Daily Reminder On / Off':
+      game.toggleDailyReminder();
+      break;
     case 'How to Play':
       game.ui.open('help');
       break;

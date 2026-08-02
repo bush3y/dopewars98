@@ -219,9 +219,15 @@ export interface Settings {
   sound: boolean;
   /** Cosmetic city skin (relabels neighborhoods); does not affect gameplay. */
   city: CityId;
+  /** Native-only: daily-challenge reminder notification. Ignored on web. */
+  dailyReminder: boolean;
 }
 
-const DEFAULT_SETTINGS: Settings = { sound: false, city: DEFAULT_CITY };
+const DEFAULT_SETTINGS: Settings = {
+  sound: false,
+  city: DEFAULT_CITY,
+  dailyReminder: false,
+};
 
 export function loadSettings(): Settings {
   return { ...DEFAULT_SETTINGS, ...(read<Settings>(KEY.settings) ?? {}) };
