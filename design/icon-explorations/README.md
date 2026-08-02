@@ -3,11 +3,25 @@
 Design mockups from the Phase 5 app-icon session. Kept for when we revisit the
 logo (we shipped a first pass, not a final).
 
-## What shipped
-`master-SHIPPED.html` renders the current icon: a neon-green **subway line with
-three "$" stations** (transit-bend V3, descending). The 1024px source it
-produces lives at `../../assets/icon.png`; the generated iOS set is in
-`../../ios/App/App/Assets.xcassets/`.
+## What shipped (current)
+`master-SHIPPED.html` renders the current icon: a **muted-teal (#5C756C)
+switchback metro line** with two `$` "market" stations (white bulbs, teal
+halo, `$` knocked out) and four Windows-98-flag destination stops spelling
+**DW98** (`#F35325 #81BC06 #05A6F0 #FFBA08`, characters knocked out in teal).
+Derived from the LA Metro app icon's flat monoline style (see
+`00-reference-la-metro.jpg`). The 1024px source it produces lives at
+`../../assets/icon.png`; the generated iOS set is in
+`../../ios/App/App/Assets.xcassets/`. Regenerate with
+`npx @capacitor/assets generate --ios` after overwriting `assets/icon.png`.
+
+Later rounds (LA-metro-derived): `08-switchback-spec` (first switchback build),
+`09-line-height-stops` (colored stops sized to the line), `10-dw98-variants`
+(white vs teal-knockout DW98 — teal knockout won).
+
+## Earlier direction (superseded)
+The first shipped icon was a neon-green subway line with three "$" stations on
+black (transit-bend V3). Sheets 01–07 below trace how we got from there to the
+teal switchback.
 
 ## The exploration, in order
 1. `01-first-concepts` — black LED "$", Win98 gray, mini-window. (Liked black LED but felt too "iTerm".)

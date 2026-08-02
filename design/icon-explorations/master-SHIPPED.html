@@ -2,30 +2,48 @@
 <html><head><meta charset="utf-8">
 <style>
   *{margin:0;padding:0}
-  html,body{width:1024px;height:1024px;overflow:hidden;background:#050807}
+  html,body{width:1024px;height:1024px;overflow:hidden;background:#5C756C}
   svg{display:block;width:1024px;height:1024px}
-  .dol{font-family:Arial,Helvetica,sans-serif;font-weight:800}
 </style></head>
 <body>
-  <svg viewBox="0 0 340 340">
-    <defs>
-      <radialGradient id="bg" cx="50%" cy="36%" r="82%">
-        <stop offset="0%" stop-color="#141a18"/><stop offset="100%" stop-color="#050807"/>
-      </radialGradient>
-      <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-        <feGaussianBlur stdDeviation="3" result="b"/>
-        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-    <rect width="340" height="340" fill="url(#bg)"/>
-    <g filter="url(#glow)">
-      <path d="M66 108 H116 L160 152 H206 L250 196 V236" fill="none"
-            stroke="#2dff6a" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="116" cy="108" r="10" fill="#2dff6a"/>
-      <circle cx="160" cy="152" r="10" fill="#2dff6a"/>
-      <g transform="translate(66 108)"><circle r="33" fill="#070a09" stroke="#2dff6a" stroke-width="8"/><text class="dol" y="17" font-size="49" fill="#2dff6a" text-anchor="middle">$</text></g>
-      <g transform="translate(206 152)"><circle r="33" fill="#070a09" stroke="#2dff6a" stroke-width="8"/><text class="dol" y="17" font-size="49" fill="#2dff6a" text-anchor="middle">$</text></g>
-      <g transform="translate(250 236)"><circle r="33" fill="#070a09" stroke="#2dff6a" stroke-width="8"/><text class="dol" y="17" font-size="49" fill="#2dff6a" text-anchor="middle">$</text></g>
-    </g>
-  </svg>
+<div id="host"></div>
+<script>
+  var BG='#5C756C';
+  var COLS=['#F35325','#81BC06','#05A6F0','#FFBA08'];
+  var CH=['D','W','9','8'];
+  var LW=38, R=LW/2;
+  function rp(pts,r){
+    var d='M'+pts[0][0]+' '+pts[0][1];
+    for(var i=1;i<pts.length-1;i++){
+      var p0=pts[i-1],p1=pts[i],p2=pts[i+1];
+      var v1x=p1[0]-p0[0],v1y=p1[1]-p0[1],l1=Math.hypot(v1x,v1y);
+      var v2x=p2[0]-p1[0],v2y=p2[1]-p1[1],l2=Math.hypot(v2x,v2y);
+      d+=' L'+(p1[0]-v1x/l1*r)+' '+(p1[1]-v1y/l1*r)
+       + ' Q'+p1[0]+' '+p1[1]+' '+(p1[0]+v2x/l2*r)+' '+(p1[1]+v2y/l2*r);
+    }
+    var e=pts[pts.length-1]; d+=' L'+e[0]+' '+e[1];
+    return d;
+  }
+  function market(x,y,r){
+    return '<circle cx="'+x+'" cy="'+y+'" r="'+(r+6)+'" fill="'+BG+'"/>'
+      + '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#fff"/>'
+      + '<text x="'+x+'" y="'+(y+r*0.52)+'" font-family="Arial" font-weight="800" '
+      +   'font-size="'+(r*1.4)+'" fill="'+BG+'" text-anchor="middle">$</text>';
+  }
+  var pts=[[58,88],[282,88],[282,170],[54,170],[54,252],[100,252]];
+  var dotX=[152,196,240,284];
+  var s='<svg viewBox="0 0 340 340">'
+    + '<defs><radialGradient id="vig" cx="50%" cy="42%" r="72%">'
+    +   '<stop offset="70%" stop-color="#000" stop-opacity="0"/>'
+    +   '<stop offset="100%" stop-color="#000" stop-opacity="0.14"/></radialGradient></defs>'
+    + '<rect width="340" height="340" fill="'+BG+'"/>'
+    + '<path d="'+rp(pts,32)+'" fill="none" stroke="#fff" stroke-width="'+LW+'" stroke-linecap="round" stroke-linejoin="round"/>';
+  COLS.forEach(function(c,i){
+    s+='<circle cx="'+dotX[i]+'" cy="252" r="'+R+'" fill="'+c+'"/>'
+     + '<text x="'+dotX[i]+'" y="260" font-family="Arial" font-weight="800" font-size="23" fill="'+BG+'" text-anchor="middle">'+CH[i]+'</text>';
+  });
+  s+=market(133,88,24)+market(120,170,22)
+   + '<rect width="340" height="340" fill="url(#vig)"/></svg>';
+  document.getElementById('host').innerHTML=s;
+</script>
 </body></html>
