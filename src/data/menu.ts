@@ -15,6 +15,8 @@ export interface MenuItem {
   city?: CityId;
   /** The "random city" action item. */
   random?: boolean;
+  /** Only shown inside the native app shell (hidden on the web build). */
+  nativeOnly?: boolean;
 }
 
 export interface Menu {
@@ -69,8 +71,8 @@ export const MENUS: Menu[] = [
     items: [
       { label: 'Sound On / Off' },
       // Native app only (iOS/Android): schedules an on-device daily-challenge
-      // reminder. Harmless no-op on the web build.
-      { label: 'Daily Reminder On / Off' },
+      // reminder. Hidden on web, where it can't do anything.
+      { label: 'Daily Reminder On / Off', nativeOnly: true },
     ],
   },
   {
