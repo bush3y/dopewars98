@@ -8,8 +8,9 @@ logo (we shipped a first pass, not a final).
 switchback metro line** with two staggered `$` "market" stations (white bulbs,
 teal halo, `$` knocked out) and four Windows-98-flag destination stops spelling
 **DW98** (`#F35325 #81BC06 #05A6F0 #FFBA08`, **white** characters). All six
-stations share one radius; the first stop (D) is integrated into the line's end
-via the same halo as the `$` stops.
+stations share one radius. The line's end **bevels** (cups concavely) into the
+first stop (D), and every gap — line-to-D and between all four stops — is a
+consistent 6px so it reads evenly even when scaled down.
 Derived from the LA Metro app icon's flat monoline style (see
 `00-reference-la-metro.jpg`). The 1024px source it produces lives at
 `../../assets/icon.png`; the generated iOS set is in
