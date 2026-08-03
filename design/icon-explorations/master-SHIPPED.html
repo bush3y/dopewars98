@@ -11,7 +11,7 @@
   var BG='#5C756C';
   var COLS=['#F35325','#81BC06','#05A6F0','#FFBA08'];
   var CH=['D','W','9','8'];
-  var LW=38, R=LW/2;
+  var LW=38, SR=24;
   function rp(pts,r){
     var d='M'+pts[0][0]+' '+pts[0][1];
     for(var i=1;i<pts.length-1;i++){
@@ -30,19 +30,20 @@
       + '<text x="'+x+'" y="'+(y+r*0.52)+'" font-family="Arial" font-weight="800" '
       +   'font-size="'+(r*1.4)+'" fill="'+BG+'" text-anchor="middle">$</text>';
   }
-  var pts=[[58,88],[282,88],[282,170],[54,170],[54,252],[100,252]];
-  var dotX=[152,196,240,284];
+  var pts=[[58,88],[282,88],[282,170],[54,170],[54,252],[120,252]];
+  var dotX=[120,172,224,276]; // spacing 52 -> comfortable ~4px gaps at r24
   var s='<svg viewBox="0 0 340 340">'
     + '<defs><radialGradient id="vig" cx="50%" cy="42%" r="72%">'
     +   '<stop offset="70%" stop-color="#000" stop-opacity="0"/>'
     +   '<stop offset="100%" stop-color="#000" stop-opacity="0.14"/></radialGradient></defs>'
     + '<rect width="340" height="340" fill="'+BG+'"/>'
-    + '<path d="'+rp(pts,32)+'" fill="none" stroke="#fff" stroke-width="'+LW+'" stroke-linecap="round" stroke-linejoin="round"/>';
+    + '<path d="'+rp(pts,32)+'" fill="none" stroke="#fff" stroke-width="'+LW+'" stroke-linecap="round" stroke-linejoin="round"/>'
+    + '<circle cx="120" cy="252" r="'+(SR+4)+'" fill="'+BG+'"/>';
   COLS.forEach(function(c,i){
-    s+='<circle cx="'+dotX[i]+'" cy="252" r="'+R+'" fill="'+c+'"/>'
-     + '<text x="'+dotX[i]+'" y="260" font-family="Arial" font-weight="800" font-size="23" fill="'+BG+'" text-anchor="middle">'+CH[i]+'</text>';
+    s+='<circle cx="'+dotX[i]+'" cy="252" r="'+SR+'" fill="'+c+'"/>'
+     + '<text x="'+dotX[i]+'" y="262" font-family="Arial" font-weight="800" font-size="27" fill="#fff" text-anchor="middle">'+CH[i]+'</text>';
   });
-  s+=market(133,88,24)+market(120,170,22)
+  s+=market(158,88,SR)+market(116,170,SR)
    + '<rect width="340" height="340" fill="url(#vig)"/></svg>';
   document.getElementById('host').innerHTML=s;
 </script>
