@@ -59,6 +59,7 @@ export function DesktopWindow() {
           <SubwayGrid />
           <TrenchcoatPane
             trenchcoat={snap.trenchcoat}
+            arsenal={snap.arsenal}
             spaceUsed={snap.spaceUsed}
             capacity={snap.capacity}
             selected={ui.selected}

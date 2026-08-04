@@ -11,13 +11,15 @@ export interface Gun {
   damage: number;
   /** Trenchcoat space each gun occupies (competes with drugs). */
   space: number;
+  /** One-line role shown in Dan's shop, so guns aren't a mystery stat. */
+  role: string;
 }
 
 export const GUNS: Gun[] = [
-  { id: 'bat', name: 'Baseball Bat', price: 250, damage: 1, space: 3 },
-  { id: 'pistol', name: '.38 Pistol', price: 850, damage: 2, space: 4 },
-  { id: 'shotgun', name: 'Pump Shotgun', price: 2400, damage: 3, space: 5 },
-  { id: 'magnum', name: '.44 Magnum', price: 5200, damage: 5, space: 5 },
+  { id: 'bat', name: 'Baseball Bat', price: 250, damage: 1, space: 3, role: 'Cheap muscle — a step up from bare hands.' },
+  { id: 'pistol', name: '.38 Pistol', price: 850, damage: 2, space: 4, role: 'Reliable mid-tier firepower.' },
+  { id: 'shotgun', name: 'Pump Shotgun', price: 2400, damage: 3, space: 5, role: 'Wide spread — a hit can drop two cops at once.' },
+  { id: 'magnum', name: '.44 Magnum', price: 5200, damage: 5, space: 5, role: 'Heavy stopping power — shots rarely miss.' },
 ];
 
 export const GUN_BY_ID: Record<GunId, Gun> = Object.fromEntries(

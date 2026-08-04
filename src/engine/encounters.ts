@@ -132,6 +132,8 @@ export interface RoundResult {
   damageTaken: number;
   /** Player landed a shot this round (fight only). */
   playerHit: boolean;
+  /** Officers taken down this round (fight only; 2 when a shotgun spreads). */
+  dropped: number;
   /** Player got away (run only). */
   escaped: boolean;
   won: boolean;
@@ -151,20 +153,30 @@ export function combatRng(seed: number, day: number, location: LocationId, round
   return makeRng(seed, day, location, 'combat', round);
 }
 
-/** One round of shooting back. */
+/** One round of shooting back. Your loadout sets both accuracy and how hard a hit lands. */
 export function resolveFight(
   rng: Rng,
   officers: number,
-  power: number,
+  guns: Partial<Record<GunId, number>>,
   health: number,
 ): RoundResult {
-  const hitChance = Math.min(COMBAT.playerHitCap, COMBAT.playerBaseHit + power * COMBAT.playerHitPerPower);
+  // Base accuracy scales with raw firepower; a Magnum's stopping power adds more.
+  const magnumBonus = (guns.magnum ?? 0) > 0 ? COMBAT.magnumAccuracy : 0;
+  const hitChance = Math.min(
+    COMBAT.playerHitCap,
+    COMBAT.playerBaseHit + combatPower(guns) * COMBAT.playerHitPerPower + magnumBonus,
+  );
   const playerHit = rng.chance(hitChance);
-  let remaining = officers - (playerHit ? 1 : 0);
-  if (remaining < 0) remaining = 0;
+
+  // A hit drops one cop; a shotgun's spread can catch a second (if any remain).
+  let dropped = playerHit ? 1 : 0;
+  if (playerHit && (guns.shotgun ?? 0) > 0 && officers - 1 >= 1 && rng.chance(COMBAT.shotgunSpread)) {
+    dropped = 2;
+  }
+  const remaining = Math.max(0, officers - dropped);
 
   if (remaining === 0) {
-    return { officers: 0, health, damageTaken: 0, playerHit, escaped: false, won: true, dead: false };
+    return { officers: 0, health, damageTaken: 0, playerHit, dropped, escaped: false, won: true, dead: false };
   }
   const fire = returnFire(rng, remaining, health);
   return {
@@ -172,6 +184,7 @@ export function resolveFight(
     health: Math.max(0, fire.health),
     damageTaken: fire.damage,
     playerHit,
+    dropped,
     escaped: false,
     won: false,
     dead: fire.health <= 0,
@@ -181,7 +194,7 @@ export function resolveFight(
 /** One round of trying to flee. */
 export function resolveRun(rng: Rng, officers: number, health: number): RoundResult {
   if (rng.chance(COMBAT.runEscape)) {
-    return { officers, health, damageTaken: 0, playerHit: false, escaped: true, won: false, dead: false };
+    return { officers, health, damageTaken: 0, playerHit: false, dropped: 0, escaped: true, won: false, dead: false };
   }
   const fire = returnFire(rng, officers, health);
   return {
@@ -189,6 +202,7 @@ export function resolveRun(rng: Rng, officers: number, health: number): RoundRes
     health: Math.max(0, fire.health),
     damageTaken: fire.damage,
     playerHit: false,
+    dropped: 0,
     escaped: false,
     won: false,
     dead: fire.health <= 0,

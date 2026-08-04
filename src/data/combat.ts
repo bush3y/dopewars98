@@ -24,6 +24,9 @@ export const COMBAT = {
   playerBaseHit: 0.55, // with the weakest possible loadout
   playerHitPerPower: 0.03, // each point of combat power adds this, capped
   playerHitCap: 0.92,
+  // Per-gun "signatures" that give each weapon an identity beyond raw power:
+  magnumAccuracy: 0.15, // owning a .44 Magnum adds this to your hit chance
+  shotgunSpread: 0.45, // owning a Pump Shotgun: chance a hit drops a 2nd cop
   officerHit: 0.32, // each surviving officer's chance to tag you
   damageMin: 4,
   damageMax: 14,

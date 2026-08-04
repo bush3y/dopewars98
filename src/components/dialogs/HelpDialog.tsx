@@ -33,11 +33,13 @@ export function HelpDialog() {
           Cash in the <b>bank</b> is safe and earns <b>+5%/day</b> — stash profits there.
         </p>
 
-        <h4 className="help__h">Guns &amp; trouble</h4>
+        <h4 className="help__h">Guns &amp; fights</h4>
         <p className="dlg__message">
-          When <b>Dan's Gun Shop</b> is open you can arm up. In a fight, your guns and{' '}
-          <b>health</b> decide whether you win, run, or get hurt. Don't let your health hit zero.
-          The more you carry, the more police heat you draw.
+          When <b>Dan's Gun Shop</b> is open you can arm up — guns ride in your coat and take
+          stash space. If the cops jump you, <b>Fight</b> or <b>Run</b>. More firepower means
+          better odds each round; a <b>Pump Shotgun</b> can drop two officers at once, and a{' '}
+          <b>.44 Magnum</b> rarely misses. Watch your <b>health</b> — at zero, you're done. And
+          the more dope you're carrying, the more police heat you draw.
         </p>
 
         <h4 className="help__h">Rank &amp; objectives</h4>

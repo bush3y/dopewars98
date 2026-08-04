@@ -4,7 +4,6 @@ import { GUN_BY_ID } from '../data/guns';
 import { generateMarket } from './market';
 import {
   generateArrival,
-  combatPower,
   gunSpace,
   totalGuns,
   combatRng,
@@ -200,7 +199,7 @@ function coreReducer(state: GameState, action: Action): GameState {
       const rng = combatRng(state.seed, state.day, state.location, enc.round);
       const result =
         action.type === 'FIGHT'
-          ? resolveFight(rng, enc.officers, combatPower(state.guns), state.health)
+          ? resolveFight(rng, enc.officers, state.guns, state.health)
           : resolveRun(rng, enc.officers, state.health);
 
       if (result.dead) {
@@ -237,13 +236,14 @@ function coreReducer(state: GameState, action: Action): GameState {
       }
 
       // Fight continues — build round feedback.
+      const dropPhrase = result.dropped === 2 ? 'Two go down!' : 'You drop one!';
       let feedback: string;
       if (action.type === 'RUN') {
         feedback = `You couldn't break away — they hit you for ${result.damageTaken}.`;
       } else if (result.playerHit && result.damageTaken > 0) {
-        feedback = `You drop one! Return fire tags you for ${result.damageTaken}.`;
+        feedback = `${dropPhrase} Return fire tags you for ${result.damageTaken}.`;
       } else if (result.playerHit) {
-        feedback = 'You drop one and stay clear of their shots.';
+        feedback = `${dropPhrase} You stay clear of their shots.`;
       } else if (result.damageTaken > 0) {
         feedback = `You miss — they hit you for ${result.damageTaken}.`;
       } else {
