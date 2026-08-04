@@ -31,7 +31,11 @@ export function GunShopDialog() {
             return (
               <tr key={g.id}>
                 <td>
-                  <span className="shop__gun-name">{g.name}</span>
+                  <span className="shop__gun-name">
+                    {g.name}
+                    {/* Space column is hidden on mobile, so show it inline there. */}
+                    <span className="shop__gun-slots"> · {g.space} slots</span>
+                  </span>
                   <span className="shop__gun-role">{g.role}</span>
                 </td>
                 <td className="grid__col-num shop__col-owned">{owned}</td>
