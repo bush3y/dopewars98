@@ -9,17 +9,17 @@ export function GunShopDialog() {
   const room = state.capacity - spaceUsed(state);
 
   return (
-    <Modal title="Dan's Gun Shop" onClose={ui.close}>
+    <Modal title="Dan's Gun Shop" onClose={ui.close} className="modal--shop">
       <p className="dlg__message">
-        Guns take coat space and set your odds in a cop fight — you can always run
-        instead. Each one plays differently. Coat space free: <b>{room}</b>.
+        Guns take coat space and set your fight odds — each one different.
+        Space free: <b>{room}</b>.
       </p>
       <table className="grid shop">
         <thead>
           <tr>
             <th className="grid__col-name">Gun</th>
-            <th className="grid__col-num">Owned</th>
-            <th className="grid__col-num">Space</th>
+            <th className="grid__col-num shop__col-owned">Owned</th>
+            <th className="grid__col-num shop__col-space">Space</th>
             <th className="grid__col-num">Price</th>
             <th />
           </tr>
@@ -34,8 +34,8 @@ export function GunShopDialog() {
                   <span className="shop__gun-name">{g.name}</span>
                   <span className="shop__gun-role">{g.role}</span>
                 </td>
-                <td className="grid__col-num">{owned}</td>
-                <td className="grid__col-num">{g.space}</td>
+                <td className="grid__col-num shop__col-owned">{owned}</td>
+                <td className="grid__col-num shop__col-space">{g.space}</td>
                 <td className="grid__col-num">{g.price.toLocaleString()}</td>
                 <td className="grid__col-num">
                   <button

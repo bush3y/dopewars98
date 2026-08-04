@@ -13,12 +13,15 @@ export function Modal({
   onClose,
   children,
   closable = true,
+  className,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
   /** Game-over has no dismiss; set false to hide the ✕ and ignore Esc/scrim. */
   closable?: boolean;
+  /** Extra class on the window (e.g. a wider variant for the gun shop). */
+  className?: string;
 }) {
   useEffect(() => {
     if (!closable) return;
@@ -38,7 +41,7 @@ export function Modal({
   return (
     <div className="modal-scrim" onClick={() => closable && onClose()}>
       <div
-        className="window modal"
+        className={`window modal${className ? ` ${className}` : ''}`}
         role="dialog"
         aria-label={title}
         onClick={(e) => e.stopPropagation()}

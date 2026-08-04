@@ -106,6 +106,17 @@ export function MobileLayout() {
             captionRight={`Coat ${snap.capacity - snap.spaceUsed}/${snap.capacity} free`}
           />
         </section>
+        {snap.arsenal.length > 0 && (
+          <div className="mobile__guns">
+            <span className="pane__guns-label">Guns</span>
+            {snap.arsenal.map((g) => (
+              <span key={g.gun} className="pane__gun">
+                {g.name}
+                {g.qty > 1 && <span className="pane__gun-qty"> ×{g.qty}</span>}
+              </span>
+            ))}
+          </div>
+        )}
       </main>
 
       <div className="mobile__subbar">
