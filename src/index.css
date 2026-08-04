@@ -26,6 +26,10 @@ body,
 #root {
   height: 100%;
   margin: 0;
+  /* Never let content force horizontal page scroll — otherwise 100vw / 100%
+     widths inflate past the screen (this was blowing the gun-shop modal off the
+     right edge on phones). */
+  overflow-x: hidden;
 }
 
 body {
@@ -612,6 +616,15 @@ body {
   flex: 0 0 auto;
   max-height: 32vh;
 }
+.mobile__guns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 6px;
+  padding: 5px 2px 0;
+  font-size: 12px;
+  flex: 0 0 auto;
+}
 .mobile__body .grid {
   font-size: 15px;
 }
@@ -985,9 +998,12 @@ body {
 .mobile__obj-btn {
   color: #7a5c00;
 }
-/* The gun shop needs room for each gun's role line plus the price/buy columns. */
-.modal:has(.grid.shop) {
+/* The gun shop needs room for each gun's role line plus the price/buy columns.
+   min-width:0 stops the nowrap table from content-sizing the modal wider than
+   its width (which spilled it off-screen on phones). */
+.modal--shop {
   width: min(480px, 100%);
+  min-width: 0;
 }
 .grid.shop {
   margin: 4px 0;
@@ -1012,6 +1028,9 @@ body {
   font-size: 11px;
   color: #505050;
   max-width: 220px;
+  /* 98.css sets white-space:nowrap on tables; let the role wrap instead of
+     forcing the column (and the whole dialog) wider than the screen. */
+  white-space: normal;
 }
 
 /* --- Sparklines (market trend column) ------------------------------------- */
@@ -1239,6 +1258,51 @@ body {
   .modal {
     width: min(420px, 100%);
     max-height: 88dvh;
+  }
+  /* Full-width shop on a phone. The nowrap table (98.css) was dictating a
+     min-width through the flex column and pushing the whole dialog off-screen;
+     let the body shrink, pin the table layout, and wrap every cell. */
+  .modal--shop {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+  /* Reflow the shop table into one grid row per gun so it always fits the
+     phone width (a real <table> kept content-sizing itself off-screen). */
+  .grid.shop,
+  .grid.shop tbody {
+    display: block;
+    width: 100%;
+  }
+  .grid.shop thead {
+    display: none;
+  }
+  .grid.shop tr {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 2px 12px;
+    padding: 5px 4px;
+  }
+  .grid.shop td {
+    display: block;
+    height: auto;
+    padding: 0;
+    white-space: normal;
+  }
+  .grid.shop .shop__col-owned,
+  .grid.shop .shop__col-space {
+    display: none;
+  }
+  .grid.shop .shop__gun-role {
+    max-width: none;
+  }
+  .grid.shop .grid__col-num {
+    text-align: right;
+  }
+  .shop__buy {
+    min-width: 48px;
   }
   .dlg__actions button {
     min-height: 44px;

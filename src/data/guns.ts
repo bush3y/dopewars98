@@ -16,10 +16,10 @@ export interface Gun {
 }
 
 export const GUNS: Gun[] = [
-  { id: 'bat', name: 'Baseball Bat', price: 250, damage: 1, space: 3, role: 'Cheap muscle — a step up from bare hands.' },
+  { id: 'bat', name: 'Baseball Bat', price: 250, damage: 1, space: 3, role: 'Cheap; barely beats bare fists.' },
   { id: 'pistol', name: '.38 Pistol', price: 850, damage: 2, space: 4, role: 'Reliable mid-tier firepower.' },
-  { id: 'shotgun', name: 'Pump Shotgun', price: 2400, damage: 3, space: 5, role: 'Wide spread — a hit can drop two cops at once.' },
-  { id: 'magnum', name: '.44 Magnum', price: 5200, damage: 5, space: 5, role: 'Heavy stopping power — shots rarely miss.' },
+  { id: 'shotgun', name: 'Pump Shotgun', price: 2400, damage: 3, space: 5, role: 'Spread — can drop two cops at once.' },
+  { id: 'magnum', name: '.44 Magnum', price: 5200, damage: 5, space: 5, role: 'Heavy hitter — rarely misses.' },
 ];
 
 export const GUN_BY_ID: Record<GunId, Gun> = Object.fromEntries(
