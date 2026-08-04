@@ -626,7 +626,9 @@ body {
   flex-wrap: wrap;
   align-items: center;
   gap: 7px;
-  padding: 9px 4px 7px;
+  /* mobile__body already adds an 8px flex gap above; keep top small and match
+     it below so the strip sits evenly between the list and the sub-bar. */
+  padding: 2px 4px 10px;
   font-size: 12px;
   flex: 0 0 auto;
 }
