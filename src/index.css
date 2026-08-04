@@ -1039,6 +1039,13 @@ body {
      forcing the column (and the whole dialog) wider than the screen. */
   white-space: normal;
 }
+/* Per-gun space is a table column on desktop; shown inline only on mobile. */
+.shop__gun-slots {
+  display: none;
+  font-weight: 400;
+  font-size: 11px;
+  color: #505050;
+}
 
 /* --- Sparklines (market trend column) ------------------------------------- */
 .grid__col-spark {
@@ -1301,6 +1308,9 @@ body {
   .grid.shop .shop__col-owned,
   .grid.shop .shop__col-space {
     display: none;
+  }
+  .grid.shop .shop__gun-slots {
+    display: inline;
   }
   .grid.shop .shop__gun-role {
     max-width: none;
