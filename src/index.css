@@ -340,6 +340,27 @@ body {
   flex: 1;
   overflow: hidden;
 }
+.pane__guns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 3px 6px;
+  padding: 3px 2px 0;
+  font-size: 12px;
+}
+.pane__guns-label {
+  color: #404040;
+  font-weight: bold;
+}
+.pane__gun {
+  background: #c0c0c0;
+  border: 1px solid #808080;
+  padding: 0 5px;
+  white-space: nowrap;
+}
+.pane__gun-qty {
+  color: #404040;
+}
 
 .grid {
   width: 100%;
@@ -964,8 +985,15 @@ body {
 .mobile__obj-btn {
   color: #7a5c00;
 }
+/* The gun shop needs room for each gun's role line plus the price/buy columns. */
+.modal:has(.grid.shop) {
+  width: min(480px, 100%);
+}
 .grid.shop {
   margin: 4px 0;
+}
+.grid.shop .grid__col-name {
+  width: 62%;
 }
 .grid.shop td,
 .grid.shop th {
@@ -975,6 +1003,15 @@ body {
   min-height: 22px;
   min-width: 44px;
   padding: 0 8px;
+}
+.shop__gun-name {
+  display: block;
+}
+.shop__gun-role {
+  display: block;
+  font-size: 11px;
+  color: #505050;
+  max-width: 220px;
 }
 
 /* --- Sparklines (market trend column) ------------------------------------- */

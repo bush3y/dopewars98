@@ -1,9 +1,10 @@
 import { DRUG_NAME } from '../data/gameData';
-import type { DrugId, InventoryEntry } from '../data/types';
+import type { ArsenalEntry, DrugId, InventoryEntry } from '../data/types';
 
 /** The "Trenchcoat. Space: X/Y" inventory list. Rows selectable to drive Sell. */
 export function TrenchcoatPane({
   trenchcoat,
+  arsenal = [],
   spaceUsed,
   capacity,
   emptyText,
@@ -11,6 +12,8 @@ export function TrenchcoatPane({
   onSelect,
 }: {
   trenchcoat: InventoryEntry[];
+  /** Owned guns, shown as a compact strip below the drugs. */
+  arsenal?: ArsenalEntry[];
   spaceUsed: number;
   capacity: number;
   /** Optional hint shown when nothing is held (used in the mobile stacked view). */
@@ -53,6 +56,17 @@ export function TrenchcoatPane({
           </tbody>
         </table>
       </div>
+      {arsenal.length > 0 && (
+        <div className="pane__guns">
+          <span className="pane__guns-label">Guns</span>
+          {arsenal.map((g) => (
+            <span key={g.gun} className="pane__gun">
+              {g.name}
+              {g.qty > 1 && <span className="pane__gun-qty"> ×{g.qty}</span>}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

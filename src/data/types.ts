@@ -1,6 +1,8 @@
 // Core domain types. Phase 0 is static, but these are shaped to grow into the
 // reducer-driven game state described in BRIEF.md §4.
 
+import type { GunId } from './guns';
+
 export type DrugId =
   | 'cocaine'
   | 'hashish'
@@ -48,6 +50,15 @@ export interface InventoryEntry {
   price: number;
 }
 
+/** An owned-gun row shown in the Trenchcoat pane's arsenal strip. */
+export interface ArsenalEntry {
+  gun: GunId;
+  name: string;
+  qty: number;
+  /** Total coat space this gun (× qty) occupies. */
+  space: number;
+}
+
 /**
  * A flattened snapshot of everything the UI renders. Phase 1 will derive this
  * from the reducer's GameState; for Phase 0 it's a hardcoded fixture.
@@ -65,4 +76,5 @@ export interface GameSnapshot {
   spaceUsed: number;
   market: MarketEntry[];
   trenchcoat: InventoryEntry[];
+  arsenal: ArsenalEntry[];
 }

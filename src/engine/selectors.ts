@@ -1,5 +1,6 @@
 import type { GameSnapshot } from '../data/types';
 import { DRUGS } from '../data/gameData';
+import { GUNS } from '../data/guns';
 import type { GameState } from './types';
 import { spaceUsed } from './reducer';
 import { totalGuns } from './encounters';
@@ -30,6 +31,12 @@ export function toSnapshot(state: GameState): GameSnapshot {
       drug: d.id,
       qty: state.inventory[d.id]!.qty,
       price: state.inventory[d.id]!.avgPrice,
+    })),
+    arsenal: GUNS.filter((g) => (state.guns[g.id] ?? 0) > 0).map((g) => ({
+      gun: g.id,
+      name: g.name,
+      qty: state.guns[g.id]!,
+      space: state.guns[g.id]! * g.space,
     })),
   };
 }
