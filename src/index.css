@@ -347,23 +347,25 @@ body {
 .pane__guns {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 3px 6px;
-  padding: 3px 2px 0;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 2px 2px;
   font-size: 12px;
 }
 .pane__guns-label {
   color: #404040;
-  font-weight: bold;
+  margin-right: 1px;
 }
 .pane__gun {
-  background: #c0c0c0;
-  border: 1px solid #808080;
-  padding: 0 5px;
+  background: silver;
+  /* Classic Win9x raised bevel, matching the buttons/tiles elsewhere. */
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
+  padding: 2px 8px;
   white-space: nowrap;
 }
 .pane__gun-qty {
-  color: #404040;
+  color: #505050;
 }
 
 .grid {
@@ -619,9 +621,9 @@ body {
 .mobile__guns {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 6px;
-  padding: 5px 2px 0;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 4px 2px;
   font-size: 12px;
   flex: 0 0 auto;
 }
