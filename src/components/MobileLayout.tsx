@@ -34,7 +34,7 @@ export function MobileLayout() {
     heldAvg[row.drug] = row.price; // avg price paid
   }
   const canSell = ui.selected != null && !!state.inventory[ui.selected];
-  const netWorth = snap.cash + snap.bank - snap.debt;
+  const netWorth = snap.netWorth;
   const objCount =
     state.mode === 'daily' ? objectivesDone(state.seed, state).filter(Boolean).length : 0;
 

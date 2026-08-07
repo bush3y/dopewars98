@@ -7,7 +7,7 @@ import { useGame } from '../../game/GameContext';
  */
 export function KingpinDialog() {
   const { ui, snapshot: snap } = useGame();
-  const netWorth = snap.cash + snap.bank - snap.debt;
+  const netWorth = snap.netWorth;
 
   return (
     <Modal title="Kingpin!" onClose={ui.close}>

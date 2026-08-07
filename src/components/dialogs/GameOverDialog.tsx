@@ -20,8 +20,8 @@ const MODE_LABEL: Record<string, string> = { classic: 'Classic', dynasty: 'Dynas
 
 export function GameOverDialog() {
   const { state, dispatch, ui, streak } = useGame();
-  const heldValue = inventoryValue(state); // unsold drugs at local price — counts at the end
-  const score = netWorth(state) + heldValue;
+  const heldValue = inventoryValue(state); // shown as its own line; already in netWorth
+  const score = netWorth(state);
   const result = outcome(state.status, score);
   const isTodaysDaily = state.mode === 'daily' && state.seed === dailySeed(todayKey());
 

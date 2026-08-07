@@ -71,6 +71,8 @@ export interface GameSnapshot {
   bank: number;
   debt: number;
   guns: number;
+  /** Total wealth incl. held-drug value at local prices (drives rank). */
+  netWorth: number;
   health: number; // 0..100
   capacity: number; // 100
   spaceUsed: number;
