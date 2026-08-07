@@ -2,7 +2,7 @@ import type { GameSnapshot } from '../data/types';
 import { DRUGS } from '../data/gameData';
 import { GUNS } from '../data/guns';
 import type { GameState } from './types';
-import { spaceUsed } from './reducer';
+import { spaceUsed, netWorth } from './reducer';
 import { totalGuns } from './encounters';
 
 /**
@@ -19,6 +19,7 @@ export function toSnapshot(state: GameState): GameSnapshot {
     bank: state.bank,
     debt: state.debt,
     guns: totalGuns(state.guns),
+    netWorth: netWorth(state),
     health: state.health,
     capacity: state.capacity,
     spaceUsed: spaceUsed(state),

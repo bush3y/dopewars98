@@ -8,7 +8,7 @@ import { RANKS, rankIndexFor } from '../../data/ranks';
  */
 export function RanksDialog() {
   const { snapshot: snap, ui, rankCounts } = useGame();
-  const netWorth = snap.cash + snap.bank - snap.debt;
+  const netWorth = snap.netWorth;
   const currentIdx = rankIndexFor(netWorth);
   const next = currentIdx + 1 < RANKS.length ? RANKS[currentIdx + 1] : null;
   const toNext = next ? next.min - netWorth : 0;

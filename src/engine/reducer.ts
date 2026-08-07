@@ -27,11 +27,6 @@ export function spaceUsed(state: GameState): number {
   return used;
 }
 
-/** The score: cash + bank − debt. */
-export function netWorth(state: GameState): number {
-  return state.cash + state.bank - state.debt;
-}
-
 /** Market value of drugs currently held, at the current location's prices. */
 export function inventoryValue(state: GameState): number {
   let total = 0;
@@ -43,12 +38,19 @@ export function inventoryValue(state: GameState): number {
 }
 
 /**
- * Final score when a run ends: net worth plus the value of any unsold drugs at
- * local prices. Held inventory only counts at the end (Option 1) — mid-game net
- * worth / rank stay cash-based.
+ * Net worth = everything you own: cash + bank + the market value of drugs you're
+ * carrying, minus debt. Held drugs count toward net worth (and thus rank) the
+ * whole run, valued at the current location's prices — so buying a big stash no
+ * longer tanks your rank. Rank fluctuates as prices/locations change, which is
+ * honest for a trading game.
  */
+export function netWorth(state: GameState): number {
+  return state.cash + state.bank - state.debt + inventoryValue(state);
+}
+
+/** Final score when a run ends — same as net worth (inventory already counts). */
 export function finalScore(state: GameState): number {
-  return netWorth(state) + inventoryValue(state);
+  return netWorth(state);
 }
 
 export function initialState(

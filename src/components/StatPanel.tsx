@@ -8,7 +8,7 @@ import type { GameSnapshot } from '../data/types';
 export function StatPanel({ snap }: { snap: GameSnapshot }) {
   const { ui } = useGame();
   const fmt = (n: number) => n.toLocaleString('en-US');
-  const netWorth = snap.cash + snap.bank - snap.debt;
+  const netWorth = snap.netWorth;
 
   return (
     <div className="stats">
