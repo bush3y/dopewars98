@@ -45,6 +45,11 @@ interface Envelope {
   state: GameState;
 }
 
+/** Backfill fields added after a save was written, so older saves still load. */
+function hydrate(state: GameState): GameState {
+  return { ...state, activeEffects: state.activeEffects ?? [] };
+}
+
 // --- Active game (auto-save) ------------------------------------------------
 
 export function saveCurrent(state: GameState): void {
@@ -53,7 +58,7 @@ export function saveCurrent(state: GameState): void {
 
 export function loadCurrent(): GameState | null {
   const env = read<Envelope>(KEY.current);
-  return env && env.version === VERSION ? env.state : null;
+  return env && env.version === VERSION ? hydrate(env.state) : null;
 }
 
 export function clearCurrent(): void {
@@ -88,7 +93,8 @@ export function saveSlot(index: number, slot: SaveSlot): void {
 }
 
 export function loadSlot(index: number): GameState | null {
-  return listSlots()[index]?.state ?? null;
+  const slotState = listSlots()[index]?.state;
+  return slotState ? hydrate(slotState) : null;
 }
 
 export function deleteSlot(index: number): void {
@@ -172,7 +178,7 @@ export function saveDailyGame(date: string, state: GameState): void {
 /** The saved in-progress daily for `date`, if any (and schema-compatible). */
 export function loadDailyGame(date: string): GameState | null {
   const env = read<DailyGameEnvelope>(KEY.dailyGame);
-  return env && env.version === VERSION && env.date === date ? env.state : null;
+  return env && env.version === VERSION && env.date === date ? hydrate(env.state) : null;
 }
 
 /** Drop the saved in-progress daily once the run ends, so a finished daily can't
@@ -280,7 +286,7 @@ export function saveModeGame(state: GameState): void {
 
 export function loadModeGame(mode: GameMode): GameState | null {
   const env = read<Envelope>(modeKey(mode));
-  return env && env.version === VERSION ? env.state : null;
+  return env && env.version === VERSION ? hydrate(env.state) : null;
 }
 
 export function clearModeGame(mode: GameMode): void {
