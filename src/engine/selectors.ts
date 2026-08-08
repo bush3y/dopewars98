@@ -2,7 +2,7 @@ import type { GameSnapshot } from '../data/types';
 import { DRUGS } from '../data/gameData';
 import { GUNS } from '../data/guns';
 import type { GameState } from './types';
-import { spaceUsed, netWorth } from './reducer';
+import { spaceUsed, netWorth, effectiveCapacity } from './reducer';
 import { totalGuns } from './encounters';
 
 /**
@@ -21,7 +21,7 @@ export function toSnapshot(state: GameState): GameSnapshot {
     guns: totalGuns(state.guns),
     netWorth: netWorth(state),
     health: state.health,
-    capacity: state.capacity,
+    capacity: effectiveCapacity(state),
     spaceUsed: spaceUsed(state),
     market: DRUGS.map((d) => ({
       drug: d.id,

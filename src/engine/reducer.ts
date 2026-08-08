@@ -84,6 +84,11 @@ export function dailyGunShopActive(state: GameState): boolean {
   return liveEffects(state).some((e) => e.type === 'daily-gun-shop');
 }
 
+/** Trenchcoat capacity including any active coat-capacity perk. */
+export function effectiveCapacity(state: GameState): number {
+  return state.capacity + coatCapacityBonus(state);
+}
+
 export function initialState(
   seed: number = Date.now() >>> 0,
   mode: GameMode = 'classic',
@@ -180,6 +185,8 @@ function coreReducer(state: GameState, action: Action): GameState {
       let cash = state.cash;
       let inventory = state.inventory;
       let instantNotice: GameState['notice'] = null;
+      // Carry over timed effects, dropping any that expired as the day advanced.
+      let activeEffects = (state.activeEffects ?? []).filter((e) => e.expiresAfterDay >= day);
 
       // Apply a non-combat outcome immediately.
       if (arrival.instant) {
@@ -190,9 +197,9 @@ function coreReducer(state: GameState, action: Action): GameState {
         } else if (o.kind === 'found-cash') {
           cash += o.amount;
           instantNotice = { title: 'Lucky Find', message: o.message };
-        } else {
-          // found-drugs — only what fits.
-          const room = state.capacity - spaceUsed(state);
+        } else if (o.kind === 'found-drugs') {
+          // only what fits
+          const room = effectiveCapacity(state) - spaceUsed(state);
           const qty = Math.min(o.qty, room);
           if (qty > 0) {
             const held = inventory[o.drug];
@@ -201,6 +208,13 @@ function coreReducer(state: GameState, action: Action): GameState {
               [o.drug]: { qty: (held?.qty ?? 0) + qty, avgPrice: held?.avgPrice ?? 0 },
             };
           }
+          instantNotice = { title: 'Lucky Find', message: o.message };
+        } else {
+          // found-coat — a temporary bigger trenchcoat via the effects engine.
+          activeEffects = [
+            ...activeEffects,
+            { type: 'coat-capacity', value: o.bonus, startedDay: day, expiresAfterDay: day + o.days - 1 },
+          ];
           instantNotice = { title: 'Lucky Find', message: o.message };
         }
       }
@@ -230,6 +244,7 @@ function coreReducer(state: GameState, action: Action): GameState {
         gunShopOpen: arrival.gunShopOpen,
         pendingEncounter: arrival.cops,
         notice,
+        activeEffects,
         stats: state.stats.visited.includes(action.location)
           ? state.stats
           : { ...state.stats, visited: [...state.stats.visited, action.location] },
@@ -308,7 +323,7 @@ function coreReducer(state: GameState, action: Action): GameState {
       if (state.status !== 'playing' || inFight) return state;
       if (!state.gunShopOpen) return state;
       const gun = GUN_BY_ID[action.gun];
-      const room = state.capacity - spaceUsed(state);
+      const room = effectiveCapacity(state) - spaceUsed(state);
       if (state.cash < gun.price || room < gun.space) return state;
       const guns = { ...state.guns, [action.gun]: (state.guns[action.gun] ?? 0) + 1 };
       return {
@@ -327,7 +342,7 @@ function coreReducer(state: GameState, action: Action): GameState {
       if (state.status !== 'playing' || inFight) return state;
       const price = state.market[action.drug];
       if (!price) return state;
-      const room = state.capacity - spaceUsed(state);
+      const room = effectiveCapacity(state) - spaceUsed(state);
       const affordable = Math.floor(state.cash / price);
       const qty = clamp(Math.floor(action.qty), 0, Math.min(room, affordable));
       if (qty <= 0) return state;

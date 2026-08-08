@@ -103,7 +103,7 @@ export function MobileLayout() {
             onSelect={ui.select}
             heldQty={heldQty}
             heldAvg={heldAvg}
-            captionRight={`Coat ${snap.capacity - snap.spaceUsed}/${snap.capacity} free`}
+            captionRight={`Coat ${Math.max(0, snap.capacity - snap.spaceUsed)}/${snap.capacity} free`}
           />
         </section>
         {snap.arsenal.length > 0 && (
