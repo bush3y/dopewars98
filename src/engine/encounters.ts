@@ -26,7 +26,8 @@ export interface CopsEncounter {
 export type InstantOutcome =
   | { kind: 'mugging'; amount: number; message: string }
   | { kind: 'found-cash'; amount: number; message: string }
-  | { kind: 'found-drugs'; drug: DrugId; qty: number; message: string };
+  | { kind: 'found-drugs'; drug: DrugId; qty: number; message: string }
+  | { kind: 'found-coat'; bonus: number; days: number; message: string };
 
 export interface ArrivalEncounter {
   cops: CopsEncounter | null;
@@ -110,7 +111,7 @@ export function generateArrival(
       amount,
       message: sub(pickMsg(er, COMBAT_FLAVOR.foundCash), { amount: amount.toLocaleString() }),
     };
-  } else {
+  } else if (roll < w.cops + w.mugging + w.foundCash + w.foundDrugs) {
     const drug = er.pick(DRUG_IDS);
     const qty = er.int(COMBAT.foundDrugsMin, COMBAT.foundDrugsMax);
     instant = {
@@ -118,6 +119,16 @@ export function generateArrival(
       drug,
       qty,
       message: sub(pickMsg(er, COMBAT_FLAVOR.foundDrugs), { qty, drug: DRUG_NAME[drug] }),
+    };
+  } else {
+    // Rare lucky find: a temporary bigger coat (via the timed-effects engine).
+    const bonus = COMBAT.coatPerkBonus;
+    const days = COMBAT.coatPerkDays;
+    instant = {
+      kind: 'found-coat',
+      bonus,
+      days,
+      message: sub(pickMsg(er, COMBAT_FLAVOR.foundCoat), { bonus, days }),
     };
   }
 

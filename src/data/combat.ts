@@ -10,9 +10,10 @@ export const COMBAT = {
   // Given an encounter, the split between trouble types (must sum to 1).
   weights: {
     cops: 0.5,
-    mugging: 0.18,
-    foundCash: 0.18,
-    foundDrugs: 0.14,
+    mugging: 0.17,
+    foundCash: 0.14,
+    foundDrugs: 0.11,
+    foundCoat: 0.08, // rare lucky find: a temporary bigger coat
   },
 
   // Cops: how many officers show up. Grows slowly with the day number.
@@ -47,6 +48,10 @@ export const COMBAT = {
   foundCashMax: 1600,
   foundDrugsMin: 2,
   foundDrugsMax: 8,
+
+  // Found-coat perk: a temporary trenchcoat-capacity boost (via the effects engine).
+  coatPerkBonus: 20, // extra units
+  coatPerkDays: 5, // in-game days it lasts
 
   // Gun shop availability per (seed, day, location).
   gunShopChance: 0.3,
@@ -85,5 +90,9 @@ export const COMBAT_FLAVOR = {
   foundDrugs: [
     'You find {qty} units of {drug} stashed behind a loose brick.',
     'An abandoned duffel holds {qty} units of {drug}.',
+  ],
+  foundCoat: [
+    'You lift a roomier trench coat off a dropped bag — +{bonus} coat space for {days} days.',
+    'A dealer ditched a big duffel as he ran. Extra room to haul: +{bonus} space for {days} days.',
   ],
 };

@@ -24,7 +24,7 @@ export function TrenchcoatPane({
   return (
     <div className="pane">
       <div className="pane__caption">
-        Trenchcoat. Space : {capacity - spaceUsed}/{capacity}
+        Trenchcoat. Space : {Math.max(0, capacity - spaceUsed)}/{capacity}
       </div>
       <div className="pane__list">
         <table className="grid grid--selectable">
