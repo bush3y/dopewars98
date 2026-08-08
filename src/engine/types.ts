@@ -17,6 +17,26 @@ export interface Notice {
   message: string;
 }
 
+/**
+ * A timed perk that modifies the rules for a stretch of in-game days. Generic on
+ * purpose: the same list can back in-game rewards, events, or (later) daily
+ * bonuses. Effects are pruned once the day passes `expiresAfterDay`.
+ */
+export type ActiveEffectType =
+  | 'coat-capacity' // value = extra trenchcoat units
+  | 'interest-multiplier' // value = factor on loan interest (e.g. 0.5 = half)
+  | 'daily-gun-shop'; // Dan's shop is open every day (value unused)
+
+export interface ActiveEffect {
+  type: ActiveEffectType;
+  /** Meaning depends on `type` (see ActiveEffectType). */
+  value: number;
+  /** In-game day it started. */
+  startedDay: number;
+  /** Active through this day inclusive; dropped once `day` exceeds it. */
+  expiresAfterDay: number;
+}
+
 /** Accumulated facts about a run, used to check daily objectives. */
 export interface RunStats {
   /** Unique locations visited (includes the start). */
@@ -67,6 +87,8 @@ export interface GameState {
   peakNetWorth: number;
   /** Accumulated facts for daily objectives. */
   stats: RunStats;
+  /** Timed perks currently in force (empty for a plain run). */
+  activeEffects: ActiveEffect[];
   status: GameStatus;
 }
 
@@ -82,4 +104,5 @@ export type Action =
   | { type: 'DEPOSIT'; amount: number }
   | { type: 'WITHDRAW'; amount: number }
   | { type: 'REPAY_DEBT'; amount: number }
+  | { type: 'GRANT_EFFECT'; effect: ActiveEffectType; value?: number; days: number }
   | { type: 'DISMISS_NOTICE' };

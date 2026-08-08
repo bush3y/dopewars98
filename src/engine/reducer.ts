@@ -11,7 +11,7 @@ import {
   resolveRun,
   bustReward,
 } from './encounters';
-import type { Action, GameState, GameMode } from './types';
+import type { Action, ActiveEffect, GameState, GameMode } from './types';
 
 const START_LOCATION = 'bronx' as const;
 
@@ -51,6 +51,37 @@ export function netWorth(state: GameState): number {
 /** Final score when a run ends — same as net worth (inventory already counts). */
 export function finalScore(state: GameState): number {
   return netWorth(state);
+}
+
+// --- Timed-effects engine ---------------------------------------------------
+// A generic list of perks that modify the rules for a stretch of in-game days.
+// Grant one with a GRANT_EFFECT action; effects self-expire once `day` passes
+// their window (pruned on the next grant, ignored by reads before then). Nothing
+// in the core loop consumes these yet — this is the reusable primitive that
+// in-game rewards / events / daily bonuses can build on when we're ready.
+
+/** Effects still in force on the current day (expired ones are ignored). */
+export function liveEffects(state: GameState): ActiveEffect[] {
+  return (state.activeEffects ?? []).filter((e) => e.expiresAfterDay >= state.day);
+}
+
+/** Extra trenchcoat capacity from active `coat-capacity` effects (0 = none). */
+export function coatCapacityBonus(state: GameState): number {
+  return liveEffects(state)
+    .filter((e) => e.type === 'coat-capacity')
+    .reduce((sum, e) => sum + e.value, 0);
+}
+
+/** Combined loan-interest factor from `interest-multiplier` effects (1 = normal). */
+export function interestMultiplier(state: GameState): number {
+  return liveEffects(state)
+    .filter((e) => e.type === 'interest-multiplier')
+    .reduce((factor, e) => factor * e.value, 1);
+}
+
+/** Whether a `daily-gun-shop` effect is currently in force. */
+export function dailyGunShopActive(state: GameState): boolean {
+  return liveEffects(state).some((e) => e.type === 'daily-gun-shop');
 }
 
 export function initialState(
@@ -93,6 +124,7 @@ export function initialState(
       soldSoft: 0,
       soldHard: 0,
     },
+    activeEffects: [],
     status: 'playing',
   };
   base.netWorthHistory = [netWorth(base)];
@@ -109,7 +141,20 @@ function coreReducer(state: GameState, action: Action): GameState {
       return initialState(action.seed, action.mode ?? state.mode);
 
     case 'LOAD_GAME':
-      return action.state;
+      // Older saves predate activeEffects; default it so reads never see undefined.
+      return { ...action.state, activeEffects: action.state.activeEffects ?? [] };
+
+    case 'GRANT_EFFECT': {
+      if (state.status !== 'playing') return state;
+      const effect: ActiveEffect = {
+        type: action.effect,
+        value: action.value ?? 1,
+        startedDay: state.day,
+        expiresAfterDay: state.day + Math.max(1, action.days) - 1,
+      };
+      // liveEffects() drops any already-expired entries as we append the new one.
+      return { ...state, activeEffects: [...liveEffects(state), effect] };
+    }
 
     case 'DISMISS_NOTICE':
       return state.notice ? { ...state, notice: null } : state;
