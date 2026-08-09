@@ -127,7 +127,7 @@ export function MobileLayout() {
           disabled={!state.gunShopOpen}
           onClick={() => ui.open('gun-shop')}
         >
-          {state.gunShopOpen ? "🔫 Dan's Gun Shop" : '🔒 Gun Shop closed'}
+          {state.gunShopOpen ? '🔫 Gun Shop' : '🔒 Gun Shop'}
         </button>
         {state.day >= FIXER.unlockDay && (
           <button type="button" className="gunshop-btn mobile__fixer-btn" onClick={() => ui.open('fixer')}>

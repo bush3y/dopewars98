@@ -24,7 +24,7 @@ export function FixerDialog() {
       ) : (
         <>
           <p className="dlg__message">
-            Today's angles — use each once, whenever you like. Fresh set tomorrow.
+            Today's favors — use each once, whenever you like. Fresh set tomorrow.
           </p>
           <ul className="fixer">
             {perks.map((id) => {
