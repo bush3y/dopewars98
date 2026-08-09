@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
-import { spaceUsed } from '../../engine/reducer';
+import { spaceUsed, effectiveCapacity } from '../../engine/reducer';
 import { DRUG_NAME } from '../../data/gameData';
 import type { DrugId } from '../../data/types';
 
 export function BuyDialog({ drug }: { drug: DrugId }) {
   const { state, dispatch, ui } = useGame();
   const price = state.market[drug];
-  const room = state.capacity - spaceUsed(state);
+  const room = Math.max(0, effectiveCapacity(state) - spaceUsed(state));
   const maxQty = Math.max(0, Math.min(room, Math.floor(state.cash / price)));
   const [qty, setQty] = useState(maxQty);
 

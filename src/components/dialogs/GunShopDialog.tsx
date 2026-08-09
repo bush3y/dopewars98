@@ -1,12 +1,12 @@
 import { Modal } from '../Modal';
 import { useGame } from '../../game/GameContext';
 import { GUNS } from '../../data/guns';
-import { spaceUsed } from '../../engine/reducer';
+import { spaceUsed, effectiveCapacity } from '../../engine/reducer';
 
 /** Dan's Gun Shop — buy guns when it's open here. Guns take coat space. */
 export function GunShopDialog() {
   const { state, dispatch, ui } = useGame();
-  const room = state.capacity - spaceUsed(state);
+  const room = Math.max(0, effectiveCapacity(state) - spaceUsed(state));
 
   return (
     <Modal title="Dan's Gun Shop" onClose={ui.close} className="modal--shop">
