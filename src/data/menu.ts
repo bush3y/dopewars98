@@ -60,6 +60,7 @@ export const MENUS: Menu[] = [
     accel: 0,
     items: [
       { label: 'Finances' },
+      { label: 'The Fixer' },
       { label: 'Daily Objectives' },
       { label: 'High Scores' },
       { label: 'Net Worth Chart' },

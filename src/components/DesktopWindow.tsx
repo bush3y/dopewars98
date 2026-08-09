@@ -8,6 +8,7 @@ import { useDragWindow } from '../hooks/useDragWindow';
 import { useGame } from '../game/GameContext';
 import { modeLabel } from '../game/daily';
 import { objectivesDone } from '../game/objectives';
+import { FIXER, fixerPerks } from '../data/fixer';
 import type { GameMode } from '../engine/types';
 
 const MODE_BADGE: Record<GameMode, string> = {
@@ -72,6 +73,12 @@ export function DesktopWindow() {
         <span className={`dw-footer__mode dw-footer__mode--${state.mode}`}>
           {MODE_BADGE[state.mode]}
         </span>
+        {state.day >= FIXER.unlockDay && (
+          <button type="button" className="footer-fixer" onClick={() => ui.open('fixer')}>
+            ☎ Fixer {fixerPerks(state.seed).filter((id) => !state.fixerUsed.includes(id)).length}/
+            {FIXER.perksPerDay}
+          </button>
+        )}
         {state.mode === 'daily' && (
           <button type="button" className="footer-objectives" onClick={() => ui.open('objectives')}>
             ⭐ {objectivesDone(state.seed, state).filter(Boolean).length}/3

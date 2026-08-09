@@ -29,6 +29,9 @@ export function runMenuItem(label: string, game: Game): void {
     case 'Finances':
       game.ui.open('finances');
       break;
+    case 'The Fixer':
+      game.ui.open('fixer');
+      break;
     case 'High Scores':
       game.ui.open('scores');
       break;

@@ -1,5 +1,6 @@
 import type { DrugId, LocationId } from '../data/types';
 import type { GunId } from '../data/guns';
+import type { FixerPerkId } from '../data/fixer';
 import type { CopsEncounter } from './encounters';
 
 export type GameStatus = 'playing' | 'won' | 'dead';
@@ -89,6 +90,8 @@ export interface GameState {
   stats: RunStats;
   /** Timed perks currently in force (empty for a plain run). */
   activeEffects: ActiveEffect[];
+  /** The Fixer perks activated this run (each of the day's 3 usable once). */
+  fixerUsed: FixerPerkId[];
   status: GameStatus;
 }
 
@@ -105,4 +108,5 @@ export type Action =
   | { type: 'WITHDRAW'; amount: number }
   | { type: 'REPAY_DEBT'; amount: number }
   | { type: 'GRANT_EFFECT'; effect: ActiveEffectType; value?: number; days: number }
+  | { type: 'USE_PERK'; perk: FixerPerkId }
   | { type: 'DISMISS_NOTICE' };

@@ -1,6 +1,7 @@
 import type { DrugId } from '../data/types';
 import { ECONOMY, DRUG_HEAT } from '../data/economy';
 import { GUN_BY_ID } from '../data/guns';
+import { FIXER, fixerPerks } from '../data/fixer';
 import { generateMarket } from './market';
 import {
   generateArrival,
@@ -130,6 +131,7 @@ export function initialState(
       soldHard: 0,
     },
     activeEffects: [],
+    fixerUsed: [],
     status: 'playing',
   };
   base.netWorthHistory = [netWorth(base)];
@@ -146,8 +148,12 @@ function coreReducer(state: GameState, action: Action): GameState {
       return initialState(action.seed, action.mode ?? state.mode);
 
     case 'LOAD_GAME':
-      // Older saves predate activeEffects; default it so reads never see undefined.
-      return { ...action.state, activeEffects: action.state.activeEffects ?? [] };
+      // Older saves predate these fields; default them so reads never see undefined.
+      return {
+        ...action.state,
+        activeEffects: action.state.activeEffects ?? [],
+        fixerUsed: action.state.fixerUsed ?? [],
+      };
 
     case 'GRANT_EFFECT': {
       if (state.status !== 'playing') return state;
@@ -159,6 +165,56 @@ function coreReducer(state: GameState, action: Action): GameState {
       };
       // liveEffects() drops any already-expired entries as we append the new one.
       return { ...state, activeEffects: [...liveEffects(state), effect] };
+    }
+
+    case 'USE_PERK': {
+      if (state.status !== 'playing') return state;
+      if (state.day < FIXER.unlockDay) return state; // the Fixer hasn't called yet
+      if (!fixerPerks(state.seed).includes(action.perk)) return state; // not on today's menu
+      if ((state.fixerUsed ?? []).includes(action.perk)) return state; // already used
+
+      const fixerUsed = [...(state.fixerUsed ?? []), action.perk];
+      const withEffect = (
+        type: ActiveEffect['type'],
+        value: number,
+        days: number,
+      ): ActiveEffect[] => [
+        ...liveEffects(state),
+        { type, value, startedDay: state.day, expiresAfterDay: state.day + days - 1 },
+      ];
+
+      switch (action.perk) {
+        case 'coat':
+          return {
+            ...state,
+            fixerUsed,
+            activeEffects: withEffect('coat-capacity', FIXER.coatBonus, FIXER.coatDays),
+          };
+        case 'interest':
+          return {
+            ...state,
+            fixerUsed,
+            activeEffects: withEffect('interest-multiplier', FIXER.interestMultiplier, FIXER.interestDays),
+          };
+        case 'gun-runner':
+          return {
+            ...state,
+            fixerUsed,
+            gunShopOpen: true,
+            activeEffects: withEffect('daily-gun-shop', 1, FIXER.gunShopDays),
+          };
+        case 'patch-up':
+          return { ...state, fixerUsed, health: 100 };
+        case 'quick-cash':
+          return {
+            ...state,
+            fixerUsed,
+            cash: state.cash + FIXER.cashLoan,
+            debt: state.debt + FIXER.cashLoan,
+          };
+        default:
+          return state;
+      }
     }
 
     case 'DISMISS_NOTICE':
@@ -175,7 +231,7 @@ function coreReducer(state: GameState, action: Action): GameState {
       }
 
       const day = state.day + 1;
-      const debt = Math.round(state.debt * (1 + ECONOMY.debtInterest));
+      const debt = Math.round(state.debt * (1 + ECONOMY.debtInterest * interestMultiplier(state)));
       const bank = Math.round(state.bank * (1 + ECONOMY.bankInterest));
       const { prices, event } = generateMarket(state.seed, day, action.location);
 
@@ -221,9 +277,20 @@ function coreReducer(state: GameState, action: Action): GameState {
 
       // Priority for the popup: combat shows its own dialog; else instant; else
       // a market price event.
+      // One-time "call from the Fixer" when the feature unlocks.
+      const fixerNotice: GameState['notice'] =
+        day === FIXER.unlockDay
+          ? {
+              title: 'The Fixer',
+              message:
+                "You've made a name for yourself out here. From now on I'll line you up with a few angles each day — check the Fixer when you need an edge.",
+            }
+          : null;
       const notice = arrival.cops
         ? null
-        : instantNotice ?? (event ? { title: 'Word on the Street', message: event.message } : null);
+        : instantNotice ??
+          fixerNotice ??
+          (event ? { title: 'Word on the Street', message: event.message } : null);
 
       const next: GameState = {
         ...state,
@@ -241,7 +308,8 @@ function coreReducer(state: GameState, action: Action): GameState {
             [...(state.priceHistory[id as DrugId] ?? []), p].slice(-HISTORY_CAP),
           ]),
         ) as GameState['priceHistory'],
-        gunShopOpen: arrival.gunShopOpen,
+        // Keep Dan's open while the gun-runner perk is live, else roll as normal.
+        gunShopOpen: arrival.gunShopOpen || activeEffects.some((e) => e.type === 'daily-gun-shop'),
         pendingEncounter: arrival.cops,
         notice,
         activeEffects,
