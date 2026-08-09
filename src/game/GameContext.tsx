@@ -64,6 +64,7 @@ export type DialogKind =
   | 'help'
   | 'about'
   | 'kingpin'
+  | 'fixer'
   | 'switch-daily';
 
 interface GameUi {

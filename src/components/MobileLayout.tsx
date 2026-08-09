@@ -5,6 +5,7 @@ import { MarketPane } from './MarketPane';
 import { MobileDrawer } from './MobileDrawer';
 import { useGame } from '../game/GameContext';
 import { objectivesDone } from '../game/objectives';
+import { FIXER, fixerPerks } from '../data/fixer';
 import { rankName } from '../data/ranks';
 import { locationName, CITY_BY_ID } from '../data/cities';
 import type { DrugId } from '../data/types';
@@ -128,6 +129,12 @@ export function MobileLayout() {
         >
           {state.gunShopOpen ? "🔫 Dan's Gun Shop" : '🔒 Gun Shop closed'}
         </button>
+        {state.day >= FIXER.unlockDay && (
+          <button type="button" className="gunshop-btn mobile__fixer-btn" onClick={() => ui.open('fixer')}>
+            ☎ Fixer {fixerPerks(state.seed).filter((id) => !state.fixerUsed.includes(id)).length}/
+            {FIXER.perksPerDay}
+          </button>
+        )}
         {state.mode === 'daily' && (
           <button type="button" className="gunshop-btn mobile__obj-btn" onClick={() => ui.open('objectives')}>
             ⭐ Objectives {objCount}/3

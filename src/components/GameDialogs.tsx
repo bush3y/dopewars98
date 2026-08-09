@@ -18,6 +18,7 @@ import { HelpDialog } from './dialogs/HelpDialog';
 import { AboutDialog } from './dialogs/AboutDialog';
 import { KingpinDialog } from './dialogs/KingpinDialog';
 import { SwitchDailyDialog } from './dialogs/SwitchDailyDialog';
+import { FixerDialog } from './dialogs/FixerDialog';
 
 /**
  * Single overlay layer rendered once at the app root, above both layouts.
@@ -62,6 +63,8 @@ export function GameDialogs() {
       return <AboutDialog />;
     case 'kingpin':
       return <KingpinDialog />;
+    case 'fixer':
+      return <FixerDialog />;
     case 'switch-daily':
       return <SwitchDailyDialog />;
     case 'new-game':

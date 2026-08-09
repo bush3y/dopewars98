@@ -47,7 +47,11 @@ interface Envelope {
 
 /** Backfill fields added after a save was written, so older saves still load. */
 function hydrate(state: GameState): GameState {
-  return { ...state, activeEffects: state.activeEffects ?? [] };
+  return {
+    ...state,
+    activeEffects: state.activeEffects ?? [],
+    fixerUsed: state.fixerUsed ?? [],
+  };
 }
 
 // --- Active game (auto-save) ------------------------------------------------

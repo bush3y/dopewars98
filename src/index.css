@@ -1230,11 +1230,50 @@ body {
   width: 18px;
   text-align: center;
 }
-.footer-objectives {
+.footer-objectives,
+.footer-fixer {
   min-height: 20px;
   padding: 0 8px;
   font-size: 11px;
   font-weight: 700;
+}
+
+/* The Fixer dialog */
+.fixer {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fixer__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  background: #fff;
+  border: 2px inset #c0c0c0;
+}
+.fixer__item.is-used {
+  opacity: 0.5;
+}
+.fixer__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.fixer__title {
+  font-weight: bold;
+}
+.fixer__desc {
+  font-size: 11px;
+  color: #404040;
+}
+.fixer__use {
+  min-width: 64px;
+  flex-shrink: 0;
 }
 
 .share {
